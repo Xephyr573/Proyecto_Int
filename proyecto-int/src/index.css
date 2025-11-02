@@ -1,16 +1,80 @@
 .boton_1 {
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 1s, color 1s, width 5s;
+  margin-left: 87px;
+  margin-top: -40px;
+}
+.boton_1 {
   width: 10em;
 }
-
 .boton_1:hover {
-  background-color: greenyellow;
-  color: white;
+  background-color: rgb(255, 0, 0);
+  color: rgb(0, 0, 0);
 }
 
-.boton_1:hover span {
-  display: none;
+h1 {
+  color: rgb(0, 0, 0);
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 2.5em;
+}
+head {
+  background-color: rgb(255, 255, 255);
+  height: 100px;
+  width: 100%;
+}
+body {
+  background-color: rgb(255, 255, 255);
 }
 
-.boton_1:hover::after {
-  content: 'Hecho!';
+.fondo-gris {
+  background-color: rgb(168, 159, 145);
+  height: 200px;
+  width: 100%;
+}
+.logo {
+  margin-left: 30px;
+  margin-right: auto;
+  margin-top: 40px;
+  width: 300px;
+  height: auto;
+
+}
+
+.fondo-blanco {
+  background-color: rgb(255, 255, 255);
+  height: 400px;
+  width: 100%;
+}
+
+.boton_2 {
+  background-color: rgb(0, 0, 0);
+  color: rgb(255, 255, 255);
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 1s, color 1s, width 5s;
+  margin-left: 87px;
+  margin-top: -20px;
+}
+
+.boton_3 {
+  background-color: rgb(255, 255, 255);
+  color: rgb(0, 0, 0);
+  font-size: 1.2em;
+  padding: 10px 20px;
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 1s, color 1s, width 5s;
+  margin-left: 87px;
+  margin-top: -20px;
 }
