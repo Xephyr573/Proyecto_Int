@@ -47,7 +47,7 @@ p {
 
 /* ------ IMAGEN ------ */
 .logo-container {
-  position: fixed;
+  position: absolute;
   left: 100px;
   top: 50px;
   z-index: 1000;
@@ -68,7 +68,7 @@ p {
   font-weight: bold;
   border-radius: 6px;
   transition: 0.3s ease;
-  position: fixed;
+  position: absolute;
   right: 50px;
   top: 70px;
   z-index: 1000;
@@ -110,6 +110,53 @@ p {
   border: 1px solid #000000; 
 }
 
+/* ------ SECCIÓN IMÁGENES CON TEXTO ------ */
+.about-section {
+  padding: 80px 20px;
+  background: #ffffff;
+}
+
+.about-container {
+  display: flex;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 50px;
+}
+
+.about-image {
+  flex: 1;
+}
+
+.project-image {
+  width: 100%;
+  max-width: 500px;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.about-text {
+  flex: 1;
+  padding: 40px;
+  border: 2px solid #463333;
+  border-radius: 10px;
+  background: #f8f8f8;
+}
+
+.about-text h2 {
+  color: #463333;
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.about-text p {
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  font-size: 1em;
+}
 /* ------ FOOTER ------ */
 footer {
   background: #463333;
