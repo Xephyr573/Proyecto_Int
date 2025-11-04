@@ -5,7 +5,7 @@ from rest_framework.response import Response
 class HelloWorldView(APIView):
     def get(self, request):
         data = {
-            "mensaje": "Prueba de funcionamiento",
+            "message": "Prueba de funcionamiento",
             "user": "Zack"
         }
         return Response(data)
