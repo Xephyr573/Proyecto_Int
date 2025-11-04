@@ -44,6 +44,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -52,6 +53,18 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+#Permitir React (puerto 3000)
+CORS_ALLOWED_ORIGINS = [
+    "https://localhost:3000",
+]
+
+#Configuracion basica de API
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION':[
+        'rest_framework.persmissions.AllowAny',
+    ]
+}
 
 ROOT_URLCONF = 'core.urls'
 
