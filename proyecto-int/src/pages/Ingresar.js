@@ -1,4 +1,4 @@
-import "./Ingresar.css";
+import "./Estudiante.css";
 import { useNavigate } from "react-router-dom";
 
 export default function Ingresar() {
