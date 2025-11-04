@@ -1,0 +1,98 @@
+/* Centrar la página */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: #f4f4f4;
+}
+
+/* Caja del formulario */
+.login-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 340px;
+  box-shadow: 0 0 12px rgba(0,0,0,0.15);
+  text-align: center;
+}
+
+/* Título */
+.login-box h2 {
+  margin-bottom: 1.5rem;
+  color: #222;
+}
+
+/* Inputs */
+.form-group {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #ef5350;
+}
+
+/* Botón ingresar */
+.btn-login {
+  width: 100%;
+  padding: 12px;
+  background: #c62828;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin-top: 0.5rem;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.btn-login:hover {
+  background: #a41e1e;
+}
+
+/* Botón olvidar */
+.btn-forgot {
+  margin-top: 1rem;
+  background: none;
+  color: #333;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+  font-size: 14px;
+}
+
+.btn-forgot:hover {
+  color: #000;
+}
+
+/* Botón volver atrás */
+.btn-back {
+  margin-top: 1rem;
+  padding: 10px;
+  width: 100%;
+  background: #b0b0b0;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.btn-back:hover {
+  background: #909090;
+}
