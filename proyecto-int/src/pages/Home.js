@@ -15,8 +15,17 @@ export default function Home() {
       </header>
 
       <header>
-        <Link to="/Ingresar" className="btn-1">Ingresar</Link>
-      </header>
+        <div className="menu-wrapper">
+        <div className="menu-btn">Ingresar</div>
+
+        <div className="menu-content">
+            <Link to="/docente">Docente</Link>
+            <Link to="/director">Director</Link>
+            <Link to="/Ingresar">Estudiante</Link>
+            <Link to="/asesor">Asesor</Link>
+        </div>
+    </div>
+    </header>
 
       <div className="title-container">
         <h1>Servicio de inclusión educativa</h1>
