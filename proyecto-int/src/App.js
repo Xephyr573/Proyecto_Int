@@ -2,6 +2,9 @@ import React, {useState, useEffect} from 'react';
 import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
+import { BrowserRouter, Routes, Route, Link} from "react-router-dom";
+import Home from "./pages/Home";
+import Ingresar from "./pages/Ingresar";
 
 function App() {
   const [message, setMessage] = useState("Cargando...");
@@ -19,22 +22,12 @@ function App() {
     });
   }, []); //El arrary vacio [] significa que esto se ejecutara 1 vez al montar el componente
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/Ingresar" element={<Ingresar />} />
+      </Routes>
+    </BrowserRouter>
   );
 }
 
