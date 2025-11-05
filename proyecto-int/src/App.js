@@ -4,7 +4,11 @@ import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Routes, Route, Link} from "react-router-dom";
 import Home from "./pages/Home";
-import Ingresar from "./pages/Ingresar";
+import Estudiante from "./pages/login/Estudiante";
+import Docente from "./pages/login/Docente";
+import Director from "./pages/login/Director";
+import Asesor from "./pages/login/Asesor"
+import EstudianteDashboard from './pages/homepage/EstudianteDashboard';
 
 function App() {
   const [message, setMessage] = useState("Cargando...");
@@ -25,8 +29,12 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/Ingresar" element={<Ingresar />} />
         <Route path="/Estudiante" element={<Estudiante />} />
+        <Route path="/Docente" element={<Docente />} />
+        <Route path="/Director" element={<Director />} />
+        <Route path="/Asesor" element={<Asesor />} />
+        {/* ------ Dashboard ------ */}
+        <Route path="/EstudianteDashboard" element={<EstudianteDashboard />} />
       </Routes>
     </BrowserRouter>
   );

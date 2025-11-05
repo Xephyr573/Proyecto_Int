@@ -1,0 +1,52 @@
+.login-doc {
+  background: #fff;
+  padding: 30px;
+  width: 350px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
+  text-align: center;
+  margin: 50px auto;
+}
+
+.login-doc h2 {
+  color: #0057b7;
+  margin-bottom: 20px;
+}
+
+.login-doc form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-doc input {
+  padding: 10px;
+  border: 1px solid #aaa;
+  border-radius: 6px;
+}
+
+.btn-login-doc {
+  background: #0057b7;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-login-doc:hover {
+  background: #003c7d;
+}
+
+.forgot-doc {
+  font-size: 13px;
+}
+
+.btn-back-doc {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 8px 15px;
+  background: #444;
+  color: white;
+  border-radius: 6px;
+}

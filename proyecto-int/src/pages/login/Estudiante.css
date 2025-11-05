@@ -1,0 +1,52 @@
+.login-est {
+  background: white;
+  padding: 30px;
+  width: 350px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
+  text-align: center;
+  margin: 50px auto;
+}
+
+.login-est h2 {
+  color: #c20000;
+  margin-bottom: 20px;
+}
+
+.login-est form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-est input {
+  padding: 10px;
+  border: 1px solid #bbb;
+  border-radius: 6px;
+}
+
+.btn-login-est {
+  background: #c20000;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-login-est:hover {
+  background: #910000;
+}
+
+.forgot-est {
+  font-size: 13px;
+}
+
+.btn-back-est {
+  display: inline-block;
+  margin-top: 15px;
+  padding: 8px 15px;
+  background: #444;
+  color: white;
+  border-radius: 6px;
+}
