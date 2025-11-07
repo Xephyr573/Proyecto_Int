@@ -20,12 +20,12 @@ export default function FichaEstudiante() {
           <tr>
             <td>01/01/2025</td>
             <td>Buena evolución. Se recomienda reforzar material impreso ampliado.</td>
-            <td>Sr. TantoTanto</td>
+            <td>Sr. ...</td>
           </tr>
           <tr>
             <td>01/01/2025</td>
             <td>Entrevista inicial: se identifican necesidades visuales y de tiempo.</td>
-            <td>Srta. TantoTanto</td>
+            <td>Srta. ...</td>
           </tr>
         </tbody>
       </table>
