@@ -13,7 +13,7 @@ export default function Asesor() {
         <label>Contraseña</label>
         <input type="password" placeholder="********" />
 
-        <button type="submit" className="btn-login-doc">Ingresar</button>
+        <button onClick={() => window.location.href="./AsesorDashboard"} type="button" className="btn-login-doc">Ingresar</button>
 
         <a href="#" className="forgot-doc">¿Olvidaste tu contraseña?</a>
       </form>

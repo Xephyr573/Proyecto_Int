@@ -1,0 +1,64 @@
+.dir-wrapper {
+  background: #f4f7f4;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* HEADER */
+.dir-header {
+  background: #006633;
+  color: white;
+  padding: 20px 35px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* MAIN */
+.dir-main {
+  flex: 1;
+  padding: 40px;
+  text-align: center;
+}
+
+.dir-summary h2 {
+  color: #004d26;
+}
+
+.dir-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.dir-card {
+  background: white;
+  border-left: 6px solid #00994d;
+  padding: 25px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #222;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  transition: 0.3s;
+}
+
+.dir-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.25);
+}
+
+.dir-card h3 {
+  color: #006633;
+  margin-bottom: 8px;
+}
+
+/* FOOTER */
+.dir-footer {
+  background: #004d26;
+  color: white;
+  text-align: center;
+  padding: 12px;
+}

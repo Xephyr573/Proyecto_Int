@@ -1,0 +1,25 @@
+@import "../EstudiantePages.css";
+
+/* Estados de solicitud */
+.state{
+  font-weight:700;
+  font-size:.9rem;
+  padding:4px 10px;
+  border-radius:999px;
+}
+
+.state.pending{
+  background:#fff6e5;
+  color:#a36300;
+  border:1px solid #ffd9a1;
+}
+.state.approved{
+  background:#e9f8ef;
+  color:#187f3a;
+  border:1px solid #bfe9cd;
+}
+.state.rejected{
+  background:#fdecef;
+  color:#a3122c;
+  border:1px solid #f6bec9;
+}

@@ -1,0 +1,84 @@
+.asesor-wrapper {
+  display: flex;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+  color: #222;
+}
+
+/* SIDEBAR */
+.asesor-sidebar {
+  background: #4b0082;
+  color: white;
+  width: 230px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 25px 15px;
+}
+
+.asesor-sidebar img {
+  height: 60px;
+  margin-bottom: 25px;
+}
+
+.asesor-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.asesor-sidebar nav a {
+  color: white;
+  text-decoration: none;
+  background: rgba(255,255,255,0.15);
+  padding: 10px;
+  border-radius: 6px;
+  text-align: center;
+  transition: 0.3s;
+}
+
+.asesor-sidebar nav a:hover {
+  background: rgba(255,255,255,0.35);
+}
+
+.asesor-sidebar button {
+  margin-top: auto;
+  background: #ffffff;
+  color: #4b0082;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* MAIN */
+.asesor-main {
+  flex: 1;
+  background: #f3f0fa;
+  padding: 40px;
+}
+
+.asesor-main h1 {
+  color: #4b0082;
+}
+
+.asesor-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+  margin-top: 30px;
+}
+
+.asesor-card {
+  background: white;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.12);
+  transition: 0.3s;
+}
+
+.asesor-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 18px rgba(0,0,0,0.25);
+}
