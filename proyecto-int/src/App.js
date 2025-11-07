@@ -3,13 +3,34 @@ import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
 import { BrowserRouter, Routes, Route, Link} from "react-router-dom";
-import Home from "./pages/Home";
-import Estudiante from "./pages/login/Estudiante";
-import Docente from "./pages/login/Docente";
-import Director from "./pages/login/Director";
-import Asesor from "./pages/login/Asesor"
-import EstudianteDashboard from './pages/homepage/EstudianteDashboard';
 
+
+// Home principal
+import Home from "./pages/main/Home";
+
+
+// Logins
+import Estudiante from "./pages/homepage/Estudiante/Estudiante";
+import Docente from "./pages/homepage/Docente/Docente";
+import Director from "./pages/homepage/Director/Director";
+import Asesor from "./pages/homepage/Asesor/Asesor"
+
+// Dashboards
+import EstudianteDashboard from './pages/homepage/Estudiante/EstudianteDashboard';
+import DocenteDashboard from './pages/homepage/Docente/DocenteDashboard';
+import DirectorDashboard from './pages/homepage/Director/DirectorDashboard';
+import AsesorDashboard from './pages/homepage/Asesor/AsesorDashboard';
+
+// Subrutas
+import PerfilEstudiante from './pages/homepage/Estudiante/pages/PerfilEstudiante';
+import ReporteEstudiante from './pages/homepage/Estudiante/pages/ReporteEstudiante';
+import AsistenciaEstudiante from './pages/homepage/Estudiante/pages/AsistenciaEstudiante';
+import FichaEstudiante from './pages/homepage/Estudiante/pages/FichaEstudiante';
+import EntrevistaEstudiante from './pages/homepage/Estudiante/pages/EntrevistaEstudiante';
+import NecesidadesEspeciales from './pages/homepage/Estudiante/pages/NecesidadesEspeciales';
+import SolicitudesEstudiante from './pages/homepage/Estudiante/pages/SolicitudesEstudiante';
+
+// ---- Rutas ----
 function App() {
   const [message, setMessage] = useState("Cargando...");
 
@@ -28,13 +49,29 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
+
+        {/* Home principal */}
         <Route path="/" element={<Home />} />
+
+        {/* ------ Logins ------ */}
         <Route path="/Estudiante" element={<Estudiante />} />
         <Route path="/Docente" element={<Docente />} />
         <Route path="/Director" element={<Director />} />
         <Route path="/Asesor" element={<Asesor />} />
+
         {/* ------ Dashboard ------ */}
         <Route path="/EstudianteDashboard" element={<EstudianteDashboard />} />
+        <Route path="/DocenteDashboard" element={<DocenteDashboard />} />
+        <Route path="/DirectorDashboard" element={<DirectorDashboard />} />
+        <Route path="/AsesorDashboard" element={<AsesorDashboard />} />
+        {/* ------ Subrutas ------ */}
+        <Route path="/Estudiante/perfil" element={<PerfilEstudiante />} />
+        <Route path="/estudiante/reporte" element={<ReporteEstudiante />} />
+        <Route path="/estudiante/asistencia" element={<AsistenciaEstudiante />} />
+        <Route path="/Estudiante/ficha" element={<FichaEstudiante />} />
+        <Route path="/Estudiante/entrevista" element={<EntrevistaEstudiante />} />
+        <Route path="/Estudiante/necesidades" element={<NecesidadesEspeciales />} />
+        <Route path="/Estudiante/solicitudes" element={<SolicitudesEstudiante />} />
       </Routes>
     </BrowserRouter>
   );

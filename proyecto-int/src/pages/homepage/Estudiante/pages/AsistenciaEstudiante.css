@@ -1,0 +1,19 @@
+@import "../EstudiantePages.css";
+
+.badge{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:16px;
+  font-size:.85rem;
+  font-weight:600;
+}
+.badge.ok{
+  background:#e9f8ef;
+  color:#187f3a;
+  border:1px solid #bfe9cd;
+}
+.badge.no{
+  background:#fff2f2;
+  color:#9f1f1f;
+  border:1px solid #f3c7c7;
+}

@@ -1,0 +1,30 @@
+@import "../EstudiantePages.css";
+
+/* Tarjetas KPI */
+.kpis{
+  width:min(100%, 980px);
+  margin:0 auto 18px;
+  display:grid;
+  gap:14px;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+}
+
+.kpi{
+  background:#fff;
+  border:1px solid #eee;
+  border-radius:12px;
+  padding:16px;
+  box-shadow:0 6px 18px rgba(0,0,0,.05);
+  text-align:left;
+}
+
+.kpi h3{
+  font-size:1rem;
+  color:#666;
+  margin-bottom:6px;
+}
+
+.kpi strong{
+  font-size:1.6rem;
+  color:var(--brand);
+}

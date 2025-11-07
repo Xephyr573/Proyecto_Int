@@ -1,0 +1,72 @@
+.doc-dash-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom, #f2f6fc, #dce5f3);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* HEADER */
+.doc-header {
+  background: #004080;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 30px;
+}
+
+.doc-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.doc-header-left img {
+  height: 50px;
+}
+
+/* MAIN */
+.doc-main {
+  text-align: center;
+  padding: 40px;
+}
+
+.doc-info h2 {
+  color: #00264d;
+}
+
+.doc-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 25px;
+  margin-top: 40px;
+}
+
+.doc-card {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  text-decoration: none;
+  color: #222;
+  transition: 0.3s ease;
+}
+
+.doc-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.25);
+}
+
+.doc-card h3 {
+  color: #004080;
+  margin-bottom: 10px;
+}
+
+/* FOOTER */
+.doc-footer {
+  background: #00264d;
+  color: white;
+  text-align: center;
+  padding: 12px;
+}

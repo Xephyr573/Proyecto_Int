@@ -13,7 +13,7 @@ export default function Director() {
         <label>Contraseña</label>
         <input type="password" placeholder="********" />
 
-        <button type="submit" className="btn-login-dir">Ingresar</button>
+        <button onClick={() => window.location.href="./DirectorDashboard"} type="button" className="btn-login-doc">Ingresar</button>
 
         <a href="#" className="forgot-dir">¿Olvidaste tu contraseña?</a>
       </form>
