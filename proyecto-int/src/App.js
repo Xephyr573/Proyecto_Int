@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route, Link} from "react-router-dom";
 
 
 // Home principal
-import Home from "./pages/main/Home";
+import Home from './pages/main/Home';
 
 
 // Logins
