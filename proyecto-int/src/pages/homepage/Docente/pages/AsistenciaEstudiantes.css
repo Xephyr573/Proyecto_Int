@@ -1,25 +1,7 @@
-.asistencia-page { 
-  background: #f0f0f0; 
-  min-height: 100vh; 
-  padding: 30px; 
-  font-family: "Segoe UI", sans-serif; 
-}
-.asistencia-page h1 {
-  color: #990000;
-  text-align: center;
-  margin-bottom: 20px;
-}
-.asistencia-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 10px;
-  overflow: hidden;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-.asistencia-table th,
-.asistencia-table td {  
-  padding: 12px 15px; 
-  border: 1px solid #ddd; 
-  text-align: center; 
-}
+.doc-page{background:#f5f5f5;min-height:100vh;padding:40px;text-align:center;font-family:'Segoe UI',sans-serif}
+.doc-page h1{color:#004080;margin-bottom:18px;}
+.doc-table{width:min(95%,900px);margin:0 auto;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.doc-table th{background:#004080;color:#fff;padding:12px;text-align:left}
+.doc-table td{padding:12px;border-bottom:1px solid #eee}
+.doc-table tr:nth-child(even){background:#fafafa}
+.btn-back{margin-top:16px;background:#222;color:#fff;border:0;padding:10px 18px;border-radius:8px;cursor:pointer}

@@ -1,13 +1,13 @@
-import { Link } from "react-router-dom";
-import "../EstudiantePages.css";
+import { useNavigate } from "react-router-dom";
 import "./SolicitudesEstudiante.css";
 
-export default function SolicitudesEstudiante() {
+export default function SolicitudesEstudiante(){
+  const navigate = useNavigate();
+
   return (
-    <div className="page-container">
+    <div className="est-page">
       <h1>Historial de Solicitudes</h1>
 
-      {/* Filtros opcionales */}
       <div className="filters">
         <input type="text" placeholder="Buscar..." />
         <select>
@@ -18,7 +18,7 @@ export default function SolicitudesEstudiante() {
         </select>
       </div>
 
-      <table className="data-table">
+      <table className="est-table">
         <thead>
           <tr>
             <th>Fecha</th>
@@ -28,24 +28,24 @@ export default function SolicitudesEstudiante() {
         </thead>
         <tbody>
           <tr>
-            <td>01/01/2025</td>
+            <td>08/04/2025</td>
             <td>Apoyo Académico</td>
             <td><span className="state pending">Pendiente</span></td>
           </tr>
           <tr>
-            <td>01/01/2025</td>
+            <td>20/03/2025</td>
             <td>Material Adaptado</td>
             <td><span className="state approved">Aprobada</span></td>
           </tr>
           <tr>
-            <td>01/01/2025</td>
-            <td>Tiempo Adicional en Evaluaciones</td>
+            <td>10/03/2025</td>
+            <td>Tiempo Adicional</td>
             <td><span className="state rejected">Rechazada</span></td>
           </tr>
         </tbody>
       </table>
 
-      <Link to="/EstudianteDashboard" className="btn-back">← Volver</Link>
+      <button className="est-btn" onClick={()=>navigate(-1)}>← Volver</button>
     </div>
   );
 }

@@ -9,42 +9,43 @@ export default function AsesorDashboard() {
   };
 
   return (
-    <div className="asesor-wrapper">
-      <aside className="asesor-sidebar">
-        <img
-          src="https://digital.inacap.cl/recursos/inacap-liferay/img/logo-footer.png"
-          alt="Inacap"
-        />
-        <nav>
-          <Link to="/asesor/entrevistas">Entrevistas</Link>
-          <Link to="/asesor/seguimiento">Seguimiento</Link>
-          <Link to="/asesor/reportes">Reportes</Link>
-          <Link to="/asesor/fichas">Ficha Estudiante</Link>
-        </nav>
-        <button onClick={handleLogout}>Cerrar Sesión</button>
-      </aside>
-
-      <main className="asesor-main">
-        <h1>Panel del Asesor</h1>
-        <p>Administra entrevistas, seguimiento y reportes individuales.</p>
-
-        <div className="asesor-grid">
-          <div className="asesor-card">
-            <h3>Entrevistas</h3>
-            <p>Gestiona entrevistas personalizadas para estudiantes.</p>
-          </div>
-
-          <div className="asesor-card">
-            <h3>Seguimiento</h3>
-            <p>Revisa el progreso y acciones realizadas.</p>
-          </div>
-
-          <div className="asesor-card">
-            <h3>Reportes</h3>
-            <p>Genera reportes sobre las necesidades detectadas.</p>
-          </div>
+    <div className="dash-wrapper">
+      <header className="dash-header">
+        <div className="header-left">
+          <img
+            src="https://digital.inacap.cl/recursos/inacap-liferay/img/logo-footer.png"
+            alt="Inacap"
+          />
+          <h1>Panel del Asesor</h1>
         </div>
-      </main>
+        <button className="btn-logout" onClick={handleLogout}>
+          Cerrar sesión
+        </button>
+      </header>
+
+      <div className="dash-grid">
+        <Link className="dash-card" to="/asesor/perfil">
+          <h3>Mi Perfil</h3>
+          <p>Actualiza tu información profesional.</p>
+        </Link>
+
+        <Link className="dash-card" to="/asesor/entrevistas">
+          <h3>Entrevistas Realizadas</h3>
+          <p>Visualiza las entrevistas agendadas y completadas.</p>
+        </Link>
+
+        <Link className="dash-card" to="/asesor/fichas">
+          <h3>Ficha de Estudiantes</h3>
+          <p>Consulta fichas individuales y observaciones.</p>
+        </Link>
+
+        <Link className="dash-card" to="/asesor/reporte">
+          <h3>Reporte de Asesorías</h3>
+          <p>Accede a reportes de seguimiento y apoyo estudiantil.</p>
+        </Link>
+      </div>
+
+      <footer className="dash-footer">© 2025 · INACAP</footer>
     </div>
   );
 }

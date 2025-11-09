@@ -1,18 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import "../EstudiantePages.css";
 import "./EntrevistaEstudiante.css";
 
-export default function EntrevistaEstudiante() {
+export default function EntrevistaEstudiante(){
   const navigate = useNavigate();
 
   return (
-    <div className="page-container">
+    <div className="est-page">
       <h1>Entrevista Individualizada</h1>
 
       <div className="grid-two">
         <div className="panel">
           <h3>Datos Iniciales</h3>
-          <div className="form">
+          <div className="est-form small">
             <label>Fecha</label>
             <input type="date" />
 
@@ -29,9 +28,9 @@ export default function EntrevistaEstudiante() {
 
         <div className="panel">
           <h3>Observaciones</h3>
-          <div className="form">
+          <div className="est-form small">
             <label>Resumen</label>
-            <textarea placeholder="Escribe aquí las observaciones de la entrevista..."></textarea>
+            <textarea placeholder="Escribe observaciones de la entrevista..."></textarea>
 
             <label>Recomendaciones</label>
             <textarea placeholder="Apoyos, tiempos, materiales, etc."></textarea>
@@ -40,16 +39,9 @@ export default function EntrevistaEstudiante() {
       </div>
 
       <div className="actions">
-        <button className="btn secondary" onClick={() => navigate(-1)}>Cancelar</button>
-        <button
-          className="btn"
-          onClick={() => alert("Entrevista guardada correctamente (demo)")}
-        >
-          Guardar Entrevista
-        </button>
+        <button className="est-btn secondary" onClick={()=>navigate(-1)}>Cancelar</button>
+        <button className="est-btn" onClick={()=>alert("Entrevista guardada (demo)")}>Guardar Entrevista</button>
       </div>
-
-      <button className="btn-back" to="/EstudianteDashboard" onClick={() => navigate(-1)}>← Volver</button>
     </div>
   );
 }
