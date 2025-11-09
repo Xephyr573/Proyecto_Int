@@ -1,0 +1,25 @@
+.asistencia-page { 
+  background: #f0f0f0; 
+  min-height: 100vh; 
+  padding: 30px; 
+  font-family: "Segoe UI", sans-serif; 
+}
+.asistencia-page h1 {
+  color: #990000;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.asistencia-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.asistencia-table th,
+.asistencia-table td {  
+  padding: 12px 15px; 
+  border: 1px solid #ddd; 
+  text-align: center; 
+}

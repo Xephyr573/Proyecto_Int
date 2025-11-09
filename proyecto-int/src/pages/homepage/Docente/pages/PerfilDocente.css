@@ -1,0 +1,45 @@
+.docente-page {
+  background: #f9f9f9;
+  min-height: 100vh;
+  padding: 40px;
+  text-align: center;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.docente-page h1 {
+  color: #990000;
+}
+
+.docente-form {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.docente-form input {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+.docente-form button,
+.docente-btn-back {
+  background: #990000;
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.25s;
+}
+
+.docente-form button:hover,
+.docente-btn-back:hover {
+  background: #b60000;
+  transform: scale(1.05);
+}
