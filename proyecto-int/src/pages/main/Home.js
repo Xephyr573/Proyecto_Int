@@ -58,7 +58,7 @@ export default function Home() {
           <div className="about-container">
             <div className="about-image">
               <img
-                src="/imgs/inclusion.jpg"
+                src="https://www.gob.mx/cms/uploads/document/main_image/46398/Servicio_social.jpg"
                 alt="Inclusión"
                 className="project-image"
               />
@@ -85,7 +85,7 @@ export default function Home() {
           <div className="about-container reverse">
             <div className="about-image">
               <img
-                src="/imgs/apoyo.jpg"
+                src="https://comunicacion.uaa.mx/revista/wp-content/uploads/2019/01/servicio-social.jpg"
                 alt="Apoyo"
                 className="project-image"
               />
@@ -106,39 +106,48 @@ export default function Home() {
           </div>
         </section>
 
-        {/* SECCIÓN DE NOTICIAS */}
-        <section className="news-section">
-          <h2>Noticias recientes</h2>
-
-          <div className="news-container">
-
-            <div className="news-item">
-              <img src="/imgs/noticia1.jpg" alt="Noticia 1" />
-              <h3>Semana de Inclusión</h3>
-              <p>
-                Este mes se realizará una jornada de talleres sobre inclusión en
-                todas las sedes.
-              </p>
+        {/* SECCIÓN DE SERVICIOS */}
+        <section className="servicios-section">
+          <h2>Servicios destacados</h2>
+          <div className="servicios-container">
+            <div className="servicio-card">
+            <img src="https://cdn-icons-png.flaticon.com/512/2491/2491065.png" alt="Apoyo psicológico" />
+              <h3>Apoyo psicológico</h3>
+              <p>Atención confidencial para estudiantes que requieran acompañamiento emocional.</p>
             </div>
+          <div className="servicio-card">
+           <img src="https://cdn-icons-png.flaticon.com/512/4324/4324856.png" alt="Tutorías académicas" />
+             <h3>Tutorías académicas</h3>
+             <p>Refuerzo en asignaturas críticas con apoyo personalizado de docentes tutores.</p>
+          </div>
+          <div className="servicio-card">
+           <img src="https://cdn-icons-png.flaticon.com/512/4849/4849089.png" alt="Adaptaciones curriculares" />
+            <h3>Adaptaciones curriculares</h3>
+            <p>Gestión de ajustes razonables para garantizar la equidad educativa.</p>
+          </div>
+         </div>
+        </section>
 
-            <div className="news-item">
-              <img src="/imgs/noticia2.jpg" alt="Noticia 2" />
-              <h3>Nuevo portal</h3>
-              <p>
-                Se lanzó una nueva plataforma de apoyo académico para estudiantes.
-              </p>
-            </div>
-
-            <div className="news-item">
-              <img src="/imgs/noticia3.jpg" alt="Noticia 3" />
-              <h3>Más apoyo</h3>
-              <p>
-                Aumenta el número de asesores profesionales incorporados al área.
-              </p>
-            </div>
-
+        {/* SECCIÓN FAQ */}
+        <section className="faq-section">
+         <h2>Preguntas frecuentes</h2>
+         <div className="faq-container">
+            <details>
+              <summary>¿Quiénes pueden acceder al servicio de inclusión?</summary>
+              <p>Cualquier estudiante con una condición de salud o necesidad especial puede solicitar apoyo.</p>
+            </details>
+            <details>
+             <summary>¿Cómo puedo agendar una entrevista?</summary>
+              <p>Desde tu panel de estudiante puedes ingresar a “Ficha y Entrevista” y completar el formulario.</p>
+            </details>
+            <details>
+              <summary>¿El servicio tiene costo?</summary>
+              <p>No. Todos los servicios de inclusión son gratuitos para los estudiantes de INACAP.</p>
+            </details>
           </div>
         </section>
+
+
       </main>
 
       <footer>

@@ -4,7 +4,7 @@ import "./Asesor.css";
 export default function Asesor() {
   return (
     <div className="login-doc">
-      <h2>Ingreso Docente</h2>
+      <h2>Ingreso Asesor</h2>
 
       <form>
         <label>Usuario</label>

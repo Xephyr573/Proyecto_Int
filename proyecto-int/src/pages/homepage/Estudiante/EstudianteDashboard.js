@@ -45,11 +45,6 @@ export default function EstudianteDashboard() {
           <h3>Reporte General</h3>
           <p>Visualiza tu progreso y estadísticas.</p>
         </Link>
-
-        <Link className="dash-card" to="/estudiante/ficha">
-          <h3>Ficha y Entrevista</h3>
-          <p>Accede a tu ficha y completa la entrevista individualizada.</p>
-        </Link>
       </div>
 
       <footer className="dash-footer">© 2025 · INACAP</footer>

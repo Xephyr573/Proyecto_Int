@@ -1,0 +1,7 @@
+.ases-page{background:#f5f5f5;min-height:100vh;padding:40px;text-align:center;font-family:'Segoe UI',sans-serif}
+.ases-page h1{color:#006600;margin-bottom:18px;}
+.ases-table{width:min(95%,900px);margin:0 auto;border-collapse:collapse;background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 4px 10px rgba(0,0,0,.08)}
+.ases-table th{background:#006600;color:#fff;padding:12px;text-align:left}
+.ases-table td{padding:12px;border-bottom:1px solid #eee}
+.ases-table tr:nth-child(even){background:#fafafa}
+.btn-back{margin-top:16px;background:#222;color:#fff;border:0;padding:10px 18px;border-radius:8px;cursor:pointer}

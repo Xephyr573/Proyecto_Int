@@ -1,32 +1,39 @@
-import { Link } from "react-router-dom";
-import "../EstudiantePages.css";
+import { useNavigate } from "react-router-dom";
 import "./NecesidadesEspeciales.css";
 
-export default function NecesidadesEspeciales() {
+export default function NecesidadesEspeciales(){
+  const navigate = useNavigate();
+
   return (
-    <div className="page-container">
+    <div className="est-page">
       <h1>Mantención de Necesidades Especiales</h1>
 
-      <form className="form" onSubmit={(e) => e.preventDefault()}>
-        <label>Tipo de Necesidad</label>
-        <select>
-          <option>Visual</option>
-          <option>Auditiva</option>
-          <option>Motriz</option>
-          <option>Cognitiva</option>
-          <option>Otra</option>
-        </select>
+      <form className="est-form" onSubmit={(e)=>e.preventDefault()}>
+        <div className="row">
+          <label>Tipo de Necesidad</label>
+          <select>
+            <option>Visual</option>
+            <option>Auditiva</option>
+            <option>Motriz</option>
+            <option>Cognitiva</option>
+            <option>Otra</option>
+          </select>
+        </div>
 
-        <label>Descripción</label>
-        <textarea placeholder="Describe brevemente tu necesidad..."></textarea>
+        <div className="row">
+          <label>Descripción</label>
+          <textarea placeholder="Describe brevemente tu necesidad..."></textarea>
+        </div>
 
-        <label>Apoyos Requeridos</label>
-        <input type="text" placeholder="Ej: material ampliado, intérprete, tiempo adicional..." />
+        <div className="row">
+          <label>Apoyos Requeridos</label>
+          <input type="text" placeholder="Ej: material ampliado, intérprete, tiempo adicional..." />
+        </div>
 
-        <button type="submit">Guardar Información</button>
+        <button type="submit">Guardar</button>
       </form>
 
-      <Link to="/EstudianteDashboard" className="btn-back">← Volver</Link>
+      <button className="est-btn" onClick={()=>navigate(-1)}>← Volver</button>
     </div>
   );
 }

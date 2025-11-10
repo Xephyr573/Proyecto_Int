@@ -1,260 +1,230 @@
-/* ------ ESTILOS GENERALES ------ */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
-}
+/* ====== HOME LANDING PAGE ====== */
 
 body {
+  margin: 0;
+  font-family: "Segoe UI", sans-serif;
   background-color: #f2f2f2;
   color: #222;
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
 }
 
+/* ---------- HEADER ---------- */
 header {
-  background: #463333;
-  padding: 45px;
-
-}
-
-header h1 {
-  color: #fff;
-}
-
-/* ------ CONTENIDO PRINCIPAL ------ */
-.title-container {
-  background: #ffffff;
-  padding: 40px 20px;
+  background-color: #53494A;
+  color: white;
+  padding: 15px 0;
   text-align: center;
-  font-size: 25px;
-  font-weight: bold;
-  margin-bottom: -40px;
 }
 
-.home-container {
-  flex: 1;
-  text-align: center;
-  padding: 60px 20px;
+.logo-container img {
+  width: 180px;
 }
 
-p {
-  font-size: 18px;
-  margin-bottom: 25px;
-}
-
-/* ------ IMAGEN ------ */
-.logo-container {
-  position: absolute;
-  left: 100px;
-  top: 50px;
-  z-index: 1000;
-}
-
-.logo { 
-  max-width: 200px;
-  height: auto;
-}
-
-/* Menu desplegable en Ingresar */
-
+/* ---------- MENÚ INGRESO ---------- */
 .menu-wrapper {
   position: absolute;
-  right: 50px;
-  top: 120px;
-  z-index: 1000;
+  top: 25px;
+  right: 35px;
 }
 
 .menu-btn {
-  padding: 12px 24px;
-  background: #000;
-  color: #fff;
-  border-radius: 6px;
+  background-color: white;
+  color: #b60000;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 20px;
   cursor: pointer;
-  font-weight: bold;
-  text-decoration: none;
+  transition: 0.3s;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .menu-btn:hover {
-  background: #000;
+  background-color: #000000;
+  color: white;
 }
 
-/* Contenedor del menú */
 .menu-content {
   display: none;
-  position: absolute;
+  flex-direction: column;
   background: white;
-  min-width: 170px;
-  border: 1px solid #000;
-  border-radius: 6px;
-  overflow: hidden;
+  position: static;
+  top: 40px;
+  right: 0;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Opciones */
+.menu-wrapper:hover .menu-content {
+  display: flex;
+}
+
 .menu-content a {
+  color: #b60000;
   text-decoration: none;
-  color: #000;
-  padding: 10px 15px;
-  display: block;
-  transition: 0.2s ease;
-  font-weight: bold;
+  padding: 10px 20px;
+  font-weight: 500;
+  transition: 0.5s;
 }
 
 .menu-content a:hover {
-  background: #ddd;
+  background: #b60000;
+  color: white;
 }
 
-/* Mostrar menú cuando se pasa el mouse */
-.menu-wrapper:hover .menu-content {
-  display: block;
-}
-/*  BOTONES  */
-
-.btn-2 { 
-  display: inline-block;
-  padding: 12px 24px;
-  background: #000000;
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-  border-radius: 6px;
-  transition: 0.3s ease;
-  margin-right: 20px; 
+/* ---------- TÍTULO ---------- */
+.title-container {
+  text-align: center;
+  margin-top: 30px;
 }
 
-.btn-2:hover {
-  background: #000000;
+.title-container h1 {
+  font-size: 2rem;
+  color: #b60000;
+  letter-spacing: 0.5px;
 }
 
+/* ---------- BOTONES PRINCIPALES ---------- */
+.main-buttons {
+  text-align: center;
+  margin: 20px 0 30px;
+}
+
+.btn-2,
 .btn-3 {
-  padding: 12px 24px;
-  background: #ffffff;
-  color: #000000;
+  display: inline-block;
+  background: #b60000;
+  color: white;
   text-decoration: none;
-  font-weight: bold;
-  border-radius: 6px;
-  transition: 0.3s ease;
-  border: 1px solid #000000;
-  margin-left: 20px;
+  padding: 10px 20px;
+  border-radius: 25px;
+  margin: 0 10px;
+  transition: 0.3s;
+  font-weight: 600;
 }
+
+.btn-2:hover,
 .btn-3:hover {
-  background: #ffffff;
-  border: 1px solid #000000; 
+  background: #8a0000;
 }
 
-/* ------ SECCIÓN IMÁGENES CON TEXTO ------ */
+/* ---------- SECCIONES ---------- */
 .about-section {
-  padding: 80px 20px;
-  background: #ffffff;
-}
-
-.about-container {
+  background: white;
+  margin: 30px auto;
+  width: min(90%, 1000px);
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-  gap: 50px;
+  justify-content: space-between;
+  padding: 25px;
+  gap: 20px;
 }
 
-.about-image {
-  flex: 1;
-}
-
-.project-image {
-  width: 100%;
-  max-width: 500px;
-  height: auto;
-  border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-.about-text {
-  flex: 1;
-  padding: 40px;
-  border: 2px solid #463333;
-  border-radius: 10px;
-  background: #f8f8f8;
-}
-
-.about-text h2 {
-  color: #463333;
-  font-size: 2em;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.about-text p {
-  color: #555;
-  line-height: 1.6;
-  margin-bottom: 15px;
-  font-size: 1em;
-}
-
-/* BOTONES CENTRALES */
-.main-buttons {
-  margin-bottom: 40px;
-}
-
-/* SECCIÓN 2 ALTERNADA */
-.second .about-container.reverse {
+.about-container.reverse {
   flex-direction: row-reverse;
 }
 
-/* SECCIÓN NOTICIAS */
-.news-section {
-  background: #ffffff;
-  padding: 60px 20px;
-  margin-top: 40px;
+.about-text h2 {
+  color: #b60000;
+  margin-bottom: 10px;
 }
 
-.news-section h2 {
-  text-align: center;
-  margin-bottom: 30px;
-  font-size: 2rem;
-  color: #463333;
+.about-text p {
+  color: #444;
+  line-height: 1.6;
 }
 
-.news-container {
-  max-width: 1200px;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 30px;
-  margin: 0 auto;
-}
-
-.news-item {
-  background: #fafafa;
-  border: 2px solid #463333;
+.about-image img {
+  width: 250px;
   border-radius: 10px;
+}
+
+/* SERVICIOS */
+.servicios-section {
+  background: #f2f2f2;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.servicios-section h2 {
+  color: #b60000;
+  margin-bottom: 25px;
+}
+
+.servicios-container {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 25px;
+}
+
+.servicio-card {
+  background: #fff;
+  width: 260px;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.servicio-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+}
+
+.servicio-card img {
+  width: 80px;
+  margin-bottom: 15px;
+}
+
+.servicio-card h3 {
+  color: #b60000;
+  margin-bottom: 10px;
+}
+
+/* FAQ */
+.faq-section {
+  padding: 40px 20px;
+  max-width: 800px;
+  margin: 0 auto 60px;
+}
+
+.faq-section h2 {
+  text-align: center;
+  color: #b60000;
+  margin-bottom: 20px;
+}
+
+.faq-container details {
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
   padding: 15px;
-  text-align: center;
+  margin-bottom: 10px;
+  transition: background 0.3s;
 }
 
-.news-item img {
-  width: 100%;
-  border-radius: 10px;
-  height: 170px;
-  object-fit: cover;
+.faq-container details:hover {
+  background: #f9f9f9;
 }
 
-.news-item h3 {
+.faq-container summary {
+  font-weight: 600;
+  color: #b60000;
+  cursor: pointer;
+}
+
+.faq-container p {
   margin-top: 10px;
-  color: #463333;
-  font-size: 1.3rem;
-}
-
-.news-item p {
-  font-size: 0.95rem;
   color: #333;
-  margin-top: 10px;
 }
 
-/* ------ FOOTER ------ */
+/* ---------- FOOTER ---------- */
 footer {
-  background: #463333;
-  color: #fff;
-  padding: 10px;
   text-align: center;
+  background: #2e2e2e;
+  color: white;
+  padding: 20px;
+  font-size: 0.9rem;
+  border-top: 4px solid #b60000;
 }

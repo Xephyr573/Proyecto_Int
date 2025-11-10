@@ -9,37 +9,43 @@ export default function DirectorDashboard() {
   };
 
   return (
-    <div className="dir-wrapper">
-      <header className="dir-header">
-        <h1>Panel del Director</h1>
-        <button className="btn-logout" onClick={handleLogout}>Cerrar sesión</button>
+    <div className="dash-wrapper">
+      <header className="dash-header">
+        <div className="header-left">
+          <img
+            src="https://digital.inacap.cl/recursos/inacap-liferay/img/logo-footer.png"
+            alt="Inacap"
+          />
+          <h1>Panel del Director</h1>
+        </div>
+        <button className="btn-logout" onClick={handleLogout}>
+          Cerrar sesión
+        </button>
       </header>
 
-      <main className="dir-main">
-        <section className="dir-summary">
-          <h2>Resumen General</h2>
-          <p>Supervisa el funcionamiento académico, solicitudes y reportes globales.</p>
-        </section>
+      <div className="dash-grid">
+        <Link className="dash-card" to="/director/perfil">
+          <h3>Mi Perfil</h3>
+          <p>Gestiona tu información personal y credenciales.</p>
+        </Link>
 
-        <div className="dir-grid">
-          <Link className="dir-card" to="/director/reportes">
-            <h3>Reportes Generales</h3>
-            <p>Consulta estadísticas de asistencia y rendimiento.</p>
-          </Link>
+        <Link className="dash-card" to="/director/gestion">
+          <h3>Gestión General</h3>
+          <p>Controla los procesos administrativos y académicos.</p>
+        </Link>
 
-          <Link className="dir-card" to="/director/solicitudes">
-            <h3>Solicitudes</h3>
-            <p>Revisa y aprueba solicitudes de ajustes razonables.</p>
-          </Link>
+        <Link className="dash-card" to="/director/asistencia">
+          <h3>Asistencia</h3>
+          <p>Revisa la asistencia global de estudiantes y asesores.</p>
+        </Link>
 
-          <Link className="dir-card" to="/director/docentes">
-            <h3>Docentes</h3>
-            <p>Gestiona información y desempeño docente.</p>
-          </Link>
-        </div>
-      </main>
+        <Link className="dash-card" to="/director/reportes">
+          <h3>Reportes Institucionales</h3>
+          <p>Visualiza estadísticas y resultados globales.</p>
+        </Link>
+      </div>
 
-      <footer className="dir-footer">© 2025 · INACAP</footer>
+      <footer className="dash-footer">© 2025 · INACAP</footer>
     </div>
   );
 }
