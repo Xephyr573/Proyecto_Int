@@ -19,7 +19,7 @@ def crear_usuarios_iniciales(apps, schema_editor):
     u1 = Usuario.objects.create(
         nombre="Andrea Lopez (Asesor)", 
         correo="asesor@sistema.cl", 
-        contrasenia="pass123", 
+        contrasena="pass123", 
         rol="Asesor"
     )
     Asesor.objects.create(
@@ -32,7 +32,7 @@ def crear_usuarios_iniciales(apps, schema_editor):
     u2 = Usuario.objects.create(
         nombre="Carlos Perez (Estudiante)", 
         correo="estudiante@sistema.cl", 
-        contrasenia="pass123", 
+        contrasena="pass123", 
         rol="Estudiante"
     )
     Estudiante.objects.create(
@@ -47,7 +47,7 @@ def crear_usuarios_iniciales(apps, schema_editor):
     u3 = Usuario.objects.create(
         nombre="Javier Soto (Docente)", 
         correo="docente@sistema.cl", 
-        contrasenia="pass123", 
+        contrasena="pass123", 
         rol="Docente"
     )
     Docente.objects.create(
@@ -60,7 +60,7 @@ def crear_usuarios_iniciales(apps, schema_editor):
     u4 = Usuario.objects.create(
         nombre="Maria Rodriguez (Director)", 
         correo="director@sistema.cl", 
-        contrasenia="pass123", 
+        contrasena="pass123", 
         rol="Director"
     )
     # Director tiene su propia PK (id_director) y FK a Usuario
