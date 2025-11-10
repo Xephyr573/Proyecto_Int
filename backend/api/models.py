@@ -11,7 +11,7 @@ ahora = datetime.datetime.now
 
 class Usuario(models.Model):
     nombre = models.CharField(max_length=100)
-    correo = models.EmailField(unique=True)
+    correo = models.EmailField(unique=True, max_length=100)
     contrasena = models.CharField(max_length=128)
     rol = models.CharField(max_length=50)
 
