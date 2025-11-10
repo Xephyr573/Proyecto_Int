@@ -23,7 +23,7 @@ def crear_usuarios_iniciales(apps, schema_editor):
         rol="Asesor"
     )
     Asesor.objects.create(
-        usuario=u1, 
+        id_usuario=u1, 
         especialidad="Psicopedagogía", 
         telefono_contacto="911112222"
     )
@@ -36,7 +36,7 @@ def crear_usuarios_iniciales(apps, schema_editor):
         rol="Estudiante"
     )
     Estudiante.objects.create(
-        usuario=u2, 
+        id_usuario=u2, 
         rut="19.123.456-7", 
         carrera="Ingeniería", 
         estado_caso="Pendiente", 
@@ -51,7 +51,7 @@ def crear_usuarios_iniciales(apps, schema_editor):
         rol="Docente"
     )
     Docente.objects.create(
-        usuario=u3, 
+        id_usuario=u3, 
         observaciones="Profesor de cálculo.", 
         cumplimiento=True
     )
