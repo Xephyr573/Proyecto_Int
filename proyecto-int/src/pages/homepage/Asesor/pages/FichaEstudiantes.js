@@ -9,8 +9,8 @@ export default function FichaEstudiantes(){
       <table className="ases-table">
         <thead><tr><th>Nombre</th><th>RUT</th><th>Apoyo</th><th>Estado</th></tr></thead>
         <tbody>
-          <tr><td>Alexander Torres</td><td>12.345.678-9</td><td>Visual</td><td>Activo</td></tr>
-          <tr><td>Matias Soto</td><td>20.456.789-1</td><td>Auditivo</td><td>En seguimiento</td></tr>
+          <tr><td>Alexander Torres</td><td>21.079.691-6</td><td>Visual</td><td>Activo</td></tr>
+          <tr><td>Matias Soto</td><td>22.120.297-K</td><td>Auditivo</td><td>En seguimiento</td></tr>
         </tbody>
       </table>
       <button className="btn-back" onClick={()=>navigate(-1)}>← Volver</button>
