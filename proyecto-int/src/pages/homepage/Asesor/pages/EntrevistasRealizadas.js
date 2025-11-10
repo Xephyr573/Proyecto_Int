@@ -9,8 +9,8 @@ export default function EntrevistasRealizadas(){
       <table className="ases-table">
         <thead><tr><th>Fecha</th><th>Estudiante</th><th>Observaciones</th></tr></thead>
         <tbody>
-          <tr><td>08/04/2025</td><td>Pedro Soto</td><td>Se recomienda seguimiento semanal</td></tr>
-          <tr><td>10/04/2025</td><td>María Gómez</td><td>Avances positivos en apoyo cognitivo</td></tr>
+          <tr><td>08/04/2025</td><td>Alexander Torres</td><td>Se recomienda seguimiento semanal</td></tr>
+          <tr><td>10/04/2025</td><td>Matias Soto</td><td>Avances positivos en apoyo cognitivo</td></tr>
         </tbody>
       </table>
       <button className="btn-back" onClick={()=>navigate(-1)}>← Volver</button>

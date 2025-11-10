@@ -9,9 +9,9 @@ export default function AsistenciaDirector(){
       <table className="dir-table">
         <thead><tr><th>Fecha</th><th>Estudiante</th><th>Actividad</th><th>Estado</th></tr></thead>
         <tbody>
-          <tr><td>10/04/2025</td><td>Juan Pérez</td><td>Entrevista</td><td>Asistió</td></tr>
-          <tr><td>12/04/2025</td><td>Ana Torres</td><td>Clase de Apoyo</td><td>No Asistió</td></tr>
-          <tr><td>15/04/2025</td><td>Lucas Rojas</td><td>Tutoría</td><td>Asistió</td></tr>
+          <tr><td>10/04/2025</td><td>Alexander Torres</td><td>Entrevista</td><td>Asistió</td></tr>
+          <tr><td>12/04/2025</td><td>Matias Soto</td><td>Clase de Apoyo</td><td>No Asistió</td></tr>
+          <tr><td>15/04/2025</td><td>Benjamin Urra</td><td>Tutoría</td><td>Asistió</td></tr>
         </tbody>
       </table>
       <button className="btn-back" onClick={()=>navigate(-1)}>← Volver</button>
