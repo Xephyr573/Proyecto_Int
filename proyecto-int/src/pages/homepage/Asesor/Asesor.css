@@ -1,4 +1,42 @@
-.login-dir {
+/* MENÚ PRINCIPAL ASESOR */
+.login-asesor-menu {
+  background: #fff;
+  padding: 30px;
+  width: 400px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.15);
+  text-align: center;
+  margin: 50px auto;
+}
+
+.asesor-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.asesor-card {
+  display: flex;
+  flex-direction: column;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  text-decoration: none;
+  color: #222;
+}
+
+.asesor-card span {
+  font-size: 0.8rem;
+  color: #555;
+}
+
+.asesor-card:hover {
+  background: #f5f5f5;
+}
+
+/* LOGIN DE CADA ASESOR */
+.login-asesor {
   background: #fff;
   padding: 30px;
   width: 350px;
@@ -8,25 +46,25 @@
   margin: 50px auto;
 }
 
-.login-dir h2 {
-  color: #004d40;
+.login-asesor h2 {
+  color: #00695c;
   margin-bottom: 20px;
 }
 
-.login-dir form {
+.login-asesor form {
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.login-dir input {
+.login-asesor input {
   padding: 10px;
   border: 1px solid #aaa;
   border-radius: 6px;
 }
 
-.btn-login-dir {
-  background: #004d40;
+.btn-login-asesor {
+  background: #00695c;
   color: white;
   border: none;
   padding: 12px;
@@ -34,19 +72,68 @@
   cursor: pointer;
 }
 
-.btn-login-dir:hover {
-  background: #00372d;
+.btn-login-asesor:hover {
+  background: #004c40;
 }
 
-.forgot-dir {
+.forgot-asesor {
   font-size: 13px;
 }
 
-.btn-back-dir {
+.btn-back-asesor {
   display: inline-block;
   margin-top: 15px;
   padding: 8px 15px;
   background: #444;
   color: white;
   border-radius: 6px;
+}
+
+/* TOOLTIP ERROR */
+.field-asesor {
+  margin-bottom: 16px;
+  text-align: left;
+}
+
+.input-wrapper-asesor {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.input-wrapper-asesor input {
+  flex: 1;
+}
+
+.tooltip-error-asesor {
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  transform: translate(8px, -50%);
+  padding: 6px 10px;
+  background: #fde0e0;
+  border: 1px solid #e53935;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  color: #b71c1c;
+  animation: pop-asesor 0.15s ease-out;
+  pointer-events: none;
+}
+
+.tooltip-error-asesor::before {
+  content: "";
+  position: absolute;
+  left: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent #e53935 transparent transparent;
+}
+
+@keyframes pop-asesor {
+  from { transform: scale(0.9); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
 }

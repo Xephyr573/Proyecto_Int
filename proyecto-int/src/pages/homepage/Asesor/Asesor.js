@@ -3,22 +3,28 @@ import "./Asesor.css";
 
 export default function Asesor() {
   return (
-    <div className="login-doc">
-      <h2>Ingreso Asesor</h2>
+    <div className="login-asesor-menu">
+      <h2>Ingreso Asesores</h2>
+      <p>Selecciona tu tipo de asesor para ingresar:</p>
 
-      <form>
-        <label>Usuario</label>
-        <input type="text" placeholder="Usuario" />
+      <div className="asesor-options">
+        <Link to="/AsesorInclusion" className="asesor-card">
+          Encargada de Inclusión
+          <span>Registra el caso en el sistema</span>
+        </Link>
 
-        <label>Contraseña</label>
-        <input type="password" placeholder="********" />
+        <Link to="/AsesorPedagogico" className="asesor-card">
+          Coord. Técnica Pedagógica
+          <span>Define los ajustes razonables</span>
+        </Link>
 
-        <button onClick={() => window.location.href="./AsesorDashboard"} type="button" className="btn-login-doc">Ingresar</button>
+        <Link to="/AsesorDirectora" className="asesor-card">
+          Directora de Carrera
+          <span>Valida y comenta los ajustes</span>
+        </Link>
+      </div>
 
-        <a href="#" className="forgot-doc">¿Olvidaste tu contraseña?</a>
-      </form>
-
-      <Link to="/" className="btn-back-doc">Volver</Link>
+      <Link to="/" className="btn-back-asesor">Volver</Link>
     </div>
   );
 }

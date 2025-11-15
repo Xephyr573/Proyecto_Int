@@ -12,14 +12,13 @@ import Home from './pages/main/Home';
 // Logins
 import Estudiante from "./pages/homepage/Estudiante/Estudiante";
 import Docente from "./pages/homepage/Docente/Docente";
-import Director from "./pages/homepage/Director/Director";
 import Asesor from "./pages/homepage/Asesor/Asesor"
 
 // Dashboards
 import EstudianteDashboard from './pages/homepage/Estudiante/EstudianteDashboard';
 import DocenteDashboard from './pages/homepage/Docente/DocenteDashboard';
-import DirectorDashboard from './pages/homepage/Director/DirectorDashboard';
-import AsesorDashboard from './pages/homepage/Asesor/AsesorDashboard';
+
+
 
 // Subrutas Estudiante
 import PerfilEstudiante from './pages/homepage/Estudiante/pages/PerfilEstudiante';
@@ -35,15 +34,9 @@ import SolicitudesRecibidas from './pages/homepage/Docente/pages/SolicitudesReci
 import ReportesDocente from './pages/homepage/Docente/pages/ReportesDocente';
 
 // Subrutas Director
-import ReportesDirector from './pages/homepage/Director/pages/ReportesDirector';
-import GestionGeneral from './pages/homepage/Director/pages/GestionGeneral';
-import PerfilDirector from './pages/homepage/Director/pages/PerfilDirector';
-import AsistenciaDirector from './pages/homepage/Director/pages/AsistenciaDirector';
+
 // Subrutas Asesor
-import PerfilAsesor from './pages/homepage/Asesor/pages/PerfilAsesor';
-import EntrevistasRealizadas from './pages/homepage/Asesor/pages/EntrevistasRealizadas';
-import FichaEstudiantes from './pages/homepage/Asesor/pages/FichaEstudiantes';
-import ReporteAsesor from './pages/homepage/Asesor/pages/ReporteAsesor';
+
 
 
 // ---- Rutas ----
@@ -93,15 +86,13 @@ function App() {
         <Route path="/docente/solicitudes" element={<SolicitudesRecibidas />} />
         <Route path="/docente/reportes" element={<ReportesDocente />} />
         {/* ------ Subrutas Director ------ */}
-        <Route path="/director/reportes" element={<ReportesDirector />} />
-        <Route path="/director/gestion" element={<GestionGeneral />} />
-        <Route path="/director/perfil" element={<PerfilDirector />} />
-        <Route path="/director/asistencia" element={<AsistenciaDirector />} />
+
+
+
         {/* ------ Subrutas Asesor ------ */}
-        <Route path="/asesor/perfil" element={<PerfilAsesor />} />
-        <Route path="/asesor/entrevistas" element={<EntrevistasRealizadas />} />
-        <Route path="/asesor/fichas" element={<FichaEstudiantes />} />
-        <Route path="/asesor/reporte" element={<ReporteAsesor />} />
+        
+
+        
       </Routes>
     </BrowserRouter>
   );
