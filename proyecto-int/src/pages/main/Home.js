@@ -22,7 +22,6 @@ export default function Home() {
 
           <div className="menu-content">
             <Link to="/Docente">Docente</Link>
-            <Link to="/Director">Director</Link>
             <Link to="/Estudiante">Estudiante</Link>
             <Link to="/Asesor">Asesor</Link>
           </div>
