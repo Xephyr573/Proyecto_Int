@@ -1,11 +1,13 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import "./Asesor.css";
+import { Link, useNavigate } from "react-router-dom";
+import "../Asesor.css";
 
 export default function AsesorPedagogicoLogin() {
   const [usuario, setUsuario] = useState("");
   const [password, setPassword] = useState("");
   const [errores, setErrores] = useState({ usuario: "", password: "" });
+
+  const navigate = useNavigate();
 
   const handleLogin = () => {
     const nuevosErrores = { usuario: "", password: "" };
@@ -24,7 +26,11 @@ export default function AsesorPedagogicoLogin() {
     setErrores(nuevosErrores);
     if (hayError) return;
 
-    window.location.href = "/AsesorDashboard";
+    // Guardar rol de Coordinadora técnica pedagógica
+    window.localStorage.setItem("rolAsesor", "COORDINADORA_PEDAGOGICA");
+
+    // Ir al dashboard del asesor
+    navigate("/AsesorDashboard");
   };
 
   return (
