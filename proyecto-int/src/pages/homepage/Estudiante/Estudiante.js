@@ -15,7 +15,7 @@ export default function Estudiante() {
     const nuevosErrores = { rut: "", password: "" };
     let hayError = false;
 
-    if (!rut.trim()) {
+    if (!rut.trim()) { 
       nuevosErrores.rut = "Campo obligatorio";
       hayError = true;
     }
