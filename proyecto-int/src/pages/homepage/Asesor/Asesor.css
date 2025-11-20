@@ -47,7 +47,7 @@
 }
 
 .login-asesor h2 {
-  color: #00695c;
+  color: #000000;
   margin-bottom: 20px;
 }
 
@@ -64,7 +64,7 @@
 }
 
 .btn-login-asesor {
-  background: #00695c;
+  background: #a10000;
   color: white;
   border: none;
   padding: 12px;
@@ -73,7 +73,7 @@
 }
 
 .btn-login-asesor:hover {
-  background: #004c40;
+  background: #8b0000;
 }
 
 .forgot-asesor {
