@@ -74,7 +74,7 @@ export default function RegistrarCaso() {
 
             <label>
               Teléfono de contacto
-              <input type="text" placeholder="+56 9 0000 0000" />
+              <input type="text" placeholder="+56 9 1234 5678" />
             </label>
           </div>
 
