@@ -1,24 +1,60 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./Asesor.css";
+import { useState } from "react";
+import { loginUsuario } from "../../../services/authService";
 
 export default function Asesor() {
+
+  const navigate = useNavigate();
+  const [correo, setCorreo] = useState(""); // Estado para el correo
+  const [contrasena, setContrasena] = useState(""); // Estado para la contraseña
+  const [error, setError] = useState(null); // Estado para mensajes de error
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError(null); // Limpiar errores previos
+
+    try { 
+      const userData = await loginUsuario(correo, contrasena); // Llama a la API usando el servicio
+      
+      if (userData.rol === 'Asesor') {
+        navigate("/AsesorDashboard");   // ✅ Redirige al dashboard del asesor
+      } else {
+        setError("Acceso denegado: No eres un asesor.");
+      }
+
+     
+  
+    } catch (errorMessage) {
+      setError(errorMessage); // Obtiene el mensaje de error recibido del servicio
+      }
+};
+
   return (
     <div className="login-doc">
       <h2>Ingreso Asesor</h2>
 
-      <form>
+      <form onSubmit={handleSubmit}>
         <label>Usuario</label>
-        <input type="text" placeholder="Usuario" />
+        <input type="text"
+        placeholder="Correo"
+        value={correo}
+        onChange={(e) => setCorreo(e.target.value)} />
 
         <label>Contraseña</label>
-        <input type="password" placeholder="********" />
+        <input type="password"
+        placeholder="********" 
+        value={contrasena}
+        onChange={(e) => setContrasena(e.target.value)}/>
 
-        <button onClick={() => window.location.href="./AsesorDashboard"} type="button" className="btn-login-doc">Ingresar</button>
+        {error && <p className="error-message-est">{error}</p>} {/* Muestra el mensaje de error si existe */}
 
-        <a href="#" className="forgot-doc">¿Olvidaste tu contraseña?</a>
+        <button type="submit" className="btn-login-est">Ingresar</button>
+
+        <a href="#" className="forgot-est">¿Olvidaste tu contraseña?</a>
       </form>
 
-      <Link to="/" className="btn-back-doc">Volver</Link>
+      <Link to="/" className="btn-back-est">Volver</Link>
     </div>
   );
 }
