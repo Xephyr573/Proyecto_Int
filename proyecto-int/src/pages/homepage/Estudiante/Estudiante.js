@@ -8,7 +8,6 @@ export default function Estudiante() {
   const navigate = useNavigate();
   const [correo, setCorreo] = useState(""); // Estado para el correo
   const [contrasena, setContrasena] = useState(""); // Estado para la contraseña
-  // const [rut, setRut] = useState(""); // Estado para el RUT
   const [error, setError] = useState(null); // Estado para mensajes de error
 
   const handleSubmit = async (e) => {
