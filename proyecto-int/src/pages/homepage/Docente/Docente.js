@@ -8,7 +8,7 @@ export default function Docente() {
 
       <form>
         <label>Usuario</label>
-        <input type="text" placeholder="Usuario" />
+        <input type="text" placeholder="Correo" />
 
         <label>Contraseña</label>
         <input type="password" placeholder="********" />

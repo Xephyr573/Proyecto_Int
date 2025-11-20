@@ -7,8 +7,8 @@ export default function Director() {
       <h2>Ingreso Director</h2>
 
       <form>
-        <label>RUT</label>
-        <input type="text" placeholder="12.345.678-9" />
+        <label>Usuario</label>
+        <input type="text" placeholder="Correo" />
 
         <label>Contraseña</label>
         <input type="password" placeholder="********" />
