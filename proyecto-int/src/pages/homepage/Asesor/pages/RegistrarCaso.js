@@ -1,7 +1,121 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import "../AsesorDashboard.css";
 
+// Lista de carreras para el menú desplegable
+const CARRERAS_INACAP = [
+  // Administración y Servicios
+  "Administración de Empresas",
+  "Ingeniería en Administración de Empresas",
+  "Administración Gastronómica",
+  "Gastronomía",
+  "Técnico en Farmacia",
+  "Técnico en Odontología",
+  "Gestión Turística",
+  "Ingeniería en Gestión Turística",
+  // Energía y Sostenibilidad
+  "Ingeniería Agrícola",
+  "Técnico Agrícola",
+  "Construcción Civil",
+  "Técnico en Construcción",
+  "Técnico en Topografía y Geomática",
+  "Ingeniería Eléctrica",
+  "Técnico en Electricidad Industrial",
+  // Mantenimiento y Logística
+  "Ingeniería en Logística",
+  "Técnico en Logística",
+  "Ingeniería en Mecánica y Electromovilidad Automotriz",
+  "Mecánica Automotriz en Maquinaria Pesada",
+  "Técnico en Mantenimiento Industrial",
+  "Técnico en Mecánica y Electromovilidad Automotriz",
+  // Tecnología Aplicada
+  "Técnico en Automatización y Robótica",
+  "Animación Digital y Videojuegos",
+  "Diseño Digital Profesional",
+  "Diseño Digital y Web",
+  "Analista Programador",
+  "Ingeniería en Ciberseguridad",
+  "Ingeniería en Informática",
+  "Ingeniería en Telecomunicaciones y Servicios Digitales",
+  "Otro (especificar en observaciones)",
+];
+
+// Mini “base de datos” de ejemplo (solo demo front)
+const ESTUDIANTES_DEMO = [
+  {
+    rut: "21.079.691-6",
+    nombre: "Alexander Torres",
+    correo: "alexander.torres@inacapmail.cl",
+    telefono: "+56 9 1234 5678",
+    carrera: "Ingeniería en Informática",
+    residencia: "Labranza",
+  },
+  {
+    rut: "21.958.928-K",
+    nombre: "Benjamin Urra",
+    correo: "benjamin.urra05@inacapmail.cl",
+    telefono: "+56 9 1234 5678",
+    carrera: "Analista Programador",
+    residencia: "Temuco",
+  },
+];
+
 export default function RegistrarCaso() {
+  // estado para poder rellenar automático
+  const [carrera, setCarrera] = useState("");
+  const [rut, setRut] = useState("");
+  const [nombre, setNombre] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [telefono, setTelefono] = useState("");
+  const [residencia, setResidencia] = useState("");
+  const [mensajeBusqueda, setMensajeBusqueda] = useState(null);
+  const [tipoMensajeBusqueda, setTipoMensajeBusqueda] = useState("ok"); // "ok" | "error"
+
+  // normaliza texto: minúsculas, sin tildes, sin espacios de más
+  const limpiarTexto = (texto) =>
+    texto
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .trim();
+
+  // busca por rut, correo o nombre en la base demo
+  const buscarEstudianteDemo = () => {
+    const vrut = limpiarTexto(rut);
+    const vcorreo = limpiarTexto(correo);
+    const vnombre = limpiarTexto(nombre);
+
+    const encontrado = ESTUDIANTES_DEMO.find((est) => {
+      const rutEst = limpiarTexto(est.rut);
+      const correoEst = limpiarTexto(est.correo);
+      const nombreEst = limpiarTexto(est.nombre);
+
+      if (vrut && rutEst === vrut) return true;
+      if (vcorreo && correoEst === vcorreo) return true;
+      if (vnombre && nombreEst.includes(vnombre)) return true;
+      return false;
+    });
+
+    if (encontrado) {
+      setRut(encontrado.rut);
+      setNombre(encontrado.nombre);
+      setCorreo(encontrado.correo);
+      setTelefono(encontrado.telefono);
+      setCarrera(encontrado.carrera);
+      setResidencia(encontrado.residencia || "");
+
+      setTipoMensajeBusqueda("ok");
+      setMensajeBusqueda(
+        `Datos cargados desde la base demo para: ${encontrado.nombre}.`
+      );
+    } else {
+      setTipoMensajeBusqueda("error");
+      setMensajeBusqueda(
+        "No se encontraron datos con la información ingresada (demo)."
+      );
+    }
+  };
+
   return (
     <div className="asesor-form-page">
       <h2>Registrar caso</h2>
@@ -38,17 +152,40 @@ export default function RegistrarCaso() {
 
             <label>
               Semestre
-              <input type="text" value="2/2025" readOnly className="input-readonly" />
+              <input
+                type="text"
+                value="2/2025"
+                readOnly
+                className="input-readonly"
+              />
             </label>
 
+            {/* AQUÍ cambiamos Sede/Campus por ciudad de residencia */}
             <label>
-              Sede / Campus
-              <input type="text" placeholder="Ej: Temuco" />
+              Ciudad / comuna de residencia
+              <input
+                type="text"
+                placeholder="Ej: Temuco"
+                value={residencia}
+                onChange={(e) => setResidencia(e.target.value)}
+              />
             </label>
 
             <label>
               Carrera / Programa
-              <input type="text" placeholder="Analista Programador" />
+              <select
+                value={carrera}
+                onChange={(e) => setCarrera(e.target.value)}
+              >
+                <option value="" disabled>
+                  Seleccione una carrera
+                </option>
+                {CARRERAS_INACAP.map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
             </label>
           </div>
         </fieldset>
@@ -59,29 +196,72 @@ export default function RegistrarCaso() {
           <div className="asesor-grid-2">
             <label>
               RUT estudiante
-              <input type="text" placeholder="12.345.678-9" />
+              <input
+                type="text"
+                placeholder="12.345.678-9"
+                value={rut}
+                onChange={(e) => setRut(e.target.value)}
+              />
             </label>
 
             <label>
               Nombre completo
-              <input type="text" placeholder="Nombre y apellidos" />
+              <input
+                type="text"
+                placeholder="Nombre y apellidos"
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
+              />
             </label>
 
             <label>
               Correo institucional
-              <input type="email" placeholder="estudiante@inacapmail.cl" />
+              <input
+                type="email"
+                placeholder="estudiante@inacapmail.cl"
+                value={correo}
+                onChange={(e) => setCorreo(e.target.value)}
+              />
             </label>
 
             <label>
               Teléfono de contacto
-              <input type="text" placeholder="+56 9 1234 5678" />
+              <input
+                type="text"
+                placeholder="+56 9 0000 0000"
+                value={telefono}
+                onChange={(e) => setTelefono(e.target.value)}
+              />
             </label>
           </div>
 
+          <button
+            type="button"
+            className="btn-asesor-secondary"
+            onClick={buscarEstudianteDemo}
+          >
+            Buscar estudiante en base (demo)
+          </button>
+
+          {mensajeBusqueda && (
+            <p
+              className={
+                tipoMensajeBusqueda === "ok"
+                  ? "mensaje-busqueda-ok"
+                  : "mensaje-busqueda-error"
+              }
+            >
+              {mensajeBusqueda}
+            </p>
+          )}
+
           <p className="asesor-ayuda">
-            En una implementación real, estos datos podrían cargarse
-            automáticamente desde la base de estudiantes de INACAP y sólo
-            seleccionarse el estudiante a inscribir en el programa de ajustes.
+            En la versión real, al ingresar el <strong>RUT</strong>, el{" "}
+            <strong>nombre</strong> o el <strong>correo institucional</strong>,
+            el sistema consultará automáticamente la base de estudiantes de
+            INACAP y completará estos campos, incluyendo la{" "}
+            <strong>ciudad / comuna donde vive</strong>. Aquí se muestra una
+            simulación con datos de prueba desde el frontend.
           </p>
         </fieldset>
 
@@ -124,7 +304,6 @@ export default function RegistrarCaso() {
             </select>
           </label>
 
-          {/* Resumen del caso como lista (lo que te pidieron) */}
           <label>
             Resumen del caso (selección)
             <select defaultValue="">
@@ -134,11 +313,11 @@ export default function RegistrarCaso() {
               <option value="lectura">
                 Dificultades en comprensión lectora y textos extensos
               </option>
-              <option value="atencion">
-                Dificultades de atención / concentración en clases
-              </option>
               <option value="tiempo-evaluaciones">
                 Requiere mayor tiempo para evaluaciones y trabajos
+              </option>
+              <option value="atencion">
+                Dificultades de atención / concentración en clases
               </option>
               <option value="presentaciones">
                 Alta ansiedad en presentaciones orales o exposiciones
@@ -168,6 +347,3 @@ export default function RegistrarCaso() {
     </div>
   );
 }
-
-
-

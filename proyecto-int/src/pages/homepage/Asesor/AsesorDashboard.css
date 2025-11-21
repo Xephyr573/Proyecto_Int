@@ -635,3 +635,122 @@
   border-color: #ef6c00;
   color: #ef6c00;
 }
+/* Botón secundario para búsquedas */
+.btn-asesor-secondary {
+  margin-top: 8px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: 1px solid #00695c;
+  background: #ffffff;
+  color: #00695c;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.btn-asesor-secondary:hover {
+  background: #e0f2f1;
+}
+
+.mensaje-busqueda-ok {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #2e7d32;
+}
+
+.mensaje-busqueda-error {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #b71c1c;
+}
+
+.definir-bloque-categoria {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  background: #ffffff;
+}
+
+.bloque-categoria-disabled {
+  opacity: 0.55;
+}
+
+.definir-bloque-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.definir-bloque-titulo {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.select-categoria-ajuste-label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.select-categoria-ajuste {
+  margin-top: 4px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #c4c4c4;
+  font-size: 0.9rem;
+}
+
+/* Tarjeta con detalle del ajuste seleccionado */
+
+.card-ajuste-resumen {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px dashed #cfd8dc;
+  background: #f9fafb;
+  font-size: 0.85rem;
+}
+
+.card-ajuste-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.card-ajuste-text {
+  margin: 2px 0;
+  font-size: 0.82rem;
+  color: #444;
+}
+
+.resumen-ajustes-cuadros {
+  margin-top: 16px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  padding: 14px 16px;
+  background: #fafafa;
+}
+
+.resumen-ajustes-grid {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+/* Grid bonito para resumen del caso */
+.resumen-caso-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(260px, 1.4fr);
+  gap: 10px 16px;
+  align-items: flex-start;
+}
+
+.resumen-caso-grid select,
+.resumen-caso-grid textarea {
+  width: 100%;
+}
