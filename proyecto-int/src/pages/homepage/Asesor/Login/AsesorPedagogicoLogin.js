@@ -1,3 +1,4 @@
+// src/pages/homepage/Asesor/Login/AsesorPedagogicoLogin.js
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../Asesor.css";
@@ -26,11 +27,10 @@ export default function AsesorPedagogicoLogin() {
     setErrores(nuevosErrores);
     if (hayError) return;
 
-    // Guardar rol de Coordinadora técnica pedagógica
     window.localStorage.setItem("rolAsesor", "COORDINADORA_PEDAGOGICA");
 
-    // Ir al dashboard del asesor
-    navigate("/AsesorDashboard");
+    // 👇 DEBE COINCIDIR CON App.js
+    navigate("/asesor/definir-ajustes");
   };
 
   return (
@@ -76,9 +76,13 @@ export default function AsesorPedagogicoLogin() {
           Ingresar
         </button>
 
-        <a href="#" className="forgot-asesor">
+        <button
+          type="button"
+          className="forgot-asesor"
+          onClick={() => alert("Recuperación de contraseña (demo).")}
+        >
           ¿Olvidaste tu contraseña?
-        </a>
+        </button>
       </form>
 
       <Link to="/Asesor" className="btn-back-asesor">

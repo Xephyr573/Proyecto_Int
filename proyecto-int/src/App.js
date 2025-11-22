@@ -16,10 +16,13 @@ import AsesorDirectoraLogin from "./pages/homepage/Asesor/Login/AsesorDirectoraL
 import AsesorCoordinadoraLogin from "./pages/homepage/Asesor/Login/AsesorPedagogicoLogin";
 import AsesorInclusionLogin from "./pages/homepage/Asesor/Login/AsesorInclusionLogin";
 
+// Flujo Asesor (carpeta flujo)
+import SeguimientoCaso from "./pages/homepage/Asesor/pages/flujo/SeguimientoCaso";
+import EvaluacionFinal from "./pages/homepage/Asesor/pages/flujo/EvaluacionFinal";
+
 // Dashboards
 import EstudianteDashboard from "./pages/homepage/Estudiante/EstudianteDashboard";
 import DocenteDashboard from "./pages/homepage/Docente/DocenteDashboard";
-import AsesorDashboard from "./pages/homepage/Asesor/AsesorDashboard";
 
 // Subrutas Estudiante
 import PerfilEstudiante from "./pages/homepage/Estudiante/pages/PerfilEstudiante";
@@ -75,7 +78,6 @@ function App() {
         {/* ------ Dashboards ------ */}
         <Route path="/EstudianteDashboard" element={<EstudianteDashboard />} />
         <Route path="/DocenteDashboard" element={<DocenteDashboard />} />
-        <Route path="/AsesorDashboard" element={<AsesorDashboard />} />
 
         {/* ------ Subrutas Estudiante ------ */}
         <Route path="/estudiante/perfil" element={<PerfilEstudiante />} />
@@ -94,6 +96,12 @@ function App() {
         <Route path="/asesor/registrar-caso" element={<RegistrarCaso />} />
         <Route path="/asesor/definir-ajustes" element={<DefinirAjustes />} />
         <Route path="/asesor/validar-ajustes" element={<ValidarAjustes />} />
+
+        {/* ------ Flujo Asesor ------ */}
+       <Route path="/asesor/seguimiento" element={<SeguimientoCaso />} />
+       <Route path="/asesor/evaluacion-final" element={<EvaluacionFinal />} />
+
+
       </Routes>
     </BrowserRouter>
   );

@@ -1,3 +1,4 @@
+// src/pages/homepage/Asesor/Login/AsesorInclusionLogin.js
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../Asesor.css";
@@ -26,11 +27,11 @@ export default function AsesorInclusionLogin() {
     setErrores(nuevosErrores);
     if (hayError) return;
 
-    // Guardar rol de Encargada de inclusión
+    // (opcional) guardar rol para la demo
     window.localStorage.setItem("rolAsesor", "ENCARGADA_INCLUSION");
 
-    // Ir al dashboard del asesor
-    navigate("/AsesorDashboard");
+    // 👇 ESTA RUTA DEBE COINCIDIR CON App.js
+    navigate("/asesor/registrar-caso");
   };
 
   return (
@@ -76,9 +77,13 @@ export default function AsesorInclusionLogin() {
           Ingresar
         </button>
 
-        <a href="#" className="forgot-asesor">
+        <button
+          type="button"
+          className="forgot-asesor"
+          onClick={() => alert("Recuperación de contraseña (demo).")}
+        >
           ¿Olvidaste tu contraseña?
-        </a>
+        </button>
       </form>
 
       <Link to="/Asesor" className="btn-back-asesor">

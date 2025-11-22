@@ -1,0 +1,105 @@
+.seguimiento-page {
+  background: #ffffff;
+  padding: 30px;
+  margin: 40px auto;
+  max-width: 1100px;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+
+.seguimiento-page h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #004d40;
+}
+
+.seguimiento-texto {
+  font-size: 0.95rem;
+  color: #444;
+  margin-bottom: 18px;
+}
+
+/* Barra de pasos (mismo estilo que las otras pantallas) */
+.flujo-etapas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  font-size: 0.8rem;
+}
+
+.flujo-etapas .etapa {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid #c4c4c4;
+  background: #f7f7f7;
+  color: #333;
+  cursor: pointer;
+}
+
+.flujo-etapas .etapa.done {
+  border-color: #2e7d32;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.flujo-etapas .etapa.active {
+  border-color: #00695c;
+  background: #e0f2f1;
+  color: #00695c;
+}
+
+/* Tabla de seguimiento */
+.seguimiento-tabla-wrapper {
+  margin-top: 6px;
+}
+
+.seguimiento-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.seguimiento-tabla th,
+.seguimiento-tabla td {
+  border: 1px solid #e0e0e0;
+  padding: 6px 8px;
+  vertical-align: top;
+}
+
+.seguimiento-tabla th {
+  background: #f5f5f5;
+  text-align: left;
+}
+
+.col-ajuste {
+  width: 90px;
+  white-space: nowrap;
+}
+
+.col-descripcion {
+  width: 200px;
+}
+
+.seguimiento-tabla textarea {
+  width: 100%;
+  resize: vertical;
+  font-size: 0.82rem;
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #c4c4c4;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .seguimiento-page {
+    margin: 20px 10px;
+    padding: 20px;
+  }
+
+  .seguimiento-tabla {
+    font-size: 0.8rem;
+  }
+}

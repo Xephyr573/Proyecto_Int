@@ -1,0 +1,311 @@
+/* === CONTENEDOR GENERAL === */
+.asesor-form-page {
+  background: #ffffff;
+  padding: 30px;
+  width: 900px;
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  margin: 40px auto;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.asesor-form-page h2 {
+  margin-top: 0;
+  margin-bottom: 6px;
+  color: #004d40;
+}
+
+.asesor-form-text {
+  font-size: 0.95rem;
+  color: #444;
+  margin: 0 0 16px 0;
+}
+
+/* === FLUJO SEMESTRAL === */
+.flujo-etapas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  font-size: 0.8rem;
+}
+
+.flujo-etapas .etapa {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #cccccc;
+  background: #f7f7f7;
+  color: #555;
+}
+
+.flujo-etapas .etapa.done {
+  border-color: #2e7d32;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.flujo-etapas .etapa.active {
+  border-color: #00695c;
+  background: #e0f2f1;
+  color: #00695c;
+}
+
+/* === CABECERA CASO + RESUMEN === */
+.validar-header {
+  display: grid;
+  grid-template-columns: minmax(260px, 1.6fr) minmax(220px, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+
+.validar-info-case {
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  padding: 12px 14px;
+  background: #fafafa;
+}
+
+.validar-info-case h3 {
+  margin: 4px 0 4px 0;
+  font-size: 1.05rem;
+}
+
+.validar-info-case p {
+  margin: 2px 0;
+  font-size: 0.9rem;
+}
+
+.validar-badge {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  background: #e8f5e9;
+  color: #2e7d32;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
+
+.validar-text-small {
+  margin-top: 6px;
+  font-size: 0.8rem;
+  color: #666;
+}
+
+.validar-resumen-ajustes {
+  border-radius: 10px;
+  border: 1px solid #e0e0e0;
+  padding: 10px 12px;
+  background: #ffffff;
+}
+
+.validar-resumen-ajustes h4 {
+  margin: 0 0 8px 0;
+  font-size: 0.95rem;
+}
+
+.validar-stats-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.validar-stat {
+  flex: 1;
+  border-radius: 8px;
+  padding: 6px 8px;
+  text-align: center;
+}
+
+.validar-stat span {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.validar-stat small {
+  font-size: 0.75rem;
+}
+
+.validar-stat.aprobar {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.validar-stat.revisar {
+  background: #fff8e1;
+  color: #ef6c00;
+}
+
+.validar-stat.rechazar {
+  background: #ffebee;
+  color: #b71c1c;
+}
+
+/* === PANEL Y TABLA DE AJUSTES === */
+.ajustes-panel {
+  margin-top: 8px;
+}
+
+.ajustes-panel h3 {
+  margin: 0 0 6px 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.ajustes-panel-text {
+  margin: 0 0 10px 0;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+.tabla-ajustes {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.85rem;
+}
+
+.tabla-ajustes th,
+.tabla-ajustes td {
+  border: 1px solid #e0e0e0;
+  padding: 6px 8px;
+  vertical-align: top;
+}
+
+.tabla-ajustes th {
+  background: #f5f5f5;
+  text-align: left;
+}
+
+/* === TAGS DE CATEGORÍA === */
+.tag-categoria {
+  display: inline-block;
+  min-width: 22px;
+  text-align: center;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tag-A {
+  background: #e3f2fd;
+  color: #0d47a1;
+}
+
+.tag-B {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.tag-C {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.tag-D {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+/* === BOTONES "PILL" DE DECISIÓN === */
+.radio-decision {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 0.8rem;
+  align-items: flex-start;
+}
+
+.pill-decision {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid #d0d0d0;
+  background: #fafafa;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    transform 0.08s ease;
+}
+
+.pill-decision input {
+  display: none;
+}
+
+.pill-decision span {
+  font-size: 0.78rem;
+}
+
+.pill-decision.active {
+  transform: translateY(-1px);
+}
+
+.pill-aprobar.active {
+  background: #e8f5e9;
+  border-color: #2e7d32;
+  color: #1b5e20;
+}
+
+.pill-rechazar.active {
+  background: #ffebee;
+  border-color: #c62828;
+  color: #b71c1c;
+}
+
+.pill-revisar.active {
+  background: #fff8e1;
+  border-color: #ef6c00;
+  color: #ef6c00;
+}
+
+/* === BOTONES FINALES === */
+.asesor-form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-asesor-primary {
+  background: #00695c;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-asesor-primary:hover {
+  background: #004c40;
+}
+
+.btn-asesor-volver {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: 1px solid #666;
+  background: #f5f5f5;
+  color: #333;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.btn-asesor-volver:hover {
+  background: #e0e0e0;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .asesor-form-page {
+    margin: 20px 10px;
+    padding: 20px;
+  }
+
+  .validar-header {
+    grid-template-columns: 1fr;
+  }
+}

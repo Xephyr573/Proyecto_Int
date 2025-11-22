@@ -1,0 +1,267 @@
+/* === CONTENEDOR GENERAL === */
+.asesor-form-page {
+  background: #ffffff;
+  padding: 30px;
+  width: 900px;
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
+  margin: 40px auto;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.asesor-form-page h2 {
+  margin-top: 0;
+  margin-bottom: 6px;
+  color: #004d40;
+}
+
+.asesor-form-text {
+  font-size: 0.95rem;
+  color: #444;
+  margin: 0 0 16px 0;
+}
+
+/* === FLUJO SEMESTRAL === */
+.flujo-etapas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+  font-size: 0.8rem;
+}
+
+.flujo-etapas .etapa {
+  padding: 6px 10px;
+  border-radius: 999px;
+  border: 1px solid #cccccc;
+  background: #f7f7f7;
+  color: #555;
+}
+
+.flujo-etapas .etapa.done {
+  border-color: #2e7d32;
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.flujo-etapas .etapa.active {
+  border-color: #00695c;
+  background: #e0f2f1;
+  color: #00695c;
+}
+
+/* === FORMULARIO BASE === */
+.asesor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.asesor-fieldset {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 12px 14px 14px 14px;
+  margin: 0;
+}
+
+.asesor-fieldset legend {
+  padding: 0 6px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.asesor-form label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.asesor-form select,
+.asesor-form textarea {
+  margin-top: 4px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #c4c4c4;
+  font-size: 0.9rem;
+}
+
+.asesor-form textarea {
+  resize: vertical;
+}
+
+/* === TEXTO DE AYUDA === */
+.ajustes-panel-text {
+  margin: 0 0 10px 0;
+  font-size: 0.85rem;
+  color: #555;
+}
+
+/* === BLOQUES DE CATEGORÍA A/B/C/D === */
+.definir-bloque-categoria {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  background: #ffffff;
+}
+
+.bloque-categoria-disabled {
+  opacity: 0.55;
+}
+
+.definir-bloque-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.definir-bloque-titulo {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.select-categoria-ajuste-label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.select-categoria-ajuste {
+  margin-top: 4px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #c4c4c4;
+  font-size: 0.9rem;
+}
+
+/* === TAGS DE CATEGORÍA A/B/C/D === */
+.tag-categoria {
+  display: inline-block;
+  min-width: 22px;
+  text-align: center;
+  padding: 2px 6px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.tag-A {
+  background: #e3f2fd;
+  color: #0d47a1;
+}
+
+.tag-B {
+  background: #e8f5e9;
+  color: #1b5e20;
+}
+
+.tag-C {
+  background: #fff3e0;
+  color: #ef6c00;
+}
+
+.tag-D {
+  background: #f3e5f5;
+  color: #6a1b9a;
+}
+
+/* === TARJETAS DEL RESUMEN (A, B, C, D) === */
+.resumen-ajustes-cuadros {
+  margin-top: 16px;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  padding: 14px 16px;
+  background: #fafafa;
+}
+
+.resumen-ajustes-grid {
+  margin-top: 8px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 8px;
+}
+
+.card-ajuste-resumen {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px dashed #cfd8dc;
+  background: #f9fafb;
+  font-size: 0.85rem;
+}
+
+.card-ajuste-header {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.card-ajuste-text {
+  margin: 2px 0;
+  font-size: 0.82rem;
+  color: #444;
+}
+
+/* === GRID RESUMEN CASO (si lo estás usando) === */
+.resumen-caso-grid {
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(260px, 1.4fr);
+  gap: 10px 16px;
+  align-items: flex-start;
+}
+
+.resumen-caso-grid select,
+.resumen-caso-grid textarea {
+  width: 100%;
+}
+
+/* === BOTONES === */
+.asesor-form-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.btn-asesor-primary {
+  background: #00695c;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.btn-asesor-primary:hover {
+  background: #004c40;
+}
+
+.btn-asesor-volver {
+  display: inline-block;
+  padding: 10px 18px;
+  border-radius: 6px;
+  border: 1px solid #666;
+  background: #f5f5f5;
+  color: #333;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.btn-asesor-volver:hover {
+  background: #e0e0e0;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 768px) {
+  .asesor-form-page {
+    margin: 20px 10px;
+    padding: 20px;
+  }
+}

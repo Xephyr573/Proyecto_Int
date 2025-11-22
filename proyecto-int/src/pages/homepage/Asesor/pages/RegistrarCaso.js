@@ -1,6 +1,7 @@
+// src/pages/homepage/Asesor/pages/RegistrarCaso.js
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import "../AsesorDashboard.css";
+import { Link, useNavigate } from "react-router-dom";
+import "./RegistrarCaso.css";
 
 // Lista de carreras para el menú desplegable
 const CARRERAS_INACAP = [
@@ -40,8 +41,8 @@ const CARRERAS_INACAP = [
   "Otro (especificar en observaciones)",
 ];
 
-// Mini “base de datos” de ejemplo (solo demo front)
-const ESTUDIANTES_DEMO = [
+// “Base” de estudiantes de ejemplo (solo para demo del botón Buscar)
+const BASE_FAKE_ESTUDIANTES = [
   {
     rut: "21.079.691-6",
     nombre: "Alexander Torres",
@@ -61,58 +62,44 @@ const ESTUDIANTES_DEMO = [
 ];
 
 export default function RegistrarCaso() {
-  // estado para poder rellenar automático
-  const [carrera, setCarrera] = useState("");
+  const navigate = useNavigate();
+
+  // estado de los datos del estudiante
   const [rut, setRut] = useState("");
-  const [nombre, setNombre] = useState("");
+  const [nombreCompleto, setNombreCompleto] = useState("");
   const [correo, setCorreo] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [residencia, setResidencia] = useState("");
-  const [mensajeBusqueda, setMensajeBusqueda] = useState(null);
-  const [tipoMensajeBusqueda, setTipoMensajeBusqueda] = useState("ok"); // "ok" | "error"
+  const [ciudadResidencia, setCiudadResidencia] = useState("");
 
-  // normaliza texto: minúsculas, sin tildes, sin espacios de más
-  const limpiarTexto = (texto) =>
-    texto
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .trim();
+  const [mensajeBusqueda, setMensajeBusqueda] = useState(null); // { tipo: "ok" | "error", texto: "" }
 
-  // busca por rut, correo o nombre en la base demo
-  const buscarEstudianteDemo = () => {
-    const vrut = limpiarTexto(rut);
-    const vcorreo = limpiarTexto(correo);
-    const vnombre = limpiarTexto(nombre);
+  const [carrera, setCarrera] = useState("");
 
-    const encontrado = ESTUDIANTES_DEMO.find((est) => {
-      const rutEst = limpiarTexto(est.rut);
-      const correoEst = limpiarTexto(est.correo);
-      const nombreEst = limpiarTexto(est.nombre);
-
-      if (vrut && rutEst === vrut) return true;
-      if (vcorreo && correoEst === vcorreo) return true;
-      if (vnombre && nombreEst.includes(vnombre)) return true;
-      return false;
-    });
+  const buscarDesdeBase = () => {
+    const encontrado = BASE_FAKE_ESTUDIANTES.find(
+      (e) =>
+        e.rut === rut ||
+        e.nombreCompleto.toLowerCase() === nombreCompleto.toLowerCase() ||
+        e.correo.toLowerCase() === correo.toLowerCase()
+    );
 
     if (encontrado) {
       setRut(encontrado.rut);
-      setNombre(encontrado.nombre);
+      setNombreCompleto(encontrado.nombreCompleto);
       setCorreo(encontrado.correo);
       setTelefono(encontrado.telefono);
-      setCarrera(encontrado.carrera);
-      setResidencia(encontrado.residencia || "");
-
-      setTipoMensajeBusqueda("ok");
-      setMensajeBusqueda(
-        `Datos cargados desde la base demo para: ${encontrado.nombre}.`
-      );
+      setCiudadResidencia(encontrado.ciudad);
+      setMensajeBusqueda({
+        tipo: "ok",
+        texto:
+          "Datos cargados automáticamente desde la base de estudiantes (demo).",
+      });
     } else {
-      setTipoMensajeBusqueda("error");
-      setMensajeBusqueda(
-        "No se encontraron datos con la información ingresada (demo)."
-      );
+      setMensajeBusqueda({
+        tipo: "error",
+        texto:
+          "No se encontraron coincidencias en la base de estudiantes (demo).",
+      });
     }
   };
 
@@ -127,12 +114,36 @@ export default function RegistrarCaso() {
         semestral.
       </p>
 
-      {/* Paso del flujo semestral */}
+      {/* 🔹 Flujo del caso SOLO para el asesor (ahora como navegación) */}
       <div className="flujo-etapas">
-        <div className="etapa active">1. Entrevista / Registro de caso</div>
-        <div className="etapa">2. Definición de ajustes</div>
-        <div className="etapa">3. Seguimiento</div>
-        <div className="etapa">4. Evaluación final</div>
+        <button
+          type="button"
+          className="etapa active"
+          onClick={() => navigate("/asesor/registrar-caso")}
+        >
+          1. Entrevista / Registro de caso
+        </button>
+        <button
+          type="button"
+          className="etapa"
+          onClick={() => navigate("/asesor/definir-ajustes")}
+        >
+          2. Definición de ajustes
+        </button>
+        <button
+          type="button"
+          className="etapa"
+          onClick={() => navigate("/asesor/seguimiento")}
+        >
+          3. Validación / Seguimiento
+        </button>
+        <button
+          type="button"
+          className="etapa"
+          onClick={() => navigate("/asesor/evaluacion-final")}
+        >
+          4. Evaluación final
+        </button>
       </div>
 
       <form className="asesor-form">
@@ -160,14 +171,13 @@ export default function RegistrarCaso() {
               />
             </label>
 
-            {/* AQUÍ cambiamos Sede/Campus por ciudad de residencia */}
             <label>
-              Ciudad / comuna de residencia
+              Ciudad / Lugar de residencia
               <input
                 type="text"
                 placeholder="Ej: Temuco"
-                value={residencia}
-                onChange={(e) => setResidencia(e.target.value)}
+                value={ciudadResidencia}
+                onChange={(e) => setCiudadResidencia(e.target.value)}
               />
             </label>
 
@@ -209,8 +219,8 @@ export default function RegistrarCaso() {
               <input
                 type="text"
                 placeholder="Nombre y apellidos"
-                value={nombre}
-                onChange={(e) => setNombre(e.target.value)}
+                value={nombreCompleto}
+                onChange={(e) => setNombreCompleto(e.target.value)}
               />
             </label>
 
@@ -238,30 +248,27 @@ export default function RegistrarCaso() {
           <button
             type="button"
             className="btn-asesor-secondary"
-            onClick={buscarEstudianteDemo}
+            onClick={buscarDesdeBase}
           >
-            Buscar estudiante en base (demo)
+            Buscar datos en base de estudiantes (demo)
           </button>
 
           {mensajeBusqueda && (
             <p
               className={
-                tipoMensajeBusqueda === "ok"
+                mensajeBusqueda.tipo === "ok"
                   ? "mensaje-busqueda-ok"
                   : "mensaje-busqueda-error"
               }
             >
-              {mensajeBusqueda}
+              {mensajeBusqueda.texto}
             </p>
           )}
 
           <p className="asesor-ayuda">
-            En la versión real, al ingresar el <strong>RUT</strong>, el{" "}
-            <strong>nombre</strong> o el <strong>correo institucional</strong>,
-            el sistema consultará automáticamente la base de estudiantes de
-            INACAP y completará estos campos, incluyendo la{" "}
-            <strong>ciudad / comuna donde vive</strong>. Aquí se muestra una
-            simulación con datos de prueba desde el frontend.
+            En una implementación real, estos datos se cargarían
+            automáticamente desde la base de estudiantes de INACAP y solo se
+            seleccionaría el estudiante a inscribir en el programa de ajustes.
           </p>
         </fieldset>
 
@@ -305,27 +312,6 @@ export default function RegistrarCaso() {
           </label>
 
           <label>
-            Resumen del caso (selección)
-            <select defaultValue="">
-              <option value="" disabled>
-                Seleccione un resumen
-              </option>
-              <option value="lectura">
-                Dificultades en comprensión lectora y textos extensos
-              </option>
-              <option value="tiempo-evaluaciones">
-                Requiere mayor tiempo para evaluaciones y trabajos
-              </option>
-              <option value="atencion">
-                Dificultades de atención / concentración en clases
-              </option>
-              <option value="presentaciones">
-                Alta ansiedad en presentaciones orales o exposiciones
-              </option>
-            </select>
-          </label>
-
-          <label>
             Detalle del caso
             <textarea
               rows={4}
@@ -339,8 +325,8 @@ export default function RegistrarCaso() {
             Guardar registro (demo)
           </button>
 
-          <Link to="/AsesorDashboard" className="btn-asesor-volver">
-            Volver al panel
+          <Link to="/Asesor" className="btn-asesor-volver">
+            Volver al inicio Asesor
           </Link>
         </div>
       </form>

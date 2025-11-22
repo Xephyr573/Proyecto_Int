@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import "../AsesorDashboard.css";
+import "./ValidarAjustes.css";
 
 export default function ValidarAjustes() {
   const ajustesIniciales = [
@@ -121,14 +121,6 @@ export default function ValidarAjustes() {
             Total de ajustes en el caso: <strong>{total}</strong>.
           </p>
         </div>
-      </div>
-
-      {/* Flujo semestral */}
-      <div className="flujo-etapas">
-        <div className="etapa done">1. Entrevista / Registro de caso</div>
-        <div className="etapa done">2. Definición de ajustes</div>
-        <div className="etapa active">3. Validación / Seguimiento</div>
-        <div className="etapa">4. Evaluación final</div>
       </div>
 
       <form className="asesor-form">
@@ -263,8 +255,8 @@ export default function ValidarAjustes() {
             Guardar validación (demo)
           </button>
 
-          <Link to="/AsesorDashboard" className="btn-asesor-volver">
-            Volver al panel
+          <Link to="/AsesorDirectoraLogin" className="btn-asesor-volver">
+            Volver atras
           </Link>
         </div>
       </form>
