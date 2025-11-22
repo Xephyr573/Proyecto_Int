@@ -9,6 +9,8 @@ ahora = datetime.datetime.now
 # ==============================================================================
 
 class Usuario(models.Model):
+    # id_usuario (PK)
+    id_usuario = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=100)
     correo = models.EmailField(unique=True, max_length=100)
     contrasena = models.CharField(max_length=128)
@@ -19,11 +21,12 @@ class Usuario(models.Model):
     
 class Estudiante(models.Model):
     id_usuario = models.OneToOneField(
-        Usuario, 
+        Usuario,
         on_delete=models.CASCADE, 
         primary_key=True)
     rut = models.CharField(max_length=12, unique=True)
     carrera = models.CharField(max_length=100)
+    cede = models.CharField(max_length=100)
     estado_caso = models.CharField(max_length=50)
     fecha_matricula = models.DateField(default=ahora)
 
@@ -99,16 +102,27 @@ class Asignatura(models.Model):
 # ==============================================================================
 
 class Caso(models.Model):
-    # id_diagnostico (PK)
-    id_diagnostico = models.AutoField(primary_key=True)
+    # id_caso (PK)
+    id_caso = models.AutoField(primary_key=True)
     id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE, related_name='casos_estudiante')
     id_usuario_asesor = models.ForeignKey(Asesor, on_delete=models.SET_NULL, null=True, related_name='casos_asesor')
-    id_asignatura = models.ForeignKey(Asignatura, on_delete=models.SET_NULL, null=True, related_name='casos_asignatura')
-    estado_caso = models.CharField(max_length=50)
-    evaluacion = models.TextField(blank=True)
+    estado_caso = models.CharField(max_length=50) # Ejemplo: Iniciado, En evaluacion, Finalizado
+    fecha_ingreso_caso = models.DateField(default=ahora)
+    semestre = models.CharField(max_length=8, blank=False)
 
     def __str__(self):
-        return f"Caso {self.id_diagnostico} de {self.id_usuario_estudiante.usuario.nombre}"
+        return f"Caso {self.id_caso} de {self.id_usuario_estudiante.usuario.nombre}"
+    
+class MotivoCaso(models.Model):
+    # id_motivo (PK)
+    id_motivo = models.AutoField(primary_key=True)
+    id_caso = models.ForeignKey(Caso, on_delete=models.CASCADE, related_name='motivos_caso')
+    motivo = models.CharField(max_length=200)
+    origen = models.CharField(max_length=100)
+    detalle = models.TextField()
+
+    def __str__(self):
+        return f"Motivo {self.id_motivo} del caso {self.id_caso.id_caso}"
     
 class Entrevista(models.Model):
     # id_entrevista (PK)
@@ -122,44 +136,31 @@ class Entrevista(models.Model):
     def __str__(self):
         return f"Entrevista {self.id_entrevista} el {self.fecha_entrevista.date()}"
     
-class Documento(models.Model):
-    # id_documento (PK)
-    id_documento = models.AutoField(primary_key=True)
-    id_caso = models.ForeignKey(Caso, on_delete=models.CASCADE, related_name='documentos')
-    tipo = models.CharField(max_length=100)
-    url_archivo = models.URLField() # Usamos URLField para guardar la ruta del archivo
-    fecha_subida = models.DateField(default=ahora)
+# class Documento(models.Model):
+#     # id_documento (PK)
+#     id_documento = models.AutoField(primary_key=True)
+#     id_caso = models.ForeignKey(Caso, on_delete=models.CASCADE, related_name='documentos')
+#     tipo = models.CharField(max_length=100)
+#     url_archivo = models.URLField() # Usamos URLField para guardar la ruta del archivo
+#     fecha_subida = models.DateField(default=ahora)
 
-    def __str__(self):
-        return f"Documento: {self.tipo} del caso {self.id_caso.id_diagnostico}"
+#     def __str__(self):
+#         return f"Documento: {self.tipo} del caso {self.id_caso.id_diagnostico}"
     
-class Inscripcion(models.Model):
-    # (PK Compuesta: id_asignatura, id_usuario_estudiante) -> Django necesita una PK simple.
-    # Usaremos AutoField y agregaremos una restricción unique_together en Meta.
-    id = models.AutoField(primary_key=True)
-    id_asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
-    id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
+# class Inscripcion(models.Model):
+#     # (PK Compuesta: id_asignatura, id_usuario_estudiante) -> Django necesita una PK simple.
+#     # Usaremos AutoField y agregaremos una restricción unique_together en Meta.
+#     id = models.AutoField(primary_key=True)
+#     id_asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
+#     id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
 
-    class Meta:
-        # Asegura que un estudiante solo se pueda inscribir una vez a una asignatura.
-        unique_together = ('id_asignatura', 'id_usuario_estudiante')
+#     class Meta:
+#         # Asegura que un estudiante solo se pueda inscribir una vez a una asignatura.
+#         unique_together = ('id_asignatura', 'id_usuario_estudiante')
 
-    def __str__(self):
-        return f"Inscripción: {self.id_usuario_estudiante.usuario.nombre} en {self.id_asignatura.nombre_asignatura}"
+#     def __str__(self):
+#         return f"Inscripción: {self.id_usuario_estudiante.usuario.nombre} en {self.id_asignatura.nombre_asignatura}"
     
-class Ajuste(models.Model):
-    # id_ajuste (PK)
-    id_ajuste = models.AutoField(primary_key=True)
-    id_caso = models.ForeignKey(Caso, on_delete=models.CASCADE, related_name='ajustes')
-    id_usuario_director = models.ForeignKey(Director, on_delete=models.SET_NULL, null=True, related_name='ajustes_aprobados')
-    tipo_ajuste = models.CharField(max_length=100)
-    descripcion = models.TextField()
-    estado = models.CharField(max_length=50)
-    fecha_aprobacion = models.DateField(blank=True, null=True)
-
-    def __str__(self):
-        return f"Ajuste {self.id_ajuste} - {self.tipo_ajuste}"
-
 class TipoAjuste(models.Model):
     # id_tipo_ajuste (PK)
     id_tipo_ajuste = models.AutoField(primary_key=True)
@@ -169,3 +170,18 @@ class TipoAjuste(models.Model):
     def __str__(self):
         return self.nombre_tipo
 
+class Ajuste(models.Model):
+    # id_ajuste (PK)
+    id_ajuste = models.AutoField(primary_key=True)
+    id_caso = models.ForeignKey(Caso, on_delete=models.CASCADE, related_name='ajustes')
+    id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE, related_name='ajustes_estudiante')
+    id_usuario_director = models.ForeignKey(Director, on_delete=models.CASCADE, related_name='ajustes_aprobados')
+    asignatura_asignada = models.ForeignKey(Asignatura, on_delete=models.CASCADE, blank=True, null=True)
+    titulo_ajuste = models.CharField(max_length=200) #Aqui va el nombre del ajuste, en caso de 'Otro' queda con ese mismo titulo
+    tipo_ajuste = models.ForeignKey(TipoAjuste, on_delete=models.CASCADE)
+    descripcion = models.TextField()
+    estado_ajuste = models.CharField(max_length=50) # Ejemplo: Pendiente, Aprobado, Rechazado
+    fecha_aprobacion = models.DateField(blank=True, null=True)
+
+    def __str__(self):
+        return f"Ajuste {self.id_ajuste} - {self.tipo_ajuste}"
