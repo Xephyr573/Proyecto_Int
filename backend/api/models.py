@@ -1,6 +1,7 @@
 from django.db import models
 import datetime
 ahora = datetime.datetime.now
+
 # Create your models here.
 # ==============================================================================
 # 1. MODELOS BASE (USUARIO y ROLES)
@@ -25,8 +26,8 @@ class Estudiante(models.Model):
         on_delete=models.CASCADE, 
         primary_key=True)
     rut = models.CharField(max_length=12, unique=True)
-    carrera = models.CharField(max_length=100)
-    cede = models.CharField(max_length=100)
+    carrera = models.CharField(max_length=100, blank=True)
+    cede = models.CharField(max_length=100, blank=True)
     estado_caso = models.CharField(max_length=50)
     fecha_matricula = models.DateField(default=ahora)
 
@@ -104,14 +105,14 @@ class Asignatura(models.Model):
 class Caso(models.Model):
     # id_caso (PK)
     id_caso = models.AutoField(primary_key=True)
-    id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE, related_name='casos_estudiante')
+    id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.SET_NULL, null=True, related_name='casos_estudiante')
     id_usuario_asesor = models.ForeignKey(Asesor, on_delete=models.SET_NULL, null=True, related_name='casos_asesor')
     estado_caso = models.CharField(max_length=50) # Ejemplo: Iniciado, En evaluacion, Finalizado
     fecha_ingreso_caso = models.DateField(default=ahora)
-    semestre = models.CharField(max_length=8, blank=False)
+    semestre = models.CharField(max_length=8, blank=True) # Ejemplo: 2024-1
 
     def __str__(self):
-        return f"Caso {self.id_caso} de {self.id_usuario_estudiante.usuario.nombre}"
+        return f"Caso {self.id_caso} de {self.id_usuario_estudiante.id_usuario.nombre}"
     
 class MotivoCaso(models.Model):
     # id_motivo (PK)
@@ -128,7 +129,7 @@ class Entrevista(models.Model):
     # id_entrevista (PK)
     id_entrevista = models.AutoField(primary_key=True)
     id_usuario_asesor = models.ForeignKey(Asesor, on_delete=models.SET_NULL, null=True, related_name='entrevistas_realizadas')
-    id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE, related_name='entrevistas_recibidas')
+    id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.SET_NULL, null=True, related_name='entrevistas_recibidas')
     fecha_entrevista = models.DateTimeField()
     observaciones = models.TextField(blank=True)
     estado = models.CharField(max_length=50)
@@ -174,10 +175,10 @@ class Ajuste(models.Model):
     # id_ajuste (PK)
     id_ajuste = models.AutoField(primary_key=True)
     id_caso = models.ForeignKey(Caso, on_delete=models.CASCADE, related_name='ajustes')
-    id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE, related_name='ajustes_estudiante')
-    id_usuario_director = models.ForeignKey(Director, on_delete=models.CASCADE, related_name='ajustes_aprobados')
+    id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.SET_NULL, null=True, related_name='ajustes_estudiante')
+    id_usuario_director = models.ForeignKey(Director, on_delete=models.SET_NULL, null=True, blank=True, related_name='ajustes_aprobados')
     asignatura_asignada = models.ForeignKey(Asignatura, on_delete=models.CASCADE, blank=True, null=True)
-    titulo_ajuste = models.CharField(max_length=200) #Aqui va el nombre del ajuste, en caso de 'Otro' queda con ese mismo titulo
+    titulo_ajuste = models.CharField(max_length=200, blank=True) #Aqui va el nombre del ajuste, en caso de 'Otro' queda con ese mismo titulo
     tipo_ajuste = models.ForeignKey(TipoAjuste, on_delete=models.CASCADE)
     descripcion = models.TextField()
     estado_ajuste = models.CharField(max_length=50) # Ejemplo: Pendiente, Aprobado, Rechazado
