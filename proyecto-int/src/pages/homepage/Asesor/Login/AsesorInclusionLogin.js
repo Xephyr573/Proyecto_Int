@@ -5,14 +5,14 @@ import "../Asesor.css";
 import { loginUsuario } from "../../../../services/authServices";  //Importa el servicio de login desde authServices.js
 
 export default function AsesorInclusionLogin() {
-  const [correo, setcorreo] = useState("");
-  const [contrasena, setcontrasena] = useState("");
-  const [errores, setErrores] = useState({ correo: "", contrasena: "" });
+  const [correo, setCorreo] = useState("");
+  const [contrasena, setContrasena] = useState("");
+  const [setErrores] = useState("");
 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-   e.preventDefault();
+    e.preventDefault();
     setErrores(null); // Limpia errores previos
 
     if (!correo.trim() || !contrasena.trim()) { //Se hace una sola comprobación
@@ -49,10 +49,10 @@ export default function AsesorInclusionLogin() {
           <label>Correo</label>
           <div className="input-wrapper-asesor">
             <input
-              type="text"
+              type="email"
               placeholder="usuario@inacap.cl"
               value={correo}
-              onChange={(e) => setcorreo(e.target.value)}
+              onChange={(e) => setCorreo(e.target.value)}
             />
           </div>
         </div>
@@ -61,10 +61,10 @@ export default function AsesorInclusionLogin() {
           <label>Contraseña</label>
           <div className="input-wrapper-asesor">
             <input
-              type="contrasena"
+              type="password"
               placeholder="********"
               value={contrasena}
-              onChange={(e) => setcontrasena(e.target.value)}
+              onChange={(e) => setContrasena(e.target.value)}
             />
           </div>
         </div>

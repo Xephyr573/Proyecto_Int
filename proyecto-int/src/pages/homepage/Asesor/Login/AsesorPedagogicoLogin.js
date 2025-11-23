@@ -7,10 +7,9 @@ import { loginUsuario } from "../../../../services/authServices";  //Importa el 
 export default function AsesorPedagogicoLogin() {
 
   // Estados para los campos del formulario y errores
-  //const [usuario, setUsuario] = useState(""); No se utiliza el usuario para ingresar
   const [correo, setCorreo] = useState(""); //Usamos correo para ingresar al dashboard
   const [contrasena, setcontrasena] = useState("");
-  const [errores, setErrores] = useState("");
+  const [setErrores] = useState("");
 
   const navigate = useNavigate();
 
@@ -65,7 +64,7 @@ export default function AsesorPedagogicoLogin() {
           <label>Contraseña</label>
           <div className="input-wrapper-asesor">
             <input
-              type="contrasena"
+              type="passsword"
               placeholder="********"
               value={contrasena}
               onChange={(e) => setcontrasena(e.target.value)}
