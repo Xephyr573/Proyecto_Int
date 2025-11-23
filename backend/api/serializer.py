@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Notificacion, Asignatura, Caso, Entrevista, Inscripcion, TipoAjuste, Documento
+from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Notificacion, Asignatura, Caso, Entrevista, TipoAjuste
 
 #Serializer para el modelo Usuario y subclases
 
@@ -52,10 +52,10 @@ class CasoSerializer(serializers.ModelSerializer):
         model = Caso
         fields = '__all__'
 
-class InscripcionSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Inscripcion
-        fields = '__all__'
+# class InscripcionSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Inscripcion
+#         fields = '__all__'
 
 class AjusteSerializer(serializers.ModelSerializer):
     class Meta:
@@ -67,7 +67,7 @@ class TipoAjusteSerializer(serializers.ModelSerializer):
         model = TipoAjuste
         fields = '__all__'
 
-class DocumentoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Documento
-        fields = '__all__'
+# class DocumentoSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Documento
+#         fields = '__all__'
