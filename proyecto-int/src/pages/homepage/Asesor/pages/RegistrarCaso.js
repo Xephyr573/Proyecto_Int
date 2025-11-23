@@ -283,7 +283,6 @@ export default function RegistrarCaso() {
               </option>
               <option value="estudiante">Estudiante</option>
               <option value="docente">Docente</option>
-              <option value="familia">Familia / Apoderado</option>
               <option value="otros">Otro estamento</option>
             </select>
           </label>
@@ -306,7 +305,6 @@ export default function RegistrarCaso() {
               <option value="discapacidad-temporal">
                 Condición temporal (accidente, cirugía, etc.)
               </option>
-              <option value="socioeconomico">Situación socioeconómica</option>
               <option value="otro">Otro motivo</option>
             </select>
           </label>

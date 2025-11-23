@@ -1,80 +1,213 @@
-.dash-wrapper {
+/* ===== LAYOUT GENERAL: sidebar + contenido ===== */
+.est-layout {
   min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  background: #f5f5f5;
-  font-family: "Segoe UI", sans-serif;
+  background: #f3f4ff;
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  color: #1f2933;
 }
 
-/* HEADER */
-.dash-header {
-  background: #b60000;
-  color: white;
+/* ===== SIDEBAR IZQUIERDA ===== */
+.est-sidebar {
+  width: 280px;
+  background: #262626;
+  color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  padding: 24px 24px 32px;
+  box-shadow: 4px 0 18px rgba(15, 23, 42, 0.35);
+}
+
+.est-sidebar-top {
+  margin-bottom: 32px;
+}
+
+.est-sidebar-logo {
+  height: 46px;
+}
+
+/* Tarjeta con nombre + correo */
+.est-sidebar-card {
+  background: #313539;
+  border-radius: 14px;
+  padding: 18px 18px 20px;
+  margin-bottom: 28px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+}
+
+.est-sidebar-label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+}
+
+.est-sidebar-name {
+  margin-top: 6px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #f9fafb;
+}
+
+.est-sidebar-email {
+  margin-top: 2px;
+  font-size: 0.84rem;
+  color: #fca5a5;
+}
+
+/* Menú lateral */
+.est-sidebar-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.est-sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 10px;
+  border-radius: 999px;
+  border: none;
+  background: transparent;
+  color: #e5e7eb;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.18s ease, transform 0.08s ease;
+}
+
+.est-sidebar-item:hover {
+  background: #3f3f46;
+  transform: translateX(2px);
+}
+
+.est-sidebar-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #dc2626; 
+}
+
+/* ===== CONTENIDO DERECHO ===== */
+.est-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header rojo arriba del contenido */
+.est-main-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 20px 40px;
+  padding: 18px 40px 16px;
+  background: #b60000;
+  color: #ffffff;
 }
 
-.header-left {
-  display: flex;
-  align-items: center;
-  gap: 15px;
+.est-main-header h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
 }
 
-.dash-header img {
-  height: 55px;
-}
-
-/* LOGOUT */
-.btn-logout {
-  background: #fff;
-  color: #b60000;
-  border: none;
-  padding: 10px 20px;
+/* Botón cerrar sesión */
+.est-btn-logout {
+  background: #ffffff;
+  border: 1px solid #fee2e2;
+  font-size: 0.9rem;
+  padding: 8px 16px;
   border-radius: 6px;
   cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
+  transition: background 0.2s ease, transform 0.08s ease;
+  color: #000000;
+  font-weight: 600;
 }
 
-.btn-logout:hover {
+.est-btn-logout:hover {
   background: #ffecec;
+  transform: scale(1.03);
 }
 
-/* GRID */
-.dash-grid {
+/* Zona principal de tarjetas */
+.est-main-grid {
   flex: 1;
+  padding: 34px 40px 28px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 25px;
-  padding: 40px;
+  gap: 24px;
 }
 
-/* CARD */
-.dash-card {
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 25px;
-  text-decoration: none;
-  color: #333;
-  transition: 0.3s;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+/* Tarjetas */
+.est-card {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 26px 24px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.16);
+  border: 1px solid rgba(148, 163, 184, 0.4);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease,
+    border-color 0.15s ease;
 }
 
-.dash-card:hover {
+.est-card h3 {
+  color: #000000;
+  margin-bottom: 10px;
+  font-size: 1.2rem;
+}
+
+.est-card p {
+  font-size: 0.92rem;
+  color: #4b5563;
+}
+
+.est-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.22);
+  border-color: #b60000;
 }
 
-.dash-card h3 {
-  color: #b60000;
-}
-
-.dash-footer {
-  background: #2e2e2e;
-  color: white;
+/* Footer */
+.est-footer {
   text-align: center;
-  padding: 10px;
+  padding: 10px 0 12px;
+  background: #2e2e2e;
+  color: #ffffff;
+  font-size: 0.85rem;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .est-layout {
+    flex-direction: column;
+  }
+
+  .est-sidebar {
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  }
+
+  .est-sidebar-card {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .est-sidebar-menu {
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .est-main-header {
+    padding-inline: 20px;
+  }
+
+  .est-main-grid {
+    padding-inline: 20px;
+  }
 }
