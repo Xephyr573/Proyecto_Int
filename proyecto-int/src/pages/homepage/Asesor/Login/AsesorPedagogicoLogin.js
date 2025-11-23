@@ -2,54 +2,62 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../Asesor.css";
+import { loginUsuario } from "../../../../services/authServices";  //Importa el servicio de login desde authServices.js
 
 export default function AsesorPedagogicoLogin() {
-  const [usuario, setUsuario] = useState("");
-  const [password, setPassword] = useState("");
-  const [errores, setErrores] = useState({ usuario: "", password: "" });
+
+  // Estados para los campos del formulario y errores
+  //const [usuario, setUsuario] = useState(""); No se utiliza el usuario para ingresar
+  const [correo, setCorreo] = useState(""); //Usamos correo para ingresar al dashboard
+  const [contrasena, setcontrasena] = useState("");
+  const [errores, setErrores] = useState("");
 
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    const nuevosErrores = { usuario: "", password: "" };
-    let hayError = false;
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setErrores(null); // Limpia errores previos
 
-    if (!usuario.trim()) {
-      nuevosErrores.usuario = "Campo obligatorio";
-      hayError = true;
+    if (!correo.trim() || !contrasena.trim()) { //Se hace una sola comprobación
+      setErrores("Por favor, completa todos los campos.");
+      return; 
     }
 
-    if (!password.trim()) {
-      nuevosErrores.password = "Campo obligatorio";
-      hayError = true;
+    try {
+      // Llama a la API usando el servicio de login definido en authServices.js
+      const userData = await loginUsuario(correo, contrasena);
+
+      // Verificamos si el rol es el correcto
+      if (userData.rol === 'Asesor') {
+        // Éxito: El rol es correcto, redirige al dashboard
+        navigate("/asesor/definir-ajustes"); 
+      } else {
+        // Error: Es un usuario válido, pero no es el rol esperado
+        setErrores('Acceso denegado: Sus credenciales no pertenecen a un Asesor.'); 
+        navigate("/asesor"); // Redirige de vuelta a la página de login del asesor
+      }
+      } catch (errorMessage) {
+      // 6. Si el servicio lanzó un error (ej. "Credenciales inválidas")
+      // 'errorMessage' ya es el string de error que lanzamos desde authService
+      setErrores(errorMessage);
     }
-
-    setErrores(nuevosErrores);
-    if (hayError) return;
-
-    window.localStorage.setItem("rolAsesor", "COORDINADORA_PEDAGOGICA");
-
-    // 👇 DEBE COINCIDIR CON App.js
-    navigate("/asesor/definir-ajustes");
   };
 
   return (
     <div className="login-asesor">
       <h2>Coord. Técnica Pedagógica</h2>
 
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleLogin}>
+
         <div className="field-asesor">
-          <label>Usuario</label>
+          <label>Correo</label>
           <div className="input-wrapper-asesor">
             <input
-              type="text"
+              type="email"
               placeholder="usuario@inacap.cl"
-              value={usuario}
-              onChange={(e) => setUsuario(e.target.value)}
+              value={correo}
+              onChange={(e) => setCorreo(e.target.value)}
             />
-            {errores.usuario && (
-              <div className="tooltip-error-asesor">{errores.usuario}</div>
-            )}
           </div>
         </div>
 
@@ -57,14 +65,11 @@ export default function AsesorPedagogicoLogin() {
           <label>Contraseña</label>
           <div className="input-wrapper-asesor">
             <input
-              type="password"
+              type="contrasena"
               placeholder="********"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={contrasena}
+              onChange={(e) => setcontrasena(e.target.value)}
             />
-            {errores.password && (
-              <div className="tooltip-error-asesor">{errores.password}</div>
-            )}
           </div>
         </div>
 
