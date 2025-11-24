@@ -41,11 +41,18 @@ class Asesor(models.Model):
         on_delete=models.CASCADE,
         primary_key=True
     )
-    especialidad = models.CharField(max_length=100)
+    ESPECIALIDAD_ASESOR_CHOICES = [ # Opciones para la especialidad del asesor
+        ('Pedagogico', 'Asesor Pedagogico'),
+        ('CTP', 'Asesor CTP'),
+    ]
+    especialidad = models.CharField(max_length=25, choices=ESPECIALIDAD_ASESOR_CHOICES, default='CTP') #choices para limitar a Pedagogico o CTP
     telefono_contacto = models.CharField(max_length=20, blank=True)
+    area_asignada = models.CharField(max_length=100, 
+                                     blank=True, 
+                                     help_text="Area de carrera asignada para Asesores CTP")
 
     def __str__(self):
-        return f"Asesor: {self.usuario.nombre}"
+        return f"Asesor: {self.id_usuario.nombre}"
     
 class Docente(models.Model):
     # id_usuario (PK, FK)
@@ -59,7 +66,7 @@ class Docente(models.Model):
     cumplimiento = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"Docente: {self.usuario.nombre}"
+        return f"Docente: {self.id_usuario.nombre}"
     
 class Director(models.Model):
     # id_director (PK) (Dado que tiene una FK a Director en AJUSTE y NOTIFICACION, creamos una PK separada)
