@@ -9,7 +9,7 @@ export default function AsesorPedagogicoLogin() {
   // Estados para los campos del formulario y errores
   const [correo, setCorreo] = useState(""); //Usamos correo para ingresar al dashboard
   const [contrasena, setcontrasena] = useState("");
-  const [setErrores] = useState("");
+  const [error, setErrores] = useState("");
 
   const navigate = useNavigate();
 

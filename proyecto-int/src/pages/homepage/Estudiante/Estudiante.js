@@ -15,15 +15,10 @@ export default function Estudiante() {
     const nuevosErrores = { rut: "", password: "" };
     let hayError = false;
 
-    if (!rut.trim()) { 
-      nuevosErrores.rut = "Campo obligatorio";
-      hayError = true;
+    if (!rut.trim()||!password.trim()){
+      setErrores("Por favor, completa todos los campos.");
     }
 
-    if (!password.trim()) {
-      nuevosErrores.password = "Campo obligatorio";
-      hayError = true;
-    }
 
     setErrores(nuevosErrores);
 

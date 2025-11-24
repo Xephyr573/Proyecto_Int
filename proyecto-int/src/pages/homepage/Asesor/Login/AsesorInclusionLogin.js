@@ -7,7 +7,7 @@ import { loginUsuario } from "../../../../services/authServices";  //Importa el 
 export default function AsesorInclusionLogin() {
   const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
-  const [setErrores] = useState("");
+  const [error, setErrores] = useState("");
 
   const navigate = useNavigate();
 
