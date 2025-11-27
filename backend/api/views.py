@@ -100,6 +100,10 @@ class TipoAjusteViewSet(viewsets.ModelViewSet):
 
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@api_view(['GET'])
+def hello_view(request):
+    return response.Response({"message": "Hello, world!", "user": "Proyecto Integrador"}, status=status.HTTP_200_OK)
+
 #CREACION DE ENDPOINT DE LOGIN
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
