@@ -255,8 +255,8 @@ export default function ValidarAjustes() {
             Guardar validación (demo)
           </button>
 
-          <Link to="/AsesorDirectoraLogin" className="btn-asesor-volver">
-            Volver atras
+          <Link to="/Directora" className="btn-asesor-volver">
+            Volver atrás
           </Link>
         </div>
       </form>

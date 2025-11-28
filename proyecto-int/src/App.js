@@ -10,9 +10,9 @@ import Home from "./pages/main/Home";
 import Estudiante from "./pages/homepage/Estudiante/Estudiante";
 import Docente from "./pages/homepage/Docente/Docente";
 import Asesor from "./pages/homepage/Asesor/Asesor";
+import AsesorDirectoraLogin from "./pages/homepage/Director/DirectoraLogin";
 
 // Logins Asesor (carpeta Login)
-import AsesorDirectoraLogin from "./pages/homepage/Asesor/Login/AsesorDirectoraLogin";
 import AsesorCoordinadoraLogin from "./pages/homepage/Asesor/Login/AsesorPedagogicoLogin";
 import AsesorInclusionLogin from "./pages/homepage/Asesor/Login/AsesorInclusionLogin";
 
@@ -23,6 +23,9 @@ import EvaluacionFinal from "./pages/homepage/Asesor/pages/flujo/EvaluacionFinal
 // Dashboards
 import EstudianteDashboard from "./pages/homepage/Estudiante/EstudianteDashboard";
 import DocenteDashboard from "./pages/homepage/Docente/DocenteDashboard";
+
+// Flujo Director
+import DirectorValidarAjustes from "./pages/homepage/Director/pages/ValidarAjustes";
 
 // Subrutas Estudiante
 import PerfilEstudiante from "./pages/homepage/Estudiante/pages/PerfilEstudiante";
@@ -41,8 +44,6 @@ import ReportesDocente from "./pages/homepage/Docente/pages/ReportesDocente";
 // Subrutas Asesor
 import RegistrarCaso from "./pages/homepage/Asesor/pages/RegistrarCaso";
 import DefinirAjustes from "./pages/homepage/Asesor/pages/DefinirAjustes";
-import ValidarAjustes from "./pages/homepage/Asesor/pages/ValidarAjustes";
-
 
 function App() {
   const [message, setMessage] = useState("Cargando...");
@@ -69,39 +70,77 @@ function App() {
         <Route path="/Estudiante" element={<Estudiante />} />
         <Route path="/Docente" element={<Docente />} />
         <Route path="/Asesor" element={<Asesor />} />
+        {/* Login Directora independiente */}
+        <Route path="/Directora" element={<AsesorDirectoraLogin />} />
 
         {/* ------ Logins Asesor Por Rol ------ */}
-        <Route path="/AsesorDirectoraLogin" element={<AsesorDirectoraLogin />} />
-        <Route path="/AsesorCoordinadoraLogin" element={<AsesorCoordinadoraLogin />} />
-        <Route path="/AsesorInclusionLogin" element={<AsesorInclusionLogin />} />
+        <Route
+          path="/AsesorCoordinadoraLogin"
+          element={<AsesorCoordinadoraLogin />}
+        />
+        <Route
+          path="/AsesorInclusionLogin"
+          element={<AsesorInclusionLogin />}
+        />
 
         {/* ------ Dashboards ------ */}
-        <Route path="/EstudianteDashboard" element={<EstudianteDashboard />} />
+        <Route
+          path="/EstudianteDashboard"
+          element={<EstudianteDashboard />}
+        />
         <Route path="/DocenteDashboard" element={<DocenteDashboard />} />
 
         {/* ------ Subrutas Estudiante ------ */}
         <Route path="/estudiante/perfil" element={<PerfilEstudiante />} />
-        <Route path="/estudiante/asistencia" element={<AsistenciaEstudiante />} />
-        <Route path="/estudiante/solicitudes" element={<SolicitudesEstudiante />}/>
+        <Route
+          path="/estudiante/asistencia"
+          element={<AsistenciaEstudiante />}
+        />
+        <Route
+          path="/estudiante/solicitudes"
+          element={<SolicitudesEstudiante />}
+        />
         <Route path="/estudiante/reporte" element={<ReporteEstudiante />} />
-        <Route path="/estudiante/necesidades" element={<NecesidadesEspeciales />}/>
-        <Route path="/estudiante/entrevista" element={<EntrevistaEstudiante />} />
+        <Route
+          path="/estudiante/necesidades"
+          element={<NecesidadesEspeciales />}
+        />
+        <Route
+          path="/estudiante/entrevista"
+          element={<EntrevistaEstudiante />}
+        />
 
         {/* ------ Subrutas Docente ------ */}
         <Route path="/docente/perfil" element={<PerfilDocente />} />
-        <Route path="/docente/asistencia" element={<AsistenciaDocente />} />
-        <Route path="/docente/solicitudes" element={<SolicitudesRecibidas />}/>
+        <Route
+          path="/docente/asistencia"
+          element={<AsistenciaDocente />}
+        />
+        <Route
+          path="/docente/solicitudes"
+          element={<SolicitudesRecibidas />}
+        />
         <Route path="/docente/reportes" element={<ReportesDocente />} />
+
         {/* ------ Subrutas Asesor ------ */}
-        <Route path="/asesor/registrar-caso" element={<RegistrarCaso />} />
-        <Route path="/asesor/definir-ajustes" element={<DefinirAjustes />} />
-        <Route path="/asesor/validar-ajustes" element={<ValidarAjustes />} />
+        <Route
+          path="/asesor/registrar-caso"
+          element={<RegistrarCaso />}
+        />
+        <Route
+          path="/asesor/definir-ajustes"
+          element={<DefinirAjustes />}
+        />
 
         {/* ------ Flujo Asesor ------ */}
-       <Route path="/asesor/seguimiento" element={<SeguimientoCaso />} />
-       <Route path="/asesor/evaluacion-final" element={<EvaluacionFinal />} />
+        <Route path="/asesor/seguimiento" element={<SeguimientoCaso />} />
+        <Route
+          path="/asesor/evaluacion-final"
+          element={<EvaluacionFinal />}
+        />
 
-
+        {/* ------ Flujo Director ------ */}
+        <Route path="/director/validarajustes" element={<DirectorValidarAjustes />} />
       </Routes>
     </BrowserRouter>
   );

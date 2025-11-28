@@ -24,6 +24,8 @@ export default function Home() {
             <Link to="/Docente">Docente</Link>
             <Link to="/Estudiante">Estudiante</Link>
             <Link to="/Asesor">Asesor</Link>
+            <Link to="/Directora">Director</Link>
+
           </div>
         </div>
       </header>

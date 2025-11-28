@@ -1,0 +1,150 @@
+/* ====== LOGIN DIRECTORA DE CARRERA ====== */
+
+.login-asesor {
+  max-width: 420px;
+  margin: 60px auto;
+  padding: 32px 36px;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.18);
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", sans-serif;
+  color: #1f2933;
+  border-top: 6px solid #b60000; /* franja roja tipo INACAP */
+}
+
+.login-asesor h2 {
+  margin-top: 0;
+  margin-bottom: 18px;
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: #b60000;
+  text-align: center;
+}
+
+/* Campos del formulario */
+.field-asesor {
+  margin-bottom: 16px;
+}
+
+.field-asesor label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #4b5563;
+  margin-bottom: 4px;
+}
+
+.input-wrapper-asesor {
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #f9fafb;
+  padding: 0 10px;
+  display: flex;
+  align-items: center;
+  transition: border 0.15s ease, box-shadow 0.15s ease,
+    background-color 0.15s ease;
+}
+
+.input-wrapper-asesor:focus-within {
+  border-color: #b60000;
+  background: #ffffff;
+  box-shadow: 0 0 0 2px rgba(182, 0, 0, 0.15);
+}
+
+.input-wrapper-asesor input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 10px 4px;
+  font-size: 0.95rem;
+  color: #111827;
+}
+
+.input-wrapper-asesor input::placeholder {
+  color: #9ca3af;
+}
+
+/* Botón principal "Ingresar" */
+.btn-login-asesor {
+  width: 100%;
+  margin-top: 8px;
+  padding: 11px 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, #b60000, #e11d48);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  box-shadow: 0 8px 18px rgba(182, 0, 0, 0.35);
+  transition: transform 0.12s ease, box-shadow 0.12s ease,
+    filter 0.12s ease;
+}
+
+.btn-login-asesor:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 11px 24px rgba(182, 0, 0, 0.4);
+  filter: brightness(1.03);
+}
+
+.btn-login-asesor:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 14px rgba(182, 0, 0, 0.3);
+}
+
+/* Botón de "¿Olvidaste tu contraseña?" */
+.forgot-asesor {
+  margin-top: 10px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-size: 0.85rem;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.15s ease;
+}
+
+.forgot-asesor:hover {
+  color: #b60000;
+}
+
+/* Botón "Volver" abajo */
+.btn-back-asesor {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 18px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid #d1d5db;
+  background: #f9fafb;
+  color: #374151;
+  font-size: 0.9rem;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.btn-back-asesor:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
+/* Si luego agregas un mensaje de error, ya queda el estilo listo */
+.login-error {
+  margin-bottom: 10px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 0.85rem;
+  border: 1px solid #fecaca;
+}

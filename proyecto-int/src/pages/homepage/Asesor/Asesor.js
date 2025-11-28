@@ -17,11 +17,6 @@ export default function Asesor() {
           Coordinadora técnica pedagógica
           <span>Define los ajustes razonables</span>
         </Link>
-
-        <Link to="/AsesorDirectoraLogin" className="asesor-card">
-          Directora de carrera
-          <span>Valida y comenta los ajustes</span>
-        </Link>
       </div>
 
       <Link to="/" className="btn-back-asesor">

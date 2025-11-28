@@ -1,8 +1,8 @@
-// src/pages/homepage/Asesor/Login/AsesorDirectoraLogin.js
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "../Asesor.css";
-import { loginUsuario } from "../../../../services/authServices";  //Importa el servicio de login desde authServices.js
+import "./DirectoraLogin.css";
+import { loginUsuario } from "../../../services/authServices";  //Importa el servicio de login desde authServices.js
 
 export default function AsesorDirectoraLogin() {
   const [correo, setCorreo] = useState("");
@@ -70,12 +70,10 @@ export default function AsesorDirectoraLogin() {
         </div>
 
         <button
-          type="button"
-          className="btn-login-asesor"
-          onClick={handleLogin}
-        >
-          Ingresar
+        type="button" className="btn-login-asesor" onClick={() => navigate("/director/validarajustes")} >
+            Ingresar
         </button>
+
 
         <button
           type="button"
@@ -86,7 +84,7 @@ export default function AsesorDirectoraLogin() {
         </button>
       </form>
 
-      <Link to="/Asesor" className="btn-back-asesor">
+      <Link to="/" className="btn-back-asesor">
         Volver
       </Link>
     </div>

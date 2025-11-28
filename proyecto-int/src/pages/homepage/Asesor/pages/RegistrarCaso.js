@@ -44,7 +44,7 @@ const CARRERAS_INACAP = [
 // “Base” de estudiantes de ejemplo (solo para demo del botón Buscar)
 const BASE_FAKE_ESTUDIANTES = [
   {
-    rut: "21.079.691-6",
+    rut: "21079691-6",
     nombre: "Alexander Torres",
     correo: "alexander.torres@inacapmail.cl",
     telefono: "+56 9 1234 5678",
@@ -52,7 +52,7 @@ const BASE_FAKE_ESTUDIANTES = [
     residencia: "Labranza",
   },
   {
-    rut: "21.958.928-K",
+    rut: "21958928-K",
     nombre: "Benjamin Urra",
     correo: "benjamin.urra05@inacapmail.cl",
     telefono: "+56 9 1234 5678",
@@ -114,7 +114,7 @@ export default function RegistrarCaso() {
         semestral.
       </p>
 
-      {/* 🔹 Flujo del caso SOLO para el asesor (ahora como navegación) */}
+      {/*  Flujo del caso SOLO para el asesor (ahora como navegación) */}
       <div className="flujo-etapas">
         <button
           type="button"
@@ -282,14 +282,12 @@ export default function RegistrarCaso() {
                 Seleccione una opción
               </option>
               <option value="estudiante">Estudiante</option>
-              <option value="docente">Docente</option>
-              <option value="otros">Otro estamento</option>
             </select>
           </label>
 
           <label>
             Motivo principal
-            <select defaultValue="">
+             <select defaultValue="">
               <option value="" disabled>
                 Seleccione un motivo
               </option>
@@ -307,7 +305,7 @@ export default function RegistrarCaso() {
               </option>
               <option value="otro">Otro motivo</option>
             </select>
-          </label>
+          </label> */
 
           <label>
             Detalle del caso
