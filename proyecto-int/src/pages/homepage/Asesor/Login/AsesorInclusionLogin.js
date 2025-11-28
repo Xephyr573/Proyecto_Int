@@ -23,6 +23,8 @@ export default function AsesorInclusionLogin() {
     try {
       // Llama a la API usando el servicio de login definido en authServices.js
       const userData = await loginUsuario(correo, contrasena);
+      console.log("--- DEBUG LOGIN ---");
+      console.log("Datos recibidos del Backend:", userData);
 
       // Verificamos si el rol es el correcto
       if (userData.rol === 'Asesor-CTP') {

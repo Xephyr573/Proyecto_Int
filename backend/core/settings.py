@@ -56,7 +56,7 @@ MIDDLEWARE = [
 
 #Permitir React (puerto 3000)
 CORS_ALLOWED_ORIGINS = [
-    "https://localhost:3000",
+    "http://localhost:3000",
 ]
 
 #Configuracion basica de API

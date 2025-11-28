@@ -50,7 +50,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/hello")
+      .get("http://localhost:8000/login/")
       .then((response) => {
         setMessage(response.data.message + " " + response.data.user);
       })
