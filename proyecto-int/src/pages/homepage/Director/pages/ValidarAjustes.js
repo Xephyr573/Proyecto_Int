@@ -1,3 +1,4 @@
+// src/pages/homepage/Director/pages/ValidarAjustes.js
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./ValidarAjustes.css";
@@ -17,8 +18,7 @@ export default function ValidarAjustes() {
       id: "B1",
       categoria: "B",
       categoriaNombre: "Entorno",
-      titulo:
-        "Ubicar al estudiante en un lugar estratégico dentro de la sala",
+      titulo: "Ubicar al estudiante en un lugar estratégico dentro de la sala",
       descripcion:
         "Puesto que disminuya distracciones y favorezca la participación y comprensión.",
       propuestoPorCoordinacion: true,
@@ -52,6 +52,11 @@ export default function ValidarAjustes() {
     return base;
   });
 
+  // Comentarios por ajuste
+  const [comentarios, setComentarios] = useState({});
+  // Paneles de comentario abiertos (pueden ser varios a la vez)
+  const [panelesAbiertos, setPanelesAbiertos] = useState({});
+
   const handleCambioDecision = (idAjuste, valor) => {
     setDecisiones((prev) => ({
       ...prev,
@@ -70,6 +75,10 @@ export default function ValidarAjustes() {
     (a) => decisiones[a.id] === "revisar"
   ).length;
 
+  const ajustesConComentarioAbierto = ajustesIniciales.filter(
+    (a) => panelesAbiertos[a.id]
+  );
+
   return (
     <div className="asesor-form-page">
       <h2>Validar ajustes</h2>
@@ -87,7 +96,8 @@ export default function ValidarAjustes() {
           <div className="validar-badge">Caso activo</div>
           <h3>Caso: CASO-001</h3>
           <p>
-            <strong>Estudiante:</strong> Alexander Torres – Ingeneria en Informática
+            <strong>Estudiante:</strong> Alexander Torres – Ingeniería en
+            Informática
           </p>
           <p>
             <strong>Semestre:</strong> 2/2025 ·{" "}
@@ -129,8 +139,8 @@ export default function ValidarAjustes() {
           <p className="ajustes-panel-text">
             La columna de categoría utiliza la Tabla de Ajustes Razonables:{" "}
             <span className="tag-categoria tag-A">A</span> Presentación de la
-            información,&nbsp;
-            <span className="tag-categoria tag-B">B</span> Entorno,&nbsp;
+            información,{" "}
+            <span className="tag-categoria tag-B">B</span> Entorno,{" "}
             <span className="tag-categoria tag-C">C</span> Forma de respuesta y{" "}
             <span className="tag-categoria tag-D">D</span> Organización del
             tiempo y horario. La Directora puede aprobar, no aprobar o dejar en
@@ -226,6 +236,22 @@ export default function ValidarAjustes() {
                         />
                         <span>Revisión</span>
                       </label>
+
+                      {/* Botón para abrir/cerrar panel de comentario */}
+                      <button
+                        type="button"
+                        className="btn-comentario-ajuste"
+                        onClick={() =>
+                          setPanelesAbiertos((prev) => ({
+                            ...prev,
+                            [ajuste.id]: !prev[ajuste.id],
+                          }))
+                        }
+                      >
+                        {panelesAbiertos[ajuste.id]
+                          ? "Ocultar comentario"
+                          : "Comentar"}
+                      </button>
                     </div>
                   </td>
                 </tr>
@@ -233,6 +259,60 @@ export default function ValidarAjustes() {
             </tbody>
           </table>
         </div>
+
+        {/* Paneles de comentario grandes, uno por cada ajuste abierto */}
+        {ajustesConComentarioAbierto.length > 0 && (
+          <div className="paneles-comentario-wrapper">
+            {ajustesConComentarioAbierto.map((ajuste) => (
+              <div key={ajuste.id} className="panel-comentario-ajuste">
+                <div className="panel-comentario-header">
+                  <span
+                    className={`tag-categoria tag-${ajuste.categoria}`}
+                  >
+                    {ajuste.categoria}
+                  </span>
+
+                  <div className="panel-comentario-titulos">
+                    <h4>{ajuste.titulo}</h4>
+                    <p className="panel-comentario-desc">
+                      {ajuste.descripcion}
+                    </p>
+                  </div>
+
+                  <button
+                    type="button"
+                    className="btn-cerrar-panel"
+                    onClick={() =>
+                      setPanelesAbiertos((prev) => {
+                        const copia = { ...prev };
+                        delete copia[ajuste.id];
+                        return copia;
+                      })
+                    }
+                  >
+                    Cerrar
+                  </button>
+                </div>
+
+                <label className="panel-comentario-label">
+                  Comentario de la Directora para este ajuste
+                  <textarea
+                    className="panel-comentario-textarea"
+                    rows={4}
+                    placeholder="Escriba un comentario breve sobre este ajuste (por ejemplo, condiciones, observaciones o acuerdos específicos)."
+                    value={comentarios[ajuste.id] || ""}
+                    onChange={(e) =>
+                      setComentarios((prev) => ({
+                        ...prev,
+                        [ajuste.id]: e.target.value,
+                      }))
+                    }
+                  />
+                </label>
+              </div>
+            ))}
+          </div>
+        )}
 
         <label>
           Comentario general a la coordinación
