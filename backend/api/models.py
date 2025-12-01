@@ -144,31 +144,6 @@ class Entrevista(models.Model):
     def __str__(self):
         return f"Entrevista {self.id_entrevista} el {self.fecha_entrevista.date()}"
     
-# class Documento(models.Model):
-#     # id_documento (PK)
-#     id_documento = models.AutoField(primary_key=True)
-#     id_caso = models.ForeignKey(Caso, on_delete=models.CASCADE, related_name='documentos')
-#     tipo = models.CharField(max_length=100)
-#     url_archivo = models.URLField() # Usamos URLField para guardar la ruta del archivo
-#     fecha_subida = models.DateField(default=ahora)
-
-#     def __str__(self):
-#         return f"Documento: {self.tipo} del caso {self.id_caso.id_diagnostico}"
-    
-# class Inscripcion(models.Model):
-#     # (PK Compuesta: id_asignatura, id_usuario_estudiante) -> Django necesita una PK simple.
-#     # Usaremos AutoField y agregaremos una restricción unique_together en Meta.
-#     id = models.AutoField(primary_key=True)
-#     id_asignatura = models.ForeignKey(Asignatura, on_delete=models.CASCADE)
-#     id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.CASCADE)
-
-#     class Meta:
-#         # Asegura que un estudiante solo se pueda inscribir una vez a una asignatura.
-#         unique_together = ('id_asignatura', 'id_usuario_estudiante')
-
-#     def __str__(self):
-#         return f"Inscripción: {self.id_usuario_estudiante.usuario.nombre} en {self.id_asignatura.nombre_asignatura}"
-    
 class TipoAjuste(models.Model):
     # id_tipo_ajuste (PK)
     id_tipo_ajuste = models.AutoField(primary_key=True)

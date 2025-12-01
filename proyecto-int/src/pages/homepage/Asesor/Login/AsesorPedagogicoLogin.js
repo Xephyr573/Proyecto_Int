@@ -5,9 +5,7 @@ import "../Asesor.css";
 import { loginUsuario } from "../../../../services/authServices";  //Importa el servicio de login desde authServices.js
 
 export default function AsesorPedagogicoLogin() {
-
-  // Estados para los campos del formulario y errores
-  const [correo, setCorreo] = useState(""); //Usamos correo para ingresar al dashboard
+  const [correo, setCorreo] = useState("");
   const [contrasena, setcontrasena] = useState("");
   const [error, setErrores] = useState("");
 
@@ -27,13 +25,13 @@ export default function AsesorPedagogicoLogin() {
       const userData = await loginUsuario(correo, contrasena);
 
       // Verificamos si el rol es el correcto
-      if (userData.rol === 'Asesor') {
+      if (userData.rol === 'Asesor' && userData.datos_perfil.especialidad === 'CTP') {
         // Éxito: El rol es correcto, redirige al dashboard
         navigate("/asesor/definir-ajustes"); 
       } else {
         // Error: Es un usuario válido, pero no es el rol esperado
-        setErrores('Acceso denegado: Sus credenciales no pertenecen a un Asesor.'); 
-        navigate("/asesor"); // Redirige de vuelta a la página de login del asesor
+        setErrores('Acceso denegado: Sus credenciales no pertenecen a un Coordinador Tecnico Pedagogico.'); 
+        navigate("/AsesorCoordinadoraLogin"); // Redirige de vuelta a la página de login del asesor
       }
       } catch (errorMessage) {
       // 6. Si el servicio lanzó un error (ej. "Credenciales inválidas")
@@ -64,13 +62,26 @@ export default function AsesorPedagogicoLogin() {
           <label>Contraseña</label>
           <div className="input-wrapper-asesor">
             <input
-              type="passsword"
+              type="password"
               placeholder="********"
               value={contrasena}
               onChange={(e) => setcontrasena(e.target.value)}
             />
           </div>
         </div>
+
+        {error && (
+            <div style={{ 
+                color: '#c62828', 
+                backgroundColor: '#ffebee', 
+                padding: '8px', 
+                borderRadius: '4px',
+                marginBottom: '15px'
+            }}>
+                {/* Muestra el texto guardado en el estado 'error' */}
+                {error}
+            </div>
+        )}
 
         <button
           type="button"

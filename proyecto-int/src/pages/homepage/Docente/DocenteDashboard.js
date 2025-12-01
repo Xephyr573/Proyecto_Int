@@ -6,7 +6,7 @@ export default function DocenteDashboard() {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    navigate("/");
+    navigate("/Docente");
   };
 
   // Por ahora es estático. Después lo puedes traer de la API / localStorage.

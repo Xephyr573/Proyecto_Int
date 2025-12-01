@@ -17,7 +17,7 @@ export default function AsesorDirectoraLogin() {
 
     if (!correo.trim() || !contrasena.trim()) { //Se hace una sola comprobación
       setErrores("Por favor, completa todos los campos.");
-      return; 
+      return;
     }
 
     try {
@@ -27,15 +27,13 @@ export default function AsesorDirectoraLogin() {
       // Verificamos si el rol es el correcto
       if (userData.rol === 'Director') {
         // Éxito: El rol es correcto, redirige al dashboard
-        navigate("/asesor/validar-ajustes"); 
+        navigate("/director/validarajustes"); 
       } else {
         // Error: Es un usuario válido, pero no es el rol esperado
-        setErrores('Acceso denegado: Sus credenciales no pertenecen a un Asesor.'); 
-        navigate("/asesor"); // Redirige de vuelta a la página de login del asesor
+        setErrores('Acceso denegado: Sus credenciales no pertenecen a un Director.'); 
+        navigate("/Directora"); // Redirige de vuelta a la página de login del asesor
       }
       } catch (errorMessage) {
-      // 6. Si el servicio lanzó un error (ej. "Credenciales inválidas")
-      // 'errorMessage' ya es el string de error que lanzamos desde authService
       setErrores(errorMessage);
     }
   };
@@ -44,7 +42,7 @@ export default function AsesorDirectoraLogin() {
     <div className="login-asesor">
       <h2>Directora de Carrera</h2>
 
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={handleLogin}>
         <div className="field-asesor">
           <label>Correo</label>
           <div className="input-wrapper-asesor">
@@ -69,8 +67,21 @@ export default function AsesorDirectoraLogin() {
           </div>
         </div>
 
+        {error && (
+            <div style={{ 
+                color: '#c62828', 
+                backgroundColor: '#ffebee', 
+                padding: '8px', 
+                borderRadius: '4px',
+                marginBottom: '15px'
+            }}>
+                {/* Muestra el texto guardado en el estado 'error' */}
+                {error}
+            </div>
+        )}
+
         <button
-        type="button" className="btn-login-asesor" onClick={() => navigate("/director/validarajustes")} >
+        type="button" className="btn-login-asesor" onClick={handleLogin} >
             Ingresar
         </button>
 

@@ -50,7 +50,7 @@ function App() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/")
+      .get("http://localhost:8000/api/status/")
       .then((response) => {
         setMessage(response.data.message + " " + response.data.user);
       })

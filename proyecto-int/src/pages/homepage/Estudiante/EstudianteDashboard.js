@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function EstudianteDashboard() {
   const navigate = useNavigate();
-  const handleLogout = () => navigate("/");
+  const handleLogout = () => navigate("/Estudiante");
 
   // Por ahora estático; después puedes traerlo de la API/localStorage
   const nombreEstudiante = "Nombre Nombre Apellido Apellido";

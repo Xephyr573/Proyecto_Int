@@ -23,24 +23,22 @@ export default function AsesorInclusionLogin() {
     try {
       // Llama a la API usando el servicio de login definido en authServices.js
       const userData = await loginUsuario(correo, contrasena);
-      console.log("--- DEBUG LOGIN ---");
-      console.log("Datos recibidos del Backend:", userData);
 
       // Verificamos si el rol es el correcto
-      if (userData.rol === 'Asesor-CTP') {
+      if (userData.rol === 'Asesor' && userData.datos_perfil.especialidad === 'Pedagogico') {
         // Éxito: El rol es correcto, redirige al dashboard
-        navigate("/asesor/registrar-caso"); 
+        navigate("/asesor/registrar-caso");
       } else {
         // Error: Es un usuario válido, pero no es el rol esperado
-        setErrores('Acceso denegado: Sus credenciales no pertenecen a un Asesor.'); 
-        navigate("/asesor"); // Redirige de vuelta a la página de login del asesor
+        setErrores('Acceso denegado: Sus credenciales no pertenecen a un Asesor pedagogico.'); 
+        navigate("/AsesorInclusionLogin"); // Redirige de vuelta a la página de login del asesor
       }
       } catch (errorMessage) {
       // 6. Si el servicio lanzó un error (ej. "Credenciales inválidas")
       // 'errorMessage' ya es el string de error que lanzamos desde authService
       setErrores(errorMessage);
     }
-  };
+  }
 
   return (
     <div className="login-asesor">
@@ -70,6 +68,19 @@ export default function AsesorInclusionLogin() {
             />
           </div>
         </div>
+
+        {error && (
+            <div style={{ 
+                color: '#c62828', 
+                backgroundColor: '#ffebee', 
+                padding: '8px', 
+                borderRadius: '4px',
+                marginBottom: '15px'
+            }}>
+                {/* Muestra el texto guardado en el estado 'error' */}
+                {error}
+            </div>
+        )}
 
         <button
           type="button"

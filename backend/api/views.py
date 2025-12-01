@@ -1,6 +1,8 @@
-from rest_framework.views import APIView
 from rest_framework import status, response, viewsets
-from django.shortcuts import render
+from rest_framework.permissions import AllowAny
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.response import Response
+from django.contrib.auth.hashers import check_password
 from .serializer import UsuarioSerializer, EstudianteSerializer, AsesorSerializer, DocenteSerializer, DirectorSerializer, AjusteSerializer, NotificacionSerializer, AsignaturaSerializer, CasoSerializer, EntrevistaSerializer, TipoAjusteSerializer
 from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Notificacion, Asignatura, Caso, Entrevista, TipoAjuste
 
@@ -52,14 +54,6 @@ class CasoViewSet(viewsets.ModelViewSet):
 class EntrevistaViewSet(viewsets.ModelViewSet):
     queryset = Entrevista.objects.all()
     serializer_class = EntrevistaSerializer
-
-# class DocumentoViewSet(viewsets.ModelViewSet):
-#     queryset = Documento.objects.all()
-#     serializer_class = DocumentoSerializer
-
-# class InscripcionViewSet(viewsets.ModelViewSet):
-#     queryset = Inscripcion.objects.all()
-#     serializer_class = InscripcionSerializer
     
 class AjusteViewSet(viewsets.ModelViewSet):
     queryset = Ajuste.objects.all()
@@ -69,83 +63,100 @@ class TipoAjusteViewSet(viewsets.ModelViewSet):
     queryset = TipoAjuste.objects.all()
     serializer_class = TipoAjusteSerializer
 
-# class CrearCasoView(APIView):
-#     def post(self, request):
-#         data = request.data #Captura el JSON enviado desde React
-#         rut_recibido = data.get('rut_estudiante') #No estamos utilizando el rut, usamos el correo para ingresar el login
+#=============================
+#VIEWS DE MANEJO DE DATOS
+#=============================
 
-#         if not rut_recibido:
-#             return Response({"error": "El Rut es obligatorio."}, status=status.HTTP_404_NOT_FOUND) #404 es 'recurso no encontrado', deberia ser 400
-
-#         try:
-#             estudiante = Estudiante.objects.get(rut=rut_recibido) #Comprueba si el estudiante existe
-#         except Estudiante.DoesNotExist:
-#             return Response({"error": "Estudiante no encontrado. Resgístrelo primero."}, status=status.HTTP_404_NOT_FOUND)
-
-#         id_asesor = data.get('id_asesor')
-
-#         nuevo_caso_data = {
-#             "id_usuario_estudiante": estudiante.pk,
-#             "id_usuario_asesor": id_asesor,
-#             "id_asignatura": None,
-#             "estado_caso": "Abierto",
-#             "evaluacion": f"MOTIVO: {data.get('motivo')} - DETALLE: {data.get('detalle')} - ORIGEN: {data.get('origen')}"
-#         }
-
-#         serializer = CasoSerializer(data=nuevo_caso_data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response({"mensaje": "Caso creado", "id": serializer.data['id_diagnostico']}, status=status.HTTP_201_CREATED)
-
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
-#CREACION DE ENDPOINT DE LOGIN
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from django.contrib.auth import authenticate, login
-from rest_framework.response import Response
-from rest_framework import status
-from .models import Usuario # Asegúrate de que importas tu modelo Usuario
-
-@api_view(['POST']) #Solo acepta peticiones POST
-@permission_classes([AllowAny]) #Permite acceso sin autenticación
-def login_view(request):
-
-    # request.data contiene el JSON enviado por React
-    correo = request.data.get('correo')
-    contrasena = request.data.get('contrasena')
-
-    if not correo or not contrasena:
-        return Response({'error': 'Correo y contraseña son requeridos.'}, 
-                        status=status.HTTP_400_BAD_REQUEST)
-
-    try:
-        # --- LÓGICA DE VALIDACIÓN MANUAL ---
-        # 1. Buscar el usuario por correo
-        usuario = Usuario.objects.get(correo=correo)
-        
-        # 2. Verificar la contraseña
-        # Puesto que la contraseña en la BD está en texto plano (en la migración),
-        # comparamos directamente. ¡Esto NO ES SEGURO en producción!
-        if usuario.contrasena != contrasena:
-            return Response({'error': 'Credenciales inválidas.'}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        # Respuesta exitosa
-        return Response({
-            'success': 'Login exitoso',
-            'user_id': usuario.id,
-            'nombre': usuario.nombre,
-            'rol': usuario.rol  # ¡Clave para la redirección en React!
-        }, status=status.HTTP_200_OK)
-
-    except Usuario.DoesNotExist:
-        return Response({'error': 'Credenciales inválidas.'}, status=status.HTTP_401_UNAUTHORIZED)
-    except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
-
+#VIEW DE PRUEBA
 @api_view(['GET'])
 def view_prueba(request):
     return response.Response({"message": "Hello, world!", "user": "Proyecto Integrador"}, status=status.HTTP_200_OK)
+
+# VIEW DE LOGIN
+@api_view(['POST'])
+#@permission_classes([AllowAny])
+def login_view(request):
+    correo = request.data.get('correo')
+    contrasena = request.data.get('contrasena')
+
+    if not correo or not contrasena: # Verifica que ambos campos estén presentes
+        return Response({'error': 'Correo y contraseña son requeridos.'}, 
+                        status=status.HTTP_400_BAD_REQUEST)
+    
+    # Intenta autenticar al usuario
+    try:
+        usuario = Usuario.objects.get(correo=correo) # Busca el usuario por correo
+        if not check_password(contrasena, usuario.contrasena): # Verifica la contraseña hasheada
+            return Response({'error': 'Credenciales inválidas.'}, status=status.HTTP_401_UNAUTHORIZED) # Si la contraseña es incorrecta
+
+        response_data = {
+            'success': True,
+            'id_usuario': usuario.id_usuario,
+            'nombre': usuario.nombre,
+            'correo': usuario.correo,
+            'rol': usuario.rol,
+            'datos_perfil': {} # Aquí guardaremos lo específico
+        }
+
+        # 4. Lógica de Perfiles
+        # --- ASESOR ---
+        if usuario.rol == 'Asesor':
+            try:
+                response_data['datos_perfil'] = {
+                    'especialidad': usuario.asesor.especialidad, # 'CTP' o 'Pedagogico'
+                    'telefono': usuario.asesor.telefono_contacto
+                }
+            except Asesor.DoesNotExist:
+                response_data['datos_perfil'] = {'error': 'Perfil de Asesor no encontrado'}
+
+        # --- ESTUDIANTE ---
+        elif usuario.rol == 'Estudiante':
+             try:
+                response_data['datos_perfil'] = {
+                    'rut': usuario.estudiante.rut,
+                    'carrera': usuario.estudiante.carrera,
+                    'estado_caso': usuario.estudiante.estado_caso
+                }
+             except Estudiante.DoesNotExist:
+                 response_data['datos_perfil'] = {'error': 'Perfil de Estudiante no encontrado'}
+
+        # --- DOCENTE ---
+        elif usuario.rol == 'Docente':
+             try:
+                # Asumiendo que Docente tiene OneToOne sin related_name específico
+                response_data['datos_perfil'] = {
+                    'cumplimiento': usuario.docente.cumplimiento,
+                    'observaciones': usuario.docente.observaciones
+                }
+             except Docente.DoesNotExist:
+                 response_data['datos_perfil'] = {'error': 'Perfil de Docente no encontrado'}
+
+        # --- DIRECTOR ---
+        elif usuario.rol == 'Director':
+             try:
+                # ¡IMPORTANTE! Usamos 'director_profile' por el related_name en tu modelo
+                perfil = usuario.director_profile
+                response_data['datos_perfil'] = {
+                    'id_director': perfil.id_director, # ID específico de la tabla director
+                    'comentarios': perfil.comentarios
+                }
+             except Exception: 
+                 # Capturamos Exception genérica aquí porque si related_name falla
+                 # puede lanzar AttributeError en vez de DoesNotExist
+                 response_data['datos_perfil'] = {'error': 'Perfil de Director no encontrado'}
+        
+        # 5. Retorno final
+        return Response(response_data, status=200)
+
+    except Usuario.DoesNotExist: # Si el usuario no existe
+        return Response({'error': 'Credenciales inválidas.'}, status=status.HTTP_401_UNAUTHORIZED)
+    
+    except Exception as e:
+        print("Error en login_view:", str(e)) # Log del error para debugging (Solo nosotros)
+        return Response({'error': 'Ocurrio un error interno del servidor.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) # Error genérico del servidor
+    
+
+@api_view(['POST'])
+def registrar_caso(request):
+    # Lógica para registrar un nuevo caso
+    return Response({'message': 'Caso registrado exitosamente.'}, status=status.HTTP_201_CREATED)
