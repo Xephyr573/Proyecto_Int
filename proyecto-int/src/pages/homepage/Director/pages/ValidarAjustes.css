@@ -7,7 +7,8 @@
   border-radius: 12px;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.15);
   margin: 40px auto;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
 }
 
 .asesor-form-page h2 {
@@ -22,7 +23,7 @@
   margin: 0 0 16px 0;
 }
 
-/* === FLUJO SEMESTRAL === */
+/* === FLUJO SEMESTRAL (opcional) === */
 .flujo-etapas {
   display: flex;
   flex-wrap: wrap;
@@ -144,6 +145,13 @@
   color: #b71c1c;
 }
 
+/* === FORMULARIO BASE === */
+.asesor-form {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
 /* === PANEL Y TABLA DE AJUSTES === */
 .ajustes-panel {
   margin-top: 8px;
@@ -260,6 +268,95 @@
   background: #fff8e1;
   border-color: #ef6c00;
   color: #ef6c00;
+}
+
+/* Botón para abrir/cerrar el panel de comentario */
+.btn-comentario-ajuste {
+  margin-top: 6px;
+  border-radius: 999px;
+  padding: 4px 10px;
+  border: 1px dashed #94a3b8;
+  background: #f8fafc;
+  font-size: 0.78rem;
+  color: #334155;
+  cursor: pointer;
+}
+
+.btn-comentario-ajuste:hover {
+  border-style: solid;
+  background: #e2e8f0;
+}
+
+/* === CONTENEDOR DE TODOS LOS PANELES DE COMENTARIO === */
+.paneles-comentario-wrapper {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* === PANEL DE COMENTARIO GRANDE === */
+.panel-comentario-ajuste {
+  border-radius: 10px;
+  border: 1px solid #d0d7de;
+  background: #f8fafc;
+  padding: 12px 14px;
+}
+
+.panel-comentario-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  justify-content: space-between;
+}
+
+.panel-comentario-titulos {
+  flex: 1;
+}
+
+.panel-comentario-titulos h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #1f2933;
+}
+
+.panel-comentario-desc {
+  margin: 2px 0 0 0;
+  font-size: 0.85rem;
+  color: #4b5563;
+}
+
+.btn-cerrar-panel {
+  border: none;
+  background: transparent;
+  font-size: 0.8rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.btn-cerrar-panel:hover {
+  background: #e5e7eb;
+}
+
+.panel-comentario-label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.85rem;
+  color: #333;
+  margin-top: 8px;
+}
+
+.panel-comentario-textarea {
+  margin-top: 4px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  min-height: 96px;
+  resize: vertical;
+  font-size: 0.88rem;
+  background: #ffffff;
 }
 
 /* === BOTONES FINALES === */
