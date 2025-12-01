@@ -60,7 +60,7 @@ export default function SeguimientoCaso() {
           2. Definición de ajustes
         </button>
         <button type="button" className="etapa active">
-          3. Validación / Seguimiento
+          3. Seguimiento
         </button>
         <button
           type="button"
