@@ -6,7 +6,6 @@ from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Noti
 
 # Create your views here.
 
-
 #=============================
 # VIEWSETS USUARIO Y ROLES
 #=============================
@@ -100,9 +99,7 @@ class TipoAjusteViewSet(viewsets.ModelViewSet):
 
 #         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-@api_view(['GET'])
-def hello_view(request):
-    return response.Response({"message": "Hello, world!", "user": "Proyecto Integrador"}, status=status.HTTP_200_OK)
+
 
 #CREACION DE ENDPOINT DE LOGIN
 from rest_framework.decorators import api_view, permission_classes
@@ -147,3 +144,8 @@ def login_view(request):
         return Response({'error': 'Credenciales inválidas.'}, status=status.HTTP_401_UNAUTHORIZED)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+@api_view(['GET'])
+def view_prueba(request):
+    return response.Response({"message": "Hello, world!", "user": "Proyecto Integrador"}, status=status.HTTP_200_OK)

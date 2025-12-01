@@ -1,6 +1,6 @@
 from django.urls import path
-from .views import status_check
+from .views import view_prueba
 
 urlpatterns = [
-    path('status/', views.status_check, name='api_status'),
+    path('status/', view_prueba, name='api_status'),
 ]
