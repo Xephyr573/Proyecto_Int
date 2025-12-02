@@ -3,7 +3,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.contrib.auth.hashers import check_password
-from .serializer import UsuarioSerializer, EstudianteSerializer, AsesorSerializer, DocenteSerializer, DirectorSerializer, AjusteSerializer, NotificacionSerializer, AsignaturaSerializer, CasoSerializer, EntrevistaSerializer, TipoAjusteSerializer
+from django.db.models import Q
+from .serializer import UsuarioSerializer, EstudianteSerializer, AsesorSerializer, DocenteSerializer, DirectorSerializer, AjusteSerializer, NotificacionSerializer, AsignaturaSerializer, CasoSerializer, EntrevistaSerializer, TipoAjusteSerializer, UsuarioBaseSerializer, UsuarioConEstudianteSerializer
 from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Notificacion, Asignatura, Caso, Entrevista, TipoAjuste
 
 # Create your views here.
@@ -156,7 +157,63 @@ def login_view(request):
         return Response({'error': 'Ocurrio un error interno del servidor.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) # Error genérico del servidor
     
 
-@api_view(['POST'])
-def registrar_caso(request):
-    # Lógica para registrar un nuevo caso
-    return Response({'message': 'Caso registrado exitosamente.'}, status=status.HTTP_201_CREATED)
+def limpiar_rut(texto):
+    """
+    Elimina puntos, guiones y espacios. Convierte a mayúsculas.
+    Ej: "12.345.678-k" -> "12345678K"
+    """
+    if not texto:
+        return ""
+    return texto.replace(".", "").replace("-", "").replace(" ", "").upper()
+
+def formatear_rut(rut_limpio):
+    """
+    Recibe: '123456789' (o '12345678K')
+    Devuelve: '12.345.678-9'
+    """
+    if not rut_limpio or len(rut_limpio) < 2:
+        return rut_limpio # Devuelve tal cual si es muy corto o inválido
+
+    # Separamos cuerpo y dígito verificador
+    cuerpo = rut_limpio[:-1]
+    dv = rut_limpio[-1]
+
+    # Formateamos el cuerpo con puntos de miles
+    # El truco: invertimos el string, agrupamos de a 3, unimos con puntos y volvemos a invertir
+    cuerpo_formateado = ".".join([cuerpo[::-1][i:i+3] for i in range(0, len(cuerpo), 3)])[::-1]
+
+    return f"{cuerpo_formateado}-{dv}"
+
+@api_view(['GET'])
+def buscar_estudiante(request):
+    termino_busqueda = request.query_params.get('q', None) #q obtiene el termino de busqueda, que puede ser nombre, correo o rut
+
+    if not termino_busqueda:
+        return Response({'error': 'El término de búsqueda es requerido.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    rut_limpio = limpiar_rut(termino_busqueda) # Limpiamos el RUT de puntos, guiones y espacios
+    rut_formateado = formatear_rut(rut_limpio) # Formateamos el RUT limpio para buscar también en ese formato
+
+
+    try:
+        estudiante = Estudiante.objects.get(
+            Q(rut__iexact=rut_formateado) | # 1. Búsqueda por RUT formateado
+            Q(id_usuario__nombre__iexact=termino_busqueda) | # 2. Búsqueda por Correo (a través de la FK)
+            Q(id_usuario__correo__iexact=termino_busqueda) # 3. Búsqueda por Nombre (contiene, insensible)
+        )
+
+    except Estudiante.DoesNotExist:
+        return Response({'error': 'Estudiante no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+    
+    except Exception as e:
+        print("Error en buscar_estudiante:", str(e)) # Log del error para debugging (Solo nosotros)
+        return Response({'error': 'Ocurrio un error interno del servidor.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    serializer = UsuarioConEstudianteSerializer(estudiante)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# api_view(['POST']):
+# def registrar_caso(request):
+#     # Lógica para registrar un nuevo caso
+#     pass

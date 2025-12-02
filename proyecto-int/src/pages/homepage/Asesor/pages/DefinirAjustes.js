@@ -158,7 +158,7 @@ export default function DefinirAjustes() {
           className="etapa"
           onClick={() => navigate("/asesor/seguimiento")}
         >
-          3. Validación / Seguimiento
+          3. Seguimiento
         </button>
         <button
           type="button"

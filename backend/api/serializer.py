@@ -8,10 +8,21 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = '__all__'
 
+class UsuarioBaseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Usuario
+        fields = ['nombre', 'correo']
+
 class EstudianteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Estudiante
         fields = '__all__'
+
+class UsuarioConEstudianteSerializer(serializers.ModelSerializer):
+    usuario = UsuarioBaseSerializer(source='id_usuario', read_only=True)
+    class Meta:
+        model = Estudiante
+        fields = ['rut', 'carrera', 'cede', 'usuario']
 
 class AsesorSerializer(serializers.ModelSerializer):
     class Meta:
@@ -52,11 +63,6 @@ class CasoSerializer(serializers.ModelSerializer):
         model = Caso
         fields = '__all__'
 
-# class InscripcionSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Inscripcion
-#         fields = '__all__'
-
 class AjusteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ajuste
@@ -66,8 +72,3 @@ class TipoAjusteSerializer(serializers.ModelSerializer):
     class Meta:
         model = TipoAjuste
         fields = '__all__'
-
-# class DocumentoSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Documento
-#         fields = '__all__'
