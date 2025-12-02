@@ -69,3 +69,11 @@ backend/core/__pycache__/__init__.cpython-313.pyc
 backend/core/__pycache__/settings.cpython-313.pyc
 backend/core/__pycache__/urls.cpython-313.pyc
 backend/core/__pycache__/wsgi.cpython-313.pyc
+backend/api/__pycache__/models.cpython-313.pyc
+backend/api/__pycache__/urls.cpython-313.pyc
+backend/api/__pycache__/views.cpython-313.pyc
+backend/core/__pycache__/settings.cpython-313.pyc
+backend/api/__pycache__/models.cpython-313.pyc
+backend/api/__pycache__/urls.cpython-313.pyc
+backend/api/__pycache__/views.cpython-313.pyc
+backend/core/__pycache__/settings.cpython-313.pyc
