@@ -2,117 +2,82 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./RegistrarCaso.css";
-
-// Lista de carreras para el menú desplegable
-const CARRERAS_INACAP = [
-  // Administración y Servicios
-  "Administración de Empresas",
-  "Ingeniería en Administración de Empresas",
-  "Administración Gastronómica",
-  "Gastronomía",
-  "Técnico en Farmacia",
-  "Técnico en Odontología",
-  "Gestión Turística",
-  "Ingeniería en Gestión Turística",
-  // Energía y Sostenibilidad
-  "Ingeniería Agrícola",
-  "Técnico Agrícola",
-  "Construcción Civil",
-  "Técnico en Construcción",
-  "Técnico en Topografía y Geomática",
-  "Ingeniería Eléctrica",
-  "Técnico en Electricidad Industrial",
-  // Mantenimiento y Logística
-  "Ingeniería en Logística",
-  "Técnico en Logística",
-  "Ingeniería en Mecánica y Electromovilidad Automotriz",
-  "Mecánica Automotriz en Maquinaria Pesada",
-  "Técnico en Mantenimiento Industrial",
-  "Técnico en Mecánica y Electromovilidad Automotriz",
-  // Tecnología Aplicada
-  "Técnico en Automatización y Robótica",
-  "Animación Digital y Videojuegos",
-  "Diseño Digital Profesional",
-  "Diseño Digital y Web",
-  "Analista Programador",
-  "Ingeniería en Ciberseguridad",
-  "Ingeniería en Informática",
-  "Ingeniería en Telecomunicaciones y Servicios Digitales",
-  "Otro (especificar en observaciones)",
-];
-
-// “Base” de estudiantes de ejemplo (solo para demo del botón Buscar)
-const BASE_FAKE_ESTUDIANTES = [
-  {
-    rut: "21079691-6",
-    nombre: "Alexander Torres",
-    correo: "alexander.torres@inacapmail.cl",
-    telefono: "+56 9 1234 5678",
-    carrera: "Ingeniería en Informática",
-    residencia: "Labranza",
-  },
-  {
-    rut: "21958928-K",
-    nombre: "Benjamin Urra",
-    correo: "benjamin.urra05@inacapmail.cl",
-    telefono: "+56 9 1234 5678",
-    carrera: "Analista Programador",
-    residencia: "Temuco",
-  },
-];
+import { buscarEstudiante } from "../../../../services/searchStudent";
 
 export default function RegistrarCaso() {
   const navigate = useNavigate();
 
   // estado de los datos del estudiante
   const [rut, setRut] = useState("");
-  const [nombreCompleto, setNombreCompleto] = useState("");
+  const [nombre, setNombre] = useState("");
   const [correo, setCorreo] = useState("");
   const [telefono, setTelefono] = useState("");
-  const [ciudadResidencia, setCiudadResidencia] = useState("");
-
-  const [mensajeBusqueda, setMensajeBusqueda] = useState(null); // { tipo: "ok" | "error", texto: "" }
-
+  const [cede, setCede] = useState("");
   const [carrera, setCarrera] = useState("");
+  const [mensajeBusqueda, setMensajeBusqueda] = useState(null); // { tipo: "ok" | "error", texto: "" }
+  const [inputBusqueda, setInputBusqueda] = useState("");
 
-  const buscarDesdeBase = () => {
-    const encontrado = BASE_FAKE_ESTUDIANTES.find(
-      (e) =>
-        e.rut === rut ||
-        e.nombreCompleto.toLowerCase() === nombreCompleto.toLowerCase() ||
-        e.correo.toLowerCase() === correo.toLowerCase()
-    );
+  const buscarDesdeBase = async (e) => {
+    e.preventDefault();
+    const terminoBusqueda = rut || correo || nombre;
 
-    if (encontrado) {
-      setRut(encontrado.rut);
-      setNombreCompleto(encontrado.nombreCompleto);
-      setCorreo(encontrado.correo);
-      setTelefono(encontrado.telefono);
-      setCiudadResidencia(encontrado.ciudad);
-      setMensajeBusqueda({
-        tipo: "ok",
-        texto:
-          "Datos cargados automáticamente desde la base de estudiantes (demo).",
-      });
-    } else {
+    if (!terminoBusqueda) {
       setMensajeBusqueda({
         tipo: "error",
-        texto:
-          "No se encontraron coincidencias en la base de estudiantes (demo).",
+        texto: "Ingrese RUT, correo o nombre para buscar.",
       });
+      return;
     }
+
+    setMensajeBusqueda({tipo: "info", texto: "Buscando estudiante..."});
+
+    try {
+      const datos = await buscarEstudiante(terminoBusqueda);
+
+      setRut(datos.rut);
+      setNombre(datos.usuario.nombre);
+      setCorreo(datos.usuario.correo);
+      setCede(datos.cede);
+      setCarrera(datos.carrera);
+
+      setMensajeBusqueda({
+            tipo: "ok",
+            texto: `Datos de ${datos.usuario.nombre} cargados con éxito.`,
+        });
+
+    } catch (error) {
+        console.error("Error capturado:", error);
+        let mensajeError = "Ocurrió un error inesperado.";
+
+        if (typeof error === 'string') {
+            // Si el servicio lanzó un texto (ej: throw "No encontrado")
+          mensajeError = error; 
+      } else if (error.message) {
+          // Si es un objeto Error estándar (ej: error de red)
+          mensajeError = error.message;
+        } else if (error.response && error.response.data && error.response.data.error) {
+            // Si es un error que viene de Axios/Django
+            mensajeError = error.response.data.error;
+        }
+
+        // Captura el string de error del servicio (404, 400, o error de red)
+        setMensajeBusqueda({
+            tipo: "error",
+            texto: mensajeError, 
+        });
+      }
   };
 
   return (
     <div className="asesor-form-page">
       <h2>Registrar caso</h2>
-      <p className="asesor-form-text">
+      {/* <p className="asesor-form-text">
         En esta pantalla la <strong>Encargada de Inclusión</strong> registra el
         caso en el sistema. Se levantan los datos del estudiante, el motivo de
         la solicitud y un resumen inicial que luego será utilizado por la
         Coordinadora y la Directora en las siguientes etapas del flujo
         semestral.
-      </p>
+      </p> */}
 
       {/*  Flujo del caso SOLO para el asesor (ahora como navegación) */}
       <div className="flujo-etapas">
@@ -146,6 +111,8 @@ export default function RegistrarCaso() {
         </button>
       </div>
 
+      {/* Cuadro de DATOS DE CASO */}
+
       <form className="asesor-form">
         <fieldset className="asesor-fieldset">
           <legend>Datos del caso</legend>
@@ -170,35 +137,10 @@ export default function RegistrarCaso() {
                 className="input-readonly"
               />
             </label>
-
-            <label>
-              Ciudad / Lugar de residencia
-              <input
-                type="text"
-                placeholder="Ej: Temuco"
-                value={ciudadResidencia}
-                onChange={(e) => setCiudadResidencia(e.target.value)}
-              />
-            </label>
-
-            <label>
-              Carrera / Programa
-              <select
-                value={carrera}
-                onChange={(e) => setCarrera(e.target.value)}
-              >
-                <option value="" disabled>
-                  Seleccione una carrera
-                </option>
-                {CARRERAS_INACAP.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </label>
           </div>
         </fieldset>
+
+        {/* Cuadro DATOS ESTUDIANTE */}
 
         <fieldset className="asesor-fieldset">
           <legend>Datos del estudiante</legend>
@@ -219,8 +161,8 @@ export default function RegistrarCaso() {
               <input
                 type="text"
                 placeholder="Nombre y apellidos"
-                value={nombreCompleto}
-                onChange={(e) => setNombreCompleto(e.target.value)}
+                value={nombre}
+                onChange={(e) => setNombre(e.target.value)}
               />
             </label>
 
@@ -238,9 +180,29 @@ export default function RegistrarCaso() {
               Teléfono de contacto
               <input
                 type="text"
-                placeholder="+56 9 0000 0000"
+                placeholder="+569 1234 5678"
                 value={telefono}
                 onChange={(e) => setTelefono(e.target.value)}
+              />
+            </label>
+
+            <label>
+              Carrera
+              <input
+                type="text"
+                placeholder="Carrera del estudiante"
+                value={carrera}
+                onChange={(e) => setCarrera(e.target.value)}
+              />
+            </label>
+
+            <label>
+              Cede
+              <input
+                type="text"
+                placeholder="Ej: Cede Temuco"
+                value={cede}
+                onChange={(e) => setCede(e.target.value)}
               />
             </label>
           </div>
@@ -250,7 +212,7 @@ export default function RegistrarCaso() {
             className="btn-asesor-secondary"
             onClick={buscarDesdeBase}
           >
-            Buscar datos en base de estudiantes (demo)
+            Buscar datos del estudiante
           </button>
 
           {mensajeBusqueda && (
@@ -265,25 +227,15 @@ export default function RegistrarCaso() {
             </p>
           )}
 
-          <p className="asesor-ayuda">
+          {/* <p className="asesor-ayuda">
             En una implementación real, estos datos se cargarían
             automáticamente desde la base de estudiantes de INACAP y solo se
             seleccionaría el estudiante a inscribir en el programa de ajustes.
-          </p>
+          </p> */}
         </fieldset>
 
         <fieldset className="asesor-fieldset">
           <legend>Motivo de la solicitud</legend>
-
-          <label>
-            Origen de la solicitud
-            <select defaultValue="">
-              <option value="" disabled>
-                Seleccione una opción
-              </option>
-              <option value="estudiante">Estudiante</option>
-            </select>
-          </label>
 
           <label>
             Motivo principal
@@ -305,7 +257,7 @@ export default function RegistrarCaso() {
               </option>
               <option value="otro">Otro motivo</option>
             </select>
-          </label> */
+          </label>
 
           <label>
             Detalle del caso
@@ -318,7 +270,7 @@ export default function RegistrarCaso() {
 
         <div className="asesor-form-buttons">
           <button type="button" className="btn-asesor-primary">
-            Guardar registro (demo)
+            Guardar registro
           </button>
 
           <Link to="/Asesor" className="btn-asesor-volver">
@@ -329,3 +281,4 @@ export default function RegistrarCaso() {
     </div>
   );
 }
+
