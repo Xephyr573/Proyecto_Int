@@ -8,21 +8,55 @@ class UsuarioSerializer(serializers.ModelSerializer):
         model = Usuario
         fields = '__all__'
 
+#SERIALIZER DE UN SUBCONJUNTO DE CAMPOS DE USUARIO PARA USO EN BUSQUEDA POR NOMBRE Y CORREO
 class UsuarioBaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = ['nombre', 'correo']
 
-class EstudianteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Estudiante
-        fields = '__all__'
+# class EstudianteSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Estudiante
+#         fields = '__all__'
 
-class UsuarioConEstudianteSerializer(serializers.ModelSerializer):
+#     def get_estado_caso(self, estudiante):
+#         # Obtener el estado del caso más reciente asociado al estudiante
+#         ultimo_caso = estudiante.casos_estudiante.last()
+#         if ultimo_caso:
+#             return ultimo_caso.estado_caso
+#         return "No tiene casos"
+
+# #SERIALIZER DE USUARIO CON ESTUDIANTE PARA BUSQUEDA DETALLADA
+# class UsuarioConEstudianteSerializer(serializers.ModelSerializer):
+#     usuario = UsuarioBaseSerializer(source='id_usuario', read_only=True)
+#     class Meta:
+#         model = Estudiante
+#         fields = ['rut', 'carrera', 'cede', 'usuario', 'telefono'] 
+
+class EstudianteSerializer(serializers.ModelSerializer):
+    #Traemos los datos (Nombre, Correo) desde usuario
     usuario = UsuarioBaseSerializer(source='id_usuario', read_only=True)
+
+    #Agregamos el campo estado_caso al serializer
+    estado_caso = serializers.SerializerMethodField()
+
     class Meta:
         model = Estudiante
-        fields = ['rut', 'carrera', 'cede', 'usuario']
+        fields = ['id_usuario',
+                  'usuario',
+                  'rut',
+                  'carrera',
+                  'cede',
+                  'telefono',
+                  'estado_caso',
+                  'fecha_matricula'
+                  ]
+    def get_estado_caso(self, estudiante):
+        ultimo_caso = estudiante.casos_estudiante.last()
+
+        if ultimo_caso:
+            return ultimo_caso.estado_caso
+        return "No tiene casos"
 
 class AsesorSerializer(serializers.ModelSerializer):
     class Meta:
