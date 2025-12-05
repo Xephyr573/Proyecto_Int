@@ -26,9 +26,10 @@ class Estudiante(models.Model):
         on_delete=models.CASCADE, 
         primary_key=True)
     rut = models.CharField(max_length=12, unique=True)
+    telefono = models.CharField(max_length=14, blank=True) #Se agrego el campo telefono
     carrera = models.CharField(max_length=100, blank=True)
     cede = models.CharField(max_length=100, blank=True)
-    estado_caso = models.CharField(max_length=50)
+    #Borre estado_caso ya que lo sacaremos directamente desde el modelo Caso
     fecha_matricula = models.DateField(default=ahora)
 
     def __str__(self):

@@ -39,6 +39,7 @@ export default function RegistrarCaso() {
       setCorreo(datos.usuario.correo);
       setCede(datos.cede);
       setCarrera(datos.carrera);
+      setTelefono(datos.telefono || ""); // Asegura que no sea undefined
 
       setMensajeBusqueda({
             tipo: "ok",
