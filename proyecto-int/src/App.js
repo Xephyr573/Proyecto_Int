@@ -23,6 +23,9 @@ import EvaluacionFinal from "./pages/homepage/Asesor/pages/flujo/EvaluacionFinal
 // Dashboards
 import EstudianteDashboard from "./pages/homepage/Estudiante/EstudianteDashboard";
 import DocenteDashboard from "./pages/homepage/Docente/DocenteDashboard";
+import AsesorDashboard from "./pages/homepage/Asesor/AsesorDashboard";
+import DirectorDashboard from "./pages/homepage/Director/DirectoraDashboard";
+import EncargadaDashboard from "./pages/homepage/Asesor/EncargadaDashboard";
 
 // Flujo Director
 import DirectorValidarAjustes from "./pages/homepage/Director/pages/ValidarAjustes";
@@ -82,13 +85,14 @@ function App() {
           path="/AsesorInclusionLogin"
           element={<AsesorInclusionLogin />}
         />
+        
 
         {/* ------ Dashboards ------ */}
-        <Route
-          path="/EstudianteDashboard"
-          element={<EstudianteDashboard />}
-        />
+        <Route path="/EstudianteDashboard" element={<EstudianteDashboard />} />
         <Route path="/DocenteDashboard" element={<DocenteDashboard />} />
+        <Route path="/dashboard-asesor" element={<AsesorDashboard />} />
+        <Route path="/dashboard-directora" element={<DirectorDashboard />} />
+        <Route path="/dashboard-encargada" element={<EncargadaDashboard />} />
 
         {/* ------ Subrutas Estudiante ------ */}
         <Route path="/estudiante/perfil" element={<PerfilEstudiante />} />
