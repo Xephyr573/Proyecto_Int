@@ -77,7 +77,7 @@ def crear_usuarios_de_prueba(apps, schema_editor):
     u_docente, created = Usuario.objects.update_or_create(
         correo='docente@inacap.cl',
         defaults={
-            'nombre': 'Marcelo (Pelao) Alvarado',
+            'nombre': 'Marcelo Alvarado',
             'contrasena': contrasena,
             'rol': 'Docente'
         }
