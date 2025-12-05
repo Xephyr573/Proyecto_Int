@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./EncargadaDashboard.css";
 
-// TODO: backend: reemplazar por datos reales desde la API
+// ================== DATOS DE EJEMPLO ==================
 const CASOS_ENCARGADA = [
   {
     id: "CASO-001",
@@ -30,31 +30,51 @@ const CASOS_ENCARGADA = [
   },
 ];
 
-const BLOQUES_ENCARGADA = [
-  { id: 1, dia: "Lun 7", hora: "09:00 - 10:00" },
-  { id: 2, dia: "Lun 7", hora: "11:00 - 12:00" },
-  { id: 3, dia: "Mar 8", hora: "15:00 - 16:00" },
-  { id: 4, dia: "Mié 9", hora: "10:00 - 11:00" },
-  { id: 5, dia: "Jue 10", hora: "09:00 - 10:00" },
-];
-
 const ARCHIVOS_FORMATOS = [
   "Formato_Ficha_Entrevista_Inicial.docx",
   "Consentimiento_Informado_Ajustes.pdf",
   "Plantilla_Informe_Derivacion.docx",
+  "Resumen_Seguimiento_Semestral.xlsx",
 ];
+
+// Calendario semanal simple (días x horas)
+const DIAS_CALENDARIO = ["Lun", "Mar", "Mié", "Jue", "Vie"];
+const HORAS_CALENDARIO = [
+  "09:00 - 10:00",
+  "10:00 - 11:00",
+  "11:00 - 12:00",
+  "15:00 - 16:00",
+];
+
+function crearAgendaInicial() {
+  const agenda = {};
+  DIAS_CALENDARIO.forEach((dia) => {
+    agenda[dia] = {};
+    HORAS_CALENDARIO.forEach((hora) => {
+      agenda[dia][hora] = false; // false = disponible, true = bloqueado/entrevista
+    });
+  });
+  // Ejemplo: marcamos algunos bloques como ya reservados
+  agenda["Lun"]["11:00 - 12:00"] = true;
+  agenda["Mar"]["10:00 - 11:00"] = true;
+  agenda["Mié"]["09:00 - 10:00"] = true;
+  return agenda;
+}
 
 export default function EncargadaDashboard() {
   const navigate = useNavigate();
 
-  const [bloquesBloqueados, setBloquesBloqueados] = useState([]);
+  const [pestanaActiva, setPestanaActiva] = useState("resumen");
+  const [agendaBloques, setAgendaBloques] = useState(() =>
+    crearAgendaInicial()
+  );
   const [filtroTexto, setFiltroTexto] = useState("");
   const [casoSeleccionado, setCasoSeleccionado] = useState(null);
 
   const totalActivos = CASOS_ENCARGADA.filter(
     (c) => c.estado !== "Cerrado"
   ).length;
-  const totalDerivados = CASOS_ENCARGADA.filter(
+  const totalDerivadosCTP = CASOS_ENCARGADA.filter(
     (c) => c.estado === "Derivado a CTP"
   ).length;
 
@@ -64,228 +84,457 @@ export default function EncargadaDashboard() {
       .includes(filtroTexto.toLowerCase())
   );
 
-  const handleToggleBloque = (idBloque) => {
-    setBloquesBloqueados((prev) =>
-      prev.includes(idBloque)
-        ? prev.filter((b) => b !== idBloque)
-        : [...prev, idBloque]
-    );
+  // Marcar / desmarcar un bloque del calendario
+  const handleToggleCelda = (dia, hora) => {
+    setAgendaBloques((prev) => ({
+      ...prev,
+      [dia]: {
+        ...prev[dia],
+        [hora]: !prev[dia][hora],
+      },
+    }));
   };
 
   const handleDescargarFormato = (nombre) => {
-    // TODO: backend: descarga real
     alert(`Descarga de demostración: ${nombre}`);
   };
 
   return (
-    <div className="enc-page">
-      <header className="enc-header">
-        <div>
-          <h2>Panel Encargada de Inclusión</h2>
-          <p className="enc-subtitle">
-            Registro inicial de casos, agenda de entrevistas y envío a
-            Coordinadora / Directora.
-          </p>
+    <div className="enc-layout">
+      {/* ========== SIDEBAR ========== */}
+      <aside className="enc-sidebar">
+        <div className="enc-sidebar-top">
+          <img
+            src="https://digital.inacap.cl/recursos/inacap-liferay/img/logo-footer.png"
+            alt="Inacap"
+            className="enc-sidebar-logo"
+          />
         </div>
-        <div className="enc-header-tags">
-          <span className="enc-badge enc-badge-rol">
-            Encargada de Inclusión
-          </span>
-          <span className="enc-badge enc-badge-sede">Sede Temuco</span>
-        </div>
-      </header>
 
-      <section className="enc-stats-row">
-        <div className="enc-stat-card enc-stat-activos">
-          <span className="enc-stat-label">Casos activos</span>
-          <strong className="enc-stat-value">{totalActivos}</strong>
-          <small>En entrevista o derivados</small>
+        <div className="enc-sidebar-card">
+          <span className="enc-sidebar-label">Rol</span>
+          <p className="enc-sidebar-name">Encargada de Inclusión</p>
+          <p className="enc-sidebar-sub">Sede Temuco</p>
         </div>
-        <div className="enc-stat-card enc-stat-derivados">
-          <span className="enc-stat-label">Derivados a CTP</span>
-          <strong className="enc-stat-value">{totalDerivados}</strong>
-          <small>Pendientes de definición de ajustes</small>
-        </div>
-        <div className="enc-stat-card enc-stat-nuevo">
-          <span className="enc-stat-label">Nuevo caso</span>
+
+        <nav className="enc-sidebar-menu">
           <button
-            type="button"
-            className="enc-btn-primary"
-            onClick={() => navigate("/asesor/registrar-caso")}
+            className={
+              "enc-sidebar-item " +
+              (pestanaActiva === "resumen" ? "enc-sidebar-item-active" : "")
+            }
+            onClick={() => setPestanaActiva("resumen")}
           >
-            Registrar caso
+            <span className="enc-sidebar-bullet" />
+            <span>Resumen general</span>
           </button>
-          <small>Abre la pantalla de registro</small>
+
+          <button
+            className={
+              "enc-sidebar-item " +
+              (pestanaActiva === "agenda" ? "enc-sidebar-item-active" : "")
+            }
+            onClick={() => setPestanaActiva("agenda")}
+          >
+            <span className="enc-sidebar-bullet" />
+            <span>Agenda y horarios</span>
+          </button>
+
+          <button
+            className={
+              "enc-sidebar-item " +
+              (pestanaActiva === "casos" ? "enc-sidebar-item-active" : "")
+            }
+            onClick={() => setPestanaActiva("casos")}
+          >
+            <span className="enc-sidebar-bullet" />
+            <span>Casos recientes</span>
+          </button>
+
+          <button
+            className={
+              "enc-sidebar-item " +
+              (pestanaActiva === "detalle" ? "enc-sidebar-item-active" : "")
+            }
+            onClick={() => setPestanaActiva("detalle")}
+          >
+            <span className="enc-sidebar-bullet" />
+            <span>Detalle de caso</span>
+          </button>
+
+          <button
+            className={
+              "enc-sidebar-item " +
+              (pestanaActiva === "documentos"
+                ? "enc-sidebar-item-active"
+                : "")
+            }
+            onClick={() => setPestanaActiva("documentos")}
+          >
+            <span className="enc-sidebar-bullet" />
+            <span>Documentos y formatos</span>
+          </button>
+        </nav>
+
+        <div className="enc-sidebar-bottom">
+          <button
+            className="enc-sidebar-link"
+            onClick={() => navigate("/")}
+          >
+            Volver al inicio
+          </button>
         </div>
-      </section>
+      </aside>
 
-      <div className="enc-main-grid">
-        {/* Columna izquierda */}
-        <section className="enc-column">
-          <div className="enc-card">
-            <div className="enc-card-header">
-              <h3>Agenda y bloqueo de horarios</h3>
-            </div>
-            <p className="enc-card-help">
-              Marca los bloques en los que ya tienes entrevistas agendadas o
-              que quieras bloquear para evitar sobrecarga.
+      {/* ========== MAIN ========== */}
+      <main className="enc-main">
+        {/* HEADER */}
+        <header className="enc-main-header">
+          <div>
+            <h1>Panel Encargada de Inclusión</h1>
+            <p className="enc-main-subtitle">
+              Registro inicial de casos, agenda de entrevistas y envío a
+              Coordinadora / Directora.
             </p>
-
-            <div className="enc-calendar-grid">
-              {BLOQUES_ENCARGADA.map((b) => {
-                const bloqueado = bloquesBloqueados.includes(b.id);
-                return (
-                  <button
-                    key={b.id}
-                    type="button"
-                    className={
-                      "enc-calendar-block" +
-                      (bloqueado ? " enc-calendar-block-busy" : "")
-                    }
-                    onClick={() => handleToggleBloque(b.id)}
-                  >
-                    <span className="enc-calendar-day">{b.dia}</span>
-                    <span className="enc-calendar-hour">{b.hora}</span>
-                    <span className="enc-calendar-status">
-                      {bloqueado ? "Bloqueado" : "Disponible"}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
           </div>
+          <div className="enc-header-tags">
+            <span className="enc-badge enc-badge-rol">
+              Encargada de Inclusión
+            </span>
+            <span className="enc-badge enc-badge-sede">Sede Temuco</span>
+          </div>
+        </header>
 
-          <div className="enc-card">
-            <h3>Formatos y documentos</h3>
-            <p className="enc-card-help">
-              Descarga rápida de los principales documentos usados en la
-              entrevista y registro de casos.
-            </p>
-            <ul className="enc-formatos-list">
-              {ARCHIVOS_FORMATOS.map((f) => (
-                <li key={f}>
-                  <span>{f}</span>
-                  <button
-                    type="button"
-                    className="enc-link"
-                    onClick={() => handleDescargarFormato(f)}
-                  >
-                    Descargar (demo)
-                  </button>
-                </li>
-              ))}
-            </ul>
+        {/* STATS */}
+        <section className="enc-stats-row">
+          <div className="enc-stat-card enc-stat-activos">
+            <span className="enc-stat-label">Casos activos</span>
+            <strong className="enc-stat-value">{totalActivos}</strong>
+            <small>En entrevista o derivados</small>
+          </div>
+          <div className="enc-stat-card enc-stat-derivados">
+            <span className="enc-stat-label">Derivados a CTP</span>
+            <strong className="enc-stat-value">{totalDerivadosCTP}</strong>
+            <small>Pendientes de definición de ajustes</small>
+          </div>
+          <div className="enc-stat-card enc-stat-nuevo">
+            <span className="enc-stat-label">Nuevo caso</span>
+            <button
+              type="button"
+              className="enc-btn-primary"
+              onClick={() => navigate("/asesor/registrar-caso")}
+            >
+              Registrar caso
+            </button>
+            <small>Abre la pantalla de registro</small>
           </div>
         </section>
 
-        {/* Columna derecha */}
-        <section className="enc-column">
-          <div className="enc-card">
-            <h3>Casos recientes</h3>
-            <p className="enc-card-help">
-              Busca casos por nombre, código o carrera para revisar su estado y
-              derivarlos a coordinación.
-            </p>
+        {/* ========== CONTENIDO POR PESTAÑA ========== */}
 
-            <input
-              type="text"
-              className="enc-busqueda-input"
-              placeholder="Buscar por estudiante, caso o carrera"
-              value={filtroTexto}
-              onChange={(e) => setFiltroTexto(e.target.value)}
-            />
-
-            <div className="enc-table-wrapper">
-              <table className="enc-table">
-                <thead>
-                  <tr>
-                    <th>Caso</th>
-                    <th>Estudiante</th>
-                    <th>Carrera</th>
-                    <th>Estado</th>
-                    <th>Registro</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {casosFiltrados.length === 0 && (
-                    <tr>
-                      <td colSpan={6} className="enc-table-empty">
-                        No hay casos con estos filtros.
-                      </td>
-                    </tr>
-                  )}
-                  {casosFiltrados.map((c) => (
-                    <tr key={c.id}>
-                      <td>{c.id}</td>
-                      <td>{c.estudiante}</td>
-                      <td>{c.carrera}</td>
-                      <td>{c.estado}</td>
-                      <td>{c.fechaRegistro}</td>
-                      <td>
-                        <button
-                          type="button"
-                          className="enc-link"
-                          onClick={() => setCasoSeleccionado(c)}
-                        >
-                          Ver detalle
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {casoSeleccionado && (
-              <div className="enc-detalle">
-                <div className="enc-detalle-header">
-                  <div>
-                    <span className="enc-detalle-id">
-                      {casoSeleccionado.id}
-                    </span>
-                    <h4>{casoSeleccionado.estudiante}</h4>
-                    <p className="enc-detalle-meta">
-                      {casoSeleccionado.carrera} · Origen:{" "}
-                      {casoSeleccionado.origen}
-                    </p>
-                  </div>
-                  <button
-                    type="button"
-                    className="enc-btn-cerrar"
-                    onClick={() => setCasoSeleccionado(null)}
-                  >
-                    Cerrar
-                  </button>
+        {/* 1) Resumen general */}
+        {pestanaActiva === "resumen" && (
+          <section className="enc-section">
+            <div className="enc-grid">
+              <div className="enc-card">
+                <div className="enc-card-header">
+                  <h3>Últimos casos registrados</h3>
                 </div>
-
-                <p className="enc-detalle-text">
-                  Este bloque representa el detalle básico del caso registrado
-                  por la Encargada. Aquí se puede complementar información antes
-                  de derivar a la Coordinadora Técnica Pedagógica.
+                <p className="enc-card-help">
+                  Vista rápida de los casos ingresados por la Encargada.
                 </p>
-
-                <div className="enc-detalle-actions">
-                  <button
-                    type="button"
-                    className="enc-btn-primary"
-                    onClick={() => navigate("/asesor/registrar-caso")}
-                  >
-                    Abrir ficha de registro
-                  </button>
-                  <button
-                    type="button"
-                    className="enc-btn-secondary"
-                    onClick={() => navigate("/asesor/definir-ajustes")}
-                  >
-                    Ver definición de ajustes (cuando exista)
-                  </button>
-                </div>
+                <ul className="enc-list-casos">
+                  {CASOS_ENCARGADA.map((c) => (
+                    <li key={c.id}>
+                      <div>
+                        <span className="enc-case-id">{c.id}</span>
+                        <p className="enc-case-title">{c.estudiante}</p>
+                        <p className="enc-case-meta">
+                          {c.carrera} · {c.estado}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        className="enc-link"
+                        onClick={() => {
+                          setCasoSeleccionado(c);
+                          setPestanaActiva("detalle");
+                        }}
+                      >
+                        Ver detalle
+                      </button>
+                    </li>
+                  ))}
+                </ul>
               </div>
-            )}
-          </div>
-        </section>
-      </div>
+
+              <div className="enc-card">
+                <h3>Accesos rápidos</h3>
+                <p className="enc-card-help">
+                  Atajos a las vistas que más utiliza la Encargada.
+                </p>
+                <ul className="enc-list-simple">
+                  <li>
+                    <button
+                      type="button"
+                      className="enc-link"
+                      onClick={() => setPestanaActiva("agenda")}
+                    >
+                      Ver agenda semanal
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      className="enc-link"
+                      onClick={() => setPestanaActiva("casos")}
+                    >
+                      Revisar casos recientes
+                    </button>
+                  </li>
+                  <li>
+                    <button
+                      type="button"
+                      className="enc-link"
+                      onClick={() => setPestanaActiva("documentos")}
+                    >
+                      Revisar formatos oficiales
+                    </button>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 2) Agenda y horarios – calendario por días */}
+        {pestanaActiva === "agenda" && (
+          <section className="enc-section">
+            <div className="enc-card">
+              <div className="enc-card-header">
+                <h3>Agenda y bloqueo de horarios</h3>
+              </div>
+              <p className="enc-card-help">
+                Selecciona los bloques de cada día para marcar si están
+                disponibles o bloqueados por entrevistas.
+              </p>
+
+              <div className="enc-calendar-legend">
+                <span>
+                  <span className="enc-legend-dot enc-legend-free" /> Disponible
+                </span>
+                <span>
+                  <span className="enc-legend-dot enc-legend-busy" /> Bloqueado /
+                  Entrevista
+                </span>
+              </div>
+
+              <div className="enc-calendar-table-wrapper">
+                <table className="enc-calendar-table">
+                  <thead>
+                    <tr>
+                      <th>Hora / Día</th>
+                      {DIAS_CALENDARIO.map((dia) => (
+                        <th key={dia}>{dia}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {HORAS_CALENDARIO.map((hora) => (
+                      <tr key={hora}>
+                        <td className="enc-calendar-hour-col">{hora}</td>
+                        {DIAS_CALENDARIO.map((dia) => {
+                          const ocupado = agendaBloques[dia][hora];
+                          return (
+                            <td key={dia}>
+                              <button
+                                type="button"
+                                className={
+                                  "enc-calendar-cell" +
+                                  (ocupado ? " enc-calendar-cell-busy" : "")
+                                }
+                                onClick={() => handleToggleCelda(dia, hora)}
+                              >
+                                {ocupado ? "Bloqueado" : "Disponible"}
+                              </button>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 3) Casos recientes */}
+        {pestanaActiva === "casos" && (
+          <section className="enc-section">
+            <div className="enc-card">
+              <h3>Casos recientes</h3>
+              <p className="enc-card-help">
+                Busca casos por nombre, código o carrera para revisar su estado
+                y derivarlos a coordinación.
+              </p>
+
+              <input
+                type="text"
+                className="enc-busqueda-input"
+                placeholder="Buscar por estudiante, caso o carrera"
+                value={filtroTexto}
+                onChange={(e) => setFiltroTexto(e.target.value)}
+              />
+
+              <div className="enc-table-wrapper">
+                <table className="enc-table">
+                  <thead>
+                    <tr>
+                      <th>Caso</th>
+                      <th>Estudiante</th>
+                      <th>Carrera</th>
+                      <th>Estado</th>
+                      <th>Registro</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {casosFiltrados.length === 0 && (
+                      <tr>
+                        <td colSpan={6} className="enc-table-empty">
+                          No hay casos con estos filtros.
+                        </td>
+                      </tr>
+                    )}
+                    {casosFiltrados.map((c) => (
+                      <tr key={c.id}>
+                        <td>{c.id}</td>
+                        <td>{c.estudiante}</td>
+                        <td>{c.carrera}</td>
+                        <td>{c.estado}</td>
+                        <td>{c.fechaRegistro}</td>
+                        <td>
+                          <button
+                            type="button"
+                            className="enc-link"
+                            onClick={() => {
+                              setCasoSeleccionado(c);
+                              setPestanaActiva("detalle");
+                            }}
+                          >
+                            Ver detalle
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* 4) Detalle de caso */}
+        {pestanaActiva === "detalle" && (
+          <section className="enc-section">
+            <div className="enc-card">
+              <h3>Detalle de caso</h3>
+
+              {!casoSeleccionado && (
+                <p className="enc-card-help">
+                  Selecciona un caso desde “Casos recientes” o desde el
+                  “Resumen general” para ver el detalle antes de derivar a la
+                  Coordinadora Técnica Pedagógica.
+                </p>
+              )}
+
+              {casoSeleccionado && (
+                <div className="enc-detalle">
+                  <div className="enc-detalle-header">
+                    <div>
+                      <span className="enc-detalle-id">
+                        {casoSeleccionado.id}
+                      </span>
+                      <h4>{casoSeleccionado.estudiante}</h4>
+                      <p className="enc-detalle-meta">
+                        {casoSeleccionado.carrera} · Origen:{" "}
+                        {casoSeleccionado.origen}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      className="enc-btn-cerrar"
+                      onClick={() => setCasoSeleccionado(null)}
+                    >
+                      Cerrar
+                    </button>
+                  </div>
+
+                  <p className="enc-detalle-text">
+                    Este bloque representa el detalle básico del caso registrado
+                    por la Encargada. Aquí se puede complementar información
+                    antes de derivar a la Coordinadora Técnica Pedagógica.
+                  </p>
+
+                  <div className="enc-detalle-actions">
+                    <button
+                      type="button"
+                      className="enc-btn-primary"
+                      onClick={() => navigate("/asesor/registrar-caso")}
+                    >
+                      Abrir ficha de registro
+                    </button>
+                    <button
+                      type="button"
+                      className="enc-btn-secondary"
+                      onClick={() => setPestanaActiva("agenda")}
+                    >
+                      Ver agenda semanal
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </section>
+        )}
+
+        {/* 5) Documentos y formatos */}
+        {pestanaActiva === "documentos" && (
+          <section className="enc-section">
+            <div className="enc-card">
+              <h3>Documentos y formatos</h3>
+              <p className="enc-card-help">
+                Plantillas base utilizadas para entrevistas, consentimientos e
+                informes. En producción se descargarían desde el repositorio
+                oficial de la sede.
+              </p>
+
+              <ul className="enc-formatos-list">
+                {ARCHIVOS_FORMATOS.map((f) => (
+                  <li key={f} className="enc-doc-item">
+                    <div className="enc-doc-info">
+                      <span className="enc-doc-dot" />
+                      <span className="enc-doc-name">{f}</span>
+                    </div>
+                    <button
+                      type="button"
+                      className="enc-doc-link"
+                      onClick={() => handleDescargarFormato(f)}
+                    >
+                      Descargar (demo)
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+
+        <footer className="enc-footer">
+          © 2025 · SGAR Inclusión · Vista Encargada
+        </footer>
+      </main>
     </div>
   );
 }
