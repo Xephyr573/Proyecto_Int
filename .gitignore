@@ -113,3 +113,5 @@ backend/api/__pycache__/urls.cpython-313.pyc
 backend/api/__pycache__/views.cpython-313.pyc
 backend/core/__pycache__/settings.cpython-313.pyc
 >>>>>>> d41385b3cb1914c4c3a29b620b240187da2e6cfc
+backend/api/__pycache__/urls.cpython-313.pyc
+backend/api/__pycache__/views.cpython-313.pyc
