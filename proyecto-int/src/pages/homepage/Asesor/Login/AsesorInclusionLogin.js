@@ -26,6 +26,10 @@ export default function AsesorInclusionLogin() {
 
       // Verificamos si el rol es el correcto
       if (userData.rol === 'Asesor' && userData.datos_perfil.especialidad === 'Pedagogico') {
+
+        //guardamos la sesion del asesor
+        localStorage.setItem('user_data', JSON.stringify(userData));
+
         // Éxito: El rol es correcto, redirige al dashboard
         navigate("/asesor/registrar-caso");
       } else {

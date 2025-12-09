@@ -1,8 +1,9 @@
 // src/pages/homepage/Asesor/pages/RegistrarCaso.js
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./RegistrarCaso.css";
 import { buscarEstudiante } from "../../../../services/searchStudent";
+import { crearCaso, obtenerMotivos } from "../../../../services/guardarCaso";
 
 export default function RegistrarCaso() {
   const navigate = useNavigate();
@@ -17,6 +18,23 @@ export default function RegistrarCaso() {
   const [mensajeBusqueda, setMensajeBusqueda] = useState(null); // { tipo: "ok" | "error", texto: "" }
   const [inputBusqueda, setInputBusqueda] = useState("");
 
+  //estados para registrar caso
+  const [listaMotivos, setListaMotivos] = useState([]); // Para llenar el select de motivos
+  const [motivoSeleccionado, setMotivoSeleccionado] = useState(""); // ID del motivo
+  const [descripcion, setDescripcion] = useState(""); // Texto del detalle
+  const [mensajeGuardado, setMensajeGuardado] = useState(null); // Feedback al guardar
+  const [cargando, setCargando] = useState(false); // Para deshabilitar botón
+
+  //Cargamos los motivos del caso
+  useEffect(() => {
+    const cargarDatosIniciales = async () => {
+      const motivosCaso = await obtenerMotivos();
+      setListaMotivos(motivosCaso);
+    };
+    cargarDatosIniciales();
+  }, []);
+
+  //Funcion para buscar un estudiante en la base de datos
   const buscarDesdeBase = async (e) => {
     e.preventDefault();
     const terminoBusqueda = rut || correo || nombre;
@@ -67,6 +85,55 @@ export default function RegistrarCaso() {
             texto: mensajeError, 
         });
       }
+
+    //funcion para registrar el caso
+  
+};
+
+const handleGuardarCaso = async () => {
+    setMensajeGuardado(null);
+
+    // A. Obtener ID del Asesor desde localStorage
+    // Ajusta 'usuario_data' según como lo hayas guardado en tu Login
+    const usuarioGuardado = JSON.parse(localStorage.getItem('user_data'));
+    const idAsesor = usuarioGuardado ? usuarioGuardado.id_usuario : null;
+
+    // B. Validaciones
+    if (!idAsesor) {
+        setMensajeGuardado({ tipo: "error", texto: "Error de sesión. Vuelva a ingresar." });
+        return;
+    }
+    if (!rut) {
+        setMensajeGuardado({ tipo: "error", texto: "Debe buscar un estudiante primero." });
+        return;
+    }
+    if (!motivoSeleccionado) {
+        setMensajeGuardado({ tipo: "error", texto: "Seleccione un motivo." });
+        return;
+    }
+
+    setCargando(true);
+
+    try {
+        const datosEnviar = {
+            rut_estudiante: rut,
+            id_asesor: idAsesor,
+            id_motivo: motivoSeleccionado,
+            descripcion: descripcion
+        };
+
+        const respuesta = await crearCaso(datosEnviar);
+
+        setMensajeGuardado({ 
+            tipo: "ok", 
+            texto: `Caso creado exitosamente. ID: ${respuesta.id_caso}` 
+        });
+
+    } catch (errorTexto) {
+        setMensajeGuardado({ tipo: "error", texto: errorTexto });
+    } finally {
+        setCargando(false);
+    }
   };
 
   return (
@@ -113,7 +180,6 @@ export default function RegistrarCaso() {
       </div>
 
       {/* Cuadro de DATOS DE CASO */}
-
       <form className="asesor-form">
         <fieldset className="asesor-fieldset">
           <legend>Datos del caso</legend>
@@ -142,7 +208,6 @@ export default function RegistrarCaso() {
         </fieldset>
 
         {/* Cuadro DATOS ESTUDIANTE */}
-
         <fieldset className="asesor-fieldset">
           <legend>Datos del estudiante</legend>
 
@@ -240,6 +305,23 @@ export default function RegistrarCaso() {
 
           <label>
             Motivo principal
+            <select 
+                value={motivoSeleccionado} // Conectado al estado
+                onChange={(e) => setMotivoSeleccionado(e.target.value)} // Actualiza estado
+            >
+              <option value="">Seleccione un motivo</option>
+              
+              {/* Mapeamos la lista que viene de la BD */}
+              {listaMotivos.map((m) => (
+                  <option key={m.id} value={m.id}>
+                      {m.nombre}
+                  </option>
+              ))}
+            </select>
+          </label>
+
+          {/* <label>
+            Motivo principal
              <select defaultValue="">
               <option value="" disabled>
                 Seleccione un motivo
@@ -258,20 +340,43 @@ export default function RegistrarCaso() {
               </option>
               <option value="otro">Otro motivo</option>
             </select>
-          </label>
+          </label> */}
 
           <label>
             Detalle del caso
             <textarea
               rows={4}
-              placeholder="Describa brevemente la situación del estudiante, antecedentes relevantes y acuerdos iniciales."
+              placeholder="Describa brevemente la situación del estudiante."
+              value={descripcion} //conectado al estado
+              onChange={(e) => setDescripcion(e.target.value)} //actualiza el estado
             />
           </label>
         </fieldset>
 
         <div className="asesor-form-buttons">
-          <button type="button" className="btn-asesor-primary">
-            Guardar registro
+          
+          {/* Mensaje de feedback del guardado */}
+          {mensajeGuardado && (
+             <div style={{ 
+                 width: '100%', 
+                 padding: '10px', 
+                 marginBottom: '10px',
+                 borderRadius: '4px',
+                 backgroundColor: mensajeGuardado.tipo === 'error' ? '#ffebee' : '#e8f5e9',
+                 color: mensajeGuardado.tipo === 'error' ? '#c62828' : '#2e7d32',
+                 border: `1px solid ${mensajeGuardado.tipo === 'error' ? '#ef9a9a' : '#a5d6a7'}`
+             }}>
+                 {mensajeGuardado.texto}
+             </div>
+          )}
+
+          <button 
+            type="button" // Type button para evitar submit tradicional del form
+            className="btn-asesor-primary"
+            onClick={handleGuardarCaso} // Conectamos la función
+            disabled={cargando} // Deshabilitar si está cargando
+          >
+            {cargando ? "Guardando..." : "Guardar registro"}
           </button>
 
           <Link to="/Asesor" className="btn-asesor-volver">
@@ -282,4 +387,3 @@ export default function RegistrarCaso() {
     </div>
   );
 }
-

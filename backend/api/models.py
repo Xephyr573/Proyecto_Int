@@ -110,29 +110,46 @@ class Asignatura(models.Model):
 # 3. MODELOS DE PROCESO
 # ==============================================================================
 
+class MotivoCaso(models.Model):
+    nombre = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.nombre
+
 class Caso(models.Model):
+    #Creamos constantes para evitar errores tipograficos
+    ESTADO_INICIADO = 'Iniciado'
+    ESTADO_ABIERTO = 'Abierto'
+    ESTADO_FINALIZADO = 'Finalizado'
+
+    #Creamos una tupla de tuplas para las opciones de estado
+    ESTADO_CHOICES = [
+        (ESTADO_INICIADO, 'Iniciado'),
+        (ESTADO_ABIERTO, 'Abierto'),
+        (ESTADO_FINALIZADO, 'Finalizado'),
+    ]
+
     # id_caso (PK)
     id_caso = models.AutoField(primary_key=True)
     id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.SET_NULL, null=True, related_name='casos_estudiante')
     id_usuario_asesor = models.ForeignKey(Asesor, on_delete=models.SET_NULL, null=True, related_name='casos_asesor')
-    estado_caso = models.CharField(max_length=50) # Ejemplo: Iniciado, En evaluacion, Finalizado
+    estado_caso = models.CharField(
+        max_length=12, 
+        choices=ESTADO_CHOICES, 
+        default=ESTADO_INICIADO # Al crear, nace como 'Iniciado'
+    )
+    motivo = models.ForeignKey(MotivoCaso, 
+                               on_delete=models.PROTECT, # Evita borrar motivo si hay casos asociados
+                               verbose_name="Motivo del Caso",
+                               null=True,
+                               blank=True)
     fecha_ingreso_caso = models.DateField(default=ahora)
-    semestre = models.CharField(max_length=8, blank=True) # Ejemplo: 2024-1
+    semestre = models.CharField(max_length=8, blank=True) # Ejemplo: 2025-1
+    descripcion = models.TextField(blank=True, verbose_name="Descripción del Caso")
 
     def __str__(self):
         return f"Caso {self.id_caso} de {self.id_usuario_estudiante.id_usuario.nombre}"
-    
-class MotivoCaso(models.Model):
-    # id_motivo (PK)
-    id_motivo = models.AutoField(primary_key=True)
-    id_caso = models.ForeignKey(Caso, on_delete=models.CASCADE, related_name='motivos_caso')
-    motivo = models.CharField(max_length=200)
-    origen = models.CharField(max_length=100)
-    detalle = models.TextField()
 
-    def __str__(self):
-        return f"Motivo {self.id_motivo} del caso {self.id_caso.id_caso}"
-    
 class Entrevista(models.Model):
     # id_entrevista (PK)
     id_entrevista = models.AutoField(primary_key=True)

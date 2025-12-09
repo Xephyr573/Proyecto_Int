@@ -4,10 +4,18 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.contrib.auth.hashers import check_password
 from django.db.models import Q
-from .serializer import UsuarioSerializer, EstudianteSerializer, AsesorSerializer, DocenteSerializer, DirectorSerializer, AjusteSerializer, NotificacionSerializer, AsignaturaSerializer, CasoSerializer, EntrevistaSerializer, TipoAjusteSerializer, UsuarioBaseSerializer, UsuarioConEstudianteSerializer
-from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Notificacion, Asignatura, Caso, Entrevista, TipoAjuste
+from django.utils import timezone
+from .serializer import UsuarioSerializer, EstudianteSerializer, AsesorSerializer, DocenteSerializer, DirectorSerializer, AjusteSerializer, NotificacionSerializer, AsignaturaSerializer, CasoSerializer, EntrevistaSerializer, TipoAjusteSerializer, UsuarioBaseSerializer
+from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Notificacion, Asignatura, Caso, Entrevista, TipoAjuste, MotivoCaso
+from .utils import limpiar_rut, formatear_rut, obtener_semestre_actual
+
+from django.views.decorators.csrf import csrf_exempt
 
 # Create your views here.
+
+#CONSTANTES DE MENSAJES DE ERROR
+ERROR_SERVER = 'Ocurrio un error interno del servidor.'
+
 
 #=============================
 # VIEWSETS USUARIO Y ROLES
@@ -155,34 +163,6 @@ def login_view(request):
     except Exception as e:
         print("Error en login_view:", str(e)) # Log del error para debugging (Solo nosotros)
         return Response({'error': 'Ocurrio un error interno del servidor.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) # Error genérico del servidor
-    
-
-def limpiar_rut(texto):
-    """
-    Elimina puntos, guiones y espacios. Convierte a mayúsculas.
-    Ej: "12.345.678-k" -> "12345678K"
-    """
-    if not texto:
-        return ""
-    return texto.replace(".", "").replace("-", "").replace(" ", "").upper()
-
-def formatear_rut(rut_limpio):
-    """
-    Recibe: '123456789' (o '12345678K')
-    Devuelve: '12.345.678-9'
-    """
-    if not rut_limpio or len(rut_limpio) < 2:
-        return rut_limpio # Devuelve tal cual si es muy corto o inválido
-
-    # Separamos cuerpo y dígito verificador
-    cuerpo = rut_limpio[:-1]
-    dv = rut_limpio[-1]
-
-    # Formateamos el cuerpo con puntos de miles
-    # El truco: invertimos el string, agrupamos de a 3, unimos con puntos y volvemos a invertir
-    cuerpo_formateado = ".".join([cuerpo[::-1][i:i+3] for i in range(0, len(cuerpo), 3)])[::-1]
-
-    return f"{cuerpo_formateado}-{dv}"
 
 @api_view(['GET'])
 def buscar_estudiante(request):
@@ -207,13 +187,78 @@ def buscar_estudiante(request):
     
     except Exception as e:
         print("Error en buscar_estudiante:", str(e)) # Log del error para debugging (Solo nosotros)
-        return Response({'error': 'Ocurrio un error interno del servidor.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'error': ERROR_SERVER}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
-    serializer = UsuarioConEstudianteSerializer(estudiante)
+    serializer = EstudianteSerializer(estudiante)
     return Response(serializer.data, status=status.HTTP_200_OK)
 
+@csrf_exempt
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def registrar_caso(request):
+    # Lógica para registrar un nuevo caso
+    data = request.data # Datos enviados en la solicitud POST
 
-# api_view(['POST']):
-# def registrar_caso(request):
-#     # Lógica para registrar un nuevo caso
-#     pass
+    rut_estudiante = data.get('rut_estudiante')
+    id_asesor = data.get('id_asesor') # ID del usuario logueado
+
+    if not rut_estudiante or not id_asesor:
+        return Response({'error': 'RUT del estudiante y ID del asesor son requeridos.'}, status=status.HTTP_400_BAD_REQUEST)
+    
+    try:
+        try:
+            estudiante = Estudiante.objects.get(rut=rut_estudiante)
+        except Estudiante.DoesNotExist:
+            return Response({'error': 'Estudiante no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        try:
+            asesor = Asesor.objects.get(id_usuario__id_usuario=id_asesor)
+        except Asesor.DoesNotExist:
+            return Response({'error': 'Asesor no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        motivo_obj = None # Aquí deberíamos obtener el objeto MotivoCaso basado en los datos recibidos
+        id_motivo = data.get('id_motivo')
+
+        if id_motivo:
+            try:
+                motivo_obj = MotivoCaso.objects.get(pk=id_motivo)
+            except MotivoCaso.DoesNotExist:
+                return Response({'error': 'Motivo del caso no encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+        
+        if not motivo_obj:
+             return Response({'error': 'Debe seleccionar un motivo válido.'}, status=400)
+        
+        nuevo_caso = Caso.objects.create(
+            id_usuario_estudiante=estudiante,
+            id_usuario_asesor=asesor,
+            motivo=motivo_obj,
+            descripcion=data.get('descripcion', ''),
+            #Datos automaticos
+            estado_caso=Caso.ESTADO_INICIADO,
+            fecha_ingreso_caso=timezone.now(),
+            semestre=obtener_semestre_actual()
+        )
+
+        return Response({'success': True,
+                        'message': 'Caso registrado exitosamente.', 
+                        'id_caso': nuevo_caso.id_caso,
+                        'estudiante': estudiante.rut}, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        print("Error en registrar_caso:", str(e)) # Log del error para debugging (Solo nosotros)
+        return Response({'error': ERROR_SERVER}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+#Vista para obetener la lista de motivos
+@api_view(['GET'])
+def listar_motivos_view(request):
+    """
+    Devuelve la lista de motivos.
+    """
+    try:
+        motivos = MotivoCaso.objects.all().values('id', 'nombre')
+        
+        # Convertimos el QuerySet a una lista estándar de Python para enviarla
+        return Response(list(motivos), status=200)
+
+    except Exception as e:
+        print(f"Error listando motivos: {e}")
+        return Response([], status=500) # En caso de error, devolvemos lista vacía para no romper el front

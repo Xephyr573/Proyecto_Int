@@ -26,6 +26,10 @@ export default function AsesorPedagogicoLogin() {
 
       // Verificamos si el rol es el correcto
       if (userData.rol === 'Asesor' && userData.datos_perfil.especialidad === 'CTP') {
+
+        //guardamos la sesion del asesor
+        localStorage.setItem('user_data', JSON.stringify(userData));
+
         // Éxito: El rol es correcto, redirige al dashboard
         navigate("/asesor/definir-ajustes"); 
       } else {
