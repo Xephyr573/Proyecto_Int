@@ -122,3 +122,4 @@ backend/core/__pycache__/settings.cpython-313.pyc
 backend/api/__pycache__/urls.cpython-313.pyc
 backend/api/__pycache__/views.cpython-313.pyc
 >>>>>>> b74f6718ad93b791cd3ffa3aa04990aaf6fe29e3
+backend/core/settings.py
