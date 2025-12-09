@@ -176,8 +176,97 @@
   background: #2e2e2e;
   color: #ffffff;
   font-size: 0.85rem;
+  margin-top: auto; /*Empujara el footer al fondo si hay poco contenido*/
 }
 
+/*Estilos del Calendario*/
+.est-calendar-section{
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 26px 24px;
+  margin: 0 40px 40px 40px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.16);
+  border: 1px solid rgba(148,163, 184, 0.4);
+}
+
+.est-calendar-section h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: #1f2933;
+}
+
+.est-calendar-section p {
+  color: #6b7280;
+  margin-bottom: 24px;
+}
+
+.est-calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 16px;
+}
+
+/*Estilo de cada boton del calendario*/
+.est-calendar-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px dashed #cbd5e1;
+  background: #f8fafc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-height: 100px;
+  text-align: left;
+}
+
+/*Estado Disponible*/
+.est-calendar-block.disponible:hover {
+  background: #fff1f2;
+  border-color: #dc2626;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(220, 38, 38, 0.15);
+}
+
+.est-calendar-block.disponible .est-cal-status{
+  color: #dc2626;
+  font-weight: 700;
+}
+
+/*Estado Ocupado*/
+.est-calendar-block.ocupado {
+  background: #e2e8f0;
+  border: 1px solid #cbd5e1;
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.est-calendar-block.ocupado .est-cal-status {
+  color: #64748b;
+  font-weight: 500;
+}
+
+/*Textos internos*/
+.est-cal-day {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1f2933;
+  margin-bottom: 4px;
+}
+
+.est-cal-hour {
+  font-size: 0.9rem;
+  color: #4b5563;
+  margin-bottom: auto;
+}
+
+.est-cal-status {
+  margin-top: 10px;
+  font-size: 0.85rem;
+}
 /* ===== Responsive ===== */
 @media (max-width: 900px) {
   .est-layout {

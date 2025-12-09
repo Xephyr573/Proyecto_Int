@@ -2,6 +2,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AsesorDashboard.css";
+import { BLOQUES_CALENDARIO } from "../../../datosGlobales";
 
 // Datos de ejemplo: después los reemplazas por API
 const CASOS_ASESOR = [
@@ -22,7 +23,7 @@ const CASOS_ASESOR = [
   },
   {
     id: "CASO-002",
-    estudiante: "Valentina Muñoz",
+    estudiante: "Matias Soto",
     carrera: "Analista Programador",
     estado: "En seguimiento",
     fechaEntrevista: "2025-04-02 15:30",
@@ -37,7 +38,7 @@ const CASOS_ASESOR = [
   },
   {
     id: "CASO-003",
-    estudiante: "Diego Fuentes",
+    estudiante: "Benjamin Urra",
     carrera: "Ingeniería en Informática",
     estado: "Derivado a Directora",
     fechaEntrevista: "2025-03-25 09:30",
@@ -49,14 +50,7 @@ const CASOS_ASESOR = [
   },
 ];
 
-const BLOQUES_CALENDARIO = [
-  { id: 1, dia: "Lun 7", hora: "09:00 - 10:00" },
-  { id: 2, dia: "Lun 7", hora: "10:00 - 11:00" },
-  { id: 3, dia: "Mar 8", hora: "10:00 - 11:00" },
-  { id: 4, dia: "Mié 9", hora: "15:00 - 16:00" },
-  { id: 5, dia: "Jue 10", hora: "09:00 - 10:00" },
-  { id: 6, dia: "Vie 11", hora: "11:00 - 12:00" },
-];
+//La seccion de BLOQUES_CALENDARIO fue movida a un archivo llamado datosGlobales.js
 
 // Plantillas para la pestaña "Documentos y formatos"
 const DOCUMENTOS_PLANTILLAS = [
@@ -70,10 +64,14 @@ export default function AsesorDashboard() {
   const navigate = useNavigate();
 
   // Pestaña activa del panel
+  // const de bloquesBloqueados inicia estado de lectura en LocalStorage
   const [pestanaActiva, setPestanaActiva] = useState("resumen");
   const [filtroBusqueda, setFiltroBusqueda] = useState("");
   const [filtroCarrera, setFiltroCarrera] = useState("");
-  const [bloquesBloqueados, setBloquesBloqueados] = useState([]);
+  const [bloquesBloqueados, setBloquesBloqueados] = useState(() => {
+    const guardados = localStorage.getItem("bloques_ocupados");
+    return guardados ? JSON.parse(guardados): [];
+  });
   const [casoSeleccionado, setCasoSeleccionado] = useState(null);
 
   const totalCasos = CASOS_ASESOR.length;
@@ -93,12 +91,16 @@ export default function AsesorDashboard() {
 
   const carrerasUnicas = Array.from(new Set(CASOS_ASESOR.map((c) => c.carrera)));
 
+//LocalStorage se actualizara cada vez que se bloquee/desbloquee un bloque
+//Ademas se guardara en la BD del navegador. Esto mientras se ve el backend para que este funcional
   const handleToggleBloque = (idBloque) => {
-    setBloquesBloqueados((prev) =>
-      prev.includes(idBloque)
+    setBloquesBloqueados((prev) =>{
+      const nuevosBloqueos = prev.includes(idBloque)
         ? prev.filter((b) => b !== idBloque)
-        : [...prev, idBloque]
-    );
+        : [...prev, idBloque];
+      localStorage.setItem("bloques_ocupados", JSON.stringify(nuevosBloqueos));
+      return nuevosBloqueos;
+  });
   };
 
   const handleDescargarArchivo = (nombreArchivo) => {
