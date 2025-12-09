@@ -23,7 +23,7 @@ const CASOS_ASESOR = [
   },
   {
     id: "CASO-002",
-    estudiante: "Valentina Muñoz",
+    estudiante: "Matias Soto",
     carrera: "Analista Programador",
     estado: "En seguimiento",
     fechaEntrevista: "2025-04-02 15:30",
@@ -38,7 +38,7 @@ const CASOS_ASESOR = [
   },
   {
     id: "CASO-003",
-    estudiante: "Diego Fuentes",
+    estudiante: "Benjamin Urra",
     carrera: "Ingeniería en Informática",
     estado: "Derivado a Directora",
     fechaEntrevista: "2025-03-25 09:30",
