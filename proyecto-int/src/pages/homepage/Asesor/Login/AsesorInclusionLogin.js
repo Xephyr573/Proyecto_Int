@@ -31,7 +31,7 @@ export default function AsesorInclusionLogin() {
         localStorage.setItem('user_data', JSON.stringify(userData));
 
         // Éxito: El rol es correcto, redirige al dashboard
-        navigate("/asesor/registrar-caso");
+        navigate("/asesor/dashboard");
       } else {
         // Error: Es un usuario válido, pero no es el rol esperado
         setErrores('Acceso denegado: Sus credenciales no pertenecen a un Asesor pedagogico.'); 

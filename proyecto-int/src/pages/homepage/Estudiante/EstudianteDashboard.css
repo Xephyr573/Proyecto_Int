@@ -300,3 +300,736 @@
     padding-inline: 20px;
   }
 }
+
+/* =========================
+   Calendario mensual (Estudiante)
+   ========================= */
+
+.est-agenda-grid{
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.est-cal{
+  border: 1px solid rgba(148,163,184,0.45);
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.est-cal-head{
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.est-cal-nav{
+  border: 1px solid rgba(148,163,184,0.45);
+  background: #f8fafc;
+  border-radius: 10px;
+  height: 36px;
+  cursor: pointer;
+}
+.est-cal-nav:hover{ background: #f1f5f9; }
+
+.est-cal-title{
+  text-align: center;
+  font-weight: 800;
+  text-transform: capitalize;
+  color: #1f2933;
+}
+
+.est-cal-weekdays{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.est-cal-wd{
+  text-align: center;
+  font-size: 0.75rem;
+  color: #6b7280;
+  padding: 6px 0;
+}
+
+.est-cal-grid{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.est-cal-day{
+  border: 1px solid rgba(148,163,184,0.35);
+  background: #ffffff;
+  border-radius: 12px;
+  min-height: 46px;
+  cursor: pointer;
+  text-align: left;
+  padding: 6px 8px;
+}
+.est-cal-day:hover{ background: #f8fafc; }
+
+.est-cal-day-muted{ opacity: 0.45; }
+
+.est-cal-day-selected{
+  outline: 2px solid rgba(182,0,0,0.25);
+  border-color: #b60000;
+  background: #fff1f2;
+}
+
+.est-cal-num{
+  font-weight: 800;
+  color: #1f2933;
+  font-size: 0.85rem;
+}
+
+.est-day{
+  border: 1px solid rgba(148,163,184,0.45);
+  border-radius: 14px;
+  background: #ffffff;
+  padding: 14px;
+}
+
+.est-day-head h3{
+  margin: 0;
+  font-size: 1rem;
+}
+.est-day-sub{
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 0.82rem;
+  text-transform: capitalize;
+}
+
+.est-slots{
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.est-slot-btn{
+  border-radius: 14px;
+  border: 1px solid rgba(148,163,184,0.45);
+  padding: 12px;
+  background: #f8fafc;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.est-slot-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(15,23,42,0.10);
+}
+
+.est-slot-hour{
+  font-weight: 900;
+  color: #1f2933;
+}
+.est-slot-status{
+  margin-top: 6px;
+  font-size: 0.85rem;
+  font-weight: 800;
+}
+
+.est-slot-available{
+  background: #fff1f2;
+  border-color: rgba(182,0,0,0.35);
+}
+.est-slot-available .est-slot-status{ color: #b60000; }
+
+.est-slot-blocked{
+  background: #e2e8f0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.est-slot-blocked .est-slot-status{ color: #64748b; }
+
+.est-slot-reserved{
+  background: #eff6ff;
+  cursor: not-allowed;
+  opacity: 0.8;
+  border-color: rgba(37,99,235,0.35);
+}
+.est-slot-reserved .est-slot-status{ color: #1d4ed8; }
+
+.est-slot-pending{
+  background: #fef9c3;
+  cursor: not-allowed;
+  opacity: 0.9;
+  border-color: rgba(245,158,11,0.45);
+}
+.est-slot-pending .est-slot-status{ color: #92400e; }
+
+.est-slot-btn:disabled{
+  pointer-events: none;
+}
+
+@media (max-width: 980px){
+  .est-agenda-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+
+.est2-layout{
+  min-height: 100vh;
+  display: flex;
+  background: #f3f4ff;
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #111827;
+}
+
+/* Sidebar */
+.est2-sidebar{
+  width: 300px;
+  background: #111827;
+  color: #f9fafb;
+  display: flex;
+  flex-direction: column;
+  padding: 22px 22px 18px;
+  box-shadow: 4px 0 18px rgba(15, 23, 42, 0.35);
+}
+
+.est2-sidebar-top{ margin-bottom: 18px; }
+.est2-sidebar-logo{ height: 42px; }
+
+.est2-profile-mini{
+  background: linear-gradient(180deg, #1f2937, #111827);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 16px;
+  padding: 14px 14px 12px;
+  box-shadow: 0 12px 26px rgba(0,0,0,0.35);
+  margin-bottom: 16px;
+}
+
+.est2-mini-label{
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9ca3af;
+}
+
+.est2-mini-name{
+  margin-top: 6px;
+  font-weight: 800;
+  font-size: 1.02rem;
+}
+
+.est2-mini-mail{
+  margin-top: 2px;
+  font-size: 0.86rem;
+  color: #e5e7eb;
+  opacity: 0.9;
+}
+
+.est2-mini-chip{
+  margin-top: 10px;
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #b60000;
+  color: #fff;
+  font-weight: 800;
+  font-size: 0.78rem;
+}
+
+/* Menu */
+.est2-sidebar-menu{
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.est2-sidebar-item{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.03);
+  color: #f9fafb;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.10s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.est2-sidebar-item:hover{
+  background: rgba(255,255,255,0.08);
+  transform: translateX(2px);
+  border-color: rgba(255,255,255,0.14);
+}
+
+.est2-dot{
+  width: 9px; height: 9px;
+  border-radius: 999px;
+  background: #b60000;
+}
+
+.est2-sidebar-bottom{
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.est2-logout{
+  width: 100%;
+  background: #ffffff;
+  color: #111827;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.est2-logout:hover{ background: #ffecec; }
+
+/* Main */
+.est2-main{
+  flex: 1;
+  padding: 22px 28px 16px;
+}
+
+/* Header */
+.est2-header{
+  background: linear-gradient(90deg, #b60000, #7f1d1d);
+  color: #fff;
+  border-radius: 18px;
+  padding: 16px 18px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: flex-start;
+  box-shadow: 0 14px 32px rgba(182,0,0,0.18);
+  margin-bottom: 16px;
+}
+
+.est2-header h1{
+  margin: 0;
+  font-size: 1.35rem;
+  font-weight: 900;
+}
+
+.est2-header p{
+  margin: 6px 0 0 0;
+  opacity: 0.95;
+  font-size: 0.88rem;
+}
+
+.est2-header-actions{
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.est2-btn-primary{
+  background: #ffffff;
+  color: #111827;
+  border: none;
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.est2-btn-primary:hover{ background: #ffecec; }
+
+.est2-btn-ghost{
+  background: rgba(255,255,255,0.12);
+  color: #fff;
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 999px;
+  padding: 10px 14px;
+  font-weight: 900;
+  cursor: pointer;
+}
+
+.est2-btn-ghost:hover{ background: rgba(255,255,255,0.18); }
+
+/* Top grid */
+.est2-topgrid{
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 14px;
+  margin-bottom: 14px;
+}
+
+.est2-card{
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid rgba(148,163,184,0.45);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+  padding: 14px 16px;
+}
+
+.est2-card-title{
+  font-weight: 900;
+  color: #111827;
+  margin-bottom: 10px;
+}
+
+.est2-kv{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.est2-kv span{
+  display: block;
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.est2-kv strong{
+  display: block;
+  margin-top: 2px;
+  font-size: 0.92rem;
+  color: #111827;
+}
+
+.est2-note{
+  margin-top: 12px;
+  font-size: 0.8rem;
+  color: #6b7280;
+  border-top: 1px dashed rgba(148,163,184,0.6);
+  padding-top: 10px;
+}
+
+.est2-status-row{
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.est2-pill{
+  border-radius: 999px;
+  padding: 8px 12px;
+  font-weight: 900;
+  font-size: 0.84rem;
+}
+
+.est2-pill-pending{
+  background: #fef9c3;
+  color: #92400e;
+  border: 1px solid rgba(245,158,11,0.35);
+}
+
+.est2-pill-ok{
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid rgba(34,197,94,0.35);
+}
+
+.est2-next{
+  margin-top: 12px;
+}
+
+.est2-next-title{
+  font-weight: 900;
+  margin-bottom: 8px;
+}
+
+.est2-next-empty{
+  font-size: 0.85rem;
+  color: #6b7280;
+  background: #f8fafc;
+  border: 1px dashed rgba(148,163,184,0.6);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.est2-next-card{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  background: #fff1f2;
+  border: 1px solid rgba(182,0,0,0.25);
+  border-radius: 14px;
+  padding: 12px;
+}
+
+.est2-next-card span{
+  display: block;
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
+.est2-next-card strong{
+  display: block;
+  margin-top: 2px;
+  font-weight: 900;
+}
+
+.est2-pendinglist{
+  margin-top: 12px;
+  border-top: 1px dashed rgba(148,163,184,0.6);
+  padding-top: 10px;
+}
+
+.est2-pendingitem{
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 10px;
+  background: #f8fafc;
+  border: 1px solid rgba(148,163,184,0.35);
+  border-radius: 12px;
+  margin-top: 8px;
+}
+
+.est2-link{
+  margin-top: 10px;
+  background: transparent;
+  border: none;
+  color: #b60000;
+  font-weight: 900;
+  cursor: pointer;
+  padding: 0;
+}
+.est2-link:hover{ text-decoration: underline; }
+
+/* Calendar */
+.est2-calendar{
+  background: #ffffff;
+  border-radius: 18px;
+  border: 1px solid rgba(148,163,184,0.45);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.12);
+  padding: 14px 16px;
+}
+
+.est2-calendar h2{
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 900;
+}
+
+.est2-calendar p{
+  margin: 6px 0 0 0;
+  color: #6b7280;
+  font-size: 0.88rem;
+}
+
+.est2-agenda-grid{
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  gap: 16px;
+  margin-top: 14px;
+}
+
+.est2-cal{
+  border: 1px solid rgba(148,163,184,0.45);
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 12px;
+}
+
+.est2-cal-head{
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.est2-cal-nav{
+  border: 1px solid rgba(148,163,184,0.45);
+  background: #f8fafc;
+  border-radius: 12px;
+  height: 38px;
+  cursor: pointer;
+}
+.est2-cal-nav:hover{ background: #f1f5f9; }
+
+.est2-cal-title{
+  text-align: center;
+  font-weight: 900;
+  text-transform: capitalize;
+}
+
+.est2-cal-weekdays{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+  margin-bottom: 6px;
+}
+
+.est2-cal-wd{
+  text-align: center;
+  font-size: 0.75rem;
+  color: #6b7280;
+  padding: 6px 0;
+}
+
+.est2-cal-grid{
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.est2-cal-day{
+  border: 1px solid rgba(148,163,184,0.35);
+  background: #ffffff;
+  border-radius: 14px;
+  min-height: 46px;
+  cursor: pointer;
+  position: relative;
+  text-align: left;
+  padding: 6px 8px;
+}
+.est2-cal-day:hover{ background: #f8fafc; }
+
+.est2-cal-day-muted{ opacity: 0.45; }
+
+.est2-cal-day-selected{
+  outline: 2px solid rgba(182,0,0,0.25);
+  border-color: #b60000;
+  background: #fff1f2;
+}
+
+.est2-cal-num{
+  font-weight: 900;
+  font-size: 0.9rem;
+}
+
+.est2-cal-badge{
+  position: absolute;
+  top: 7px;
+  right: 7px;
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+}
+
+.est2-badge-pending{ background: #f59e0b; }
+.est2-badge-reserved{ background: #2563eb; }
+
+.est2-cal-legend{
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+  font-size: 0.8rem;
+  color: #6b7280;
+}
+
+.est2-lg-dot{
+  width: 10px; height: 10px;
+  border-radius: 999px;
+  display: inline-block;
+  margin-right: 6px;
+}
+.est2-lg-pending{ background: #f59e0b; }
+.est2-lg-reserved{ background: #2563eb; }
+
+/* Day slots */
+.est2-day{
+  border: 1px solid rgba(148,163,184,0.45);
+  border-radius: 16px;
+  background: #ffffff;
+  padding: 14px;
+}
+
+.est2-day-head h3{
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.est2-day-sub{
+  margin-top: 4px;
+  color: #6b7280;
+  font-size: 0.82rem;
+  text-transform: capitalize;
+}
+
+.est2-slots{
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.est2-slot-btn{
+  border-radius: 16px;
+  border: 1px solid rgba(148,163,184,0.45);
+  padding: 12px 12px;
+  background: #f8fafc;
+  cursor: pointer;
+  text-align: left;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+.est2-slot-btn:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 10px 22px rgba(15,23,42,0.10);
+}
+
+.est2-slot-hour{
+  font-weight: 900;
+  font-size: 1rem;
+}
+
+.est2-slot-status{
+  margin-top: 6px;
+  font-size: 0.86rem;
+  font-weight: 900;
+}
+
+.est2-slot-available{
+  background: #fff1f2;
+  border-color: rgba(182,0,0,0.30);
+}
+.est2-slot-available .est2-slot-status{ color: #b60000; }
+
+.est2-slot-blocked{
+  background: #e2e8f0;
+  cursor: not-allowed;
+  opacity: 0.75;
+}
+.est2-slot-blocked .est2-slot-status{ color: #64748b; }
+
+.est2-slot-reserved{
+  background: #eff6ff;
+  cursor: not-allowed;
+  opacity: 0.85;
+  border-color: rgba(37,99,235,0.35);
+}
+.est2-slot-reserved .est2-slot-status{ color: #1d4ed8; }
+
+.est2-slot-pending{
+  background: #fef9c3;
+  cursor: not-allowed;
+  opacity: 0.92;
+  border-color: rgba(245,158,11,0.45);
+}
+.est2-slot-pending .est2-slot-status{ color: #92400e; }
+
+.est2-slot-btn:disabled{ pointer-events: none; }
+
+.est2-footer{
+  text-align: right;
+  color: #6b7280;
+  font-size: 0.82rem;
+  margin-top: 10px;
+  padding-right: 2px;
+}
+
+/* Responsive */
+@media (max-width: 1100px){
+  .est2-topgrid{
+    grid-template-columns: 1fr;
+  }
+  .est2-agenda-grid{
+    grid-template-columns: 1fr;
+  }
+}
+@media (max-width: 900px){
+  .est2-layout{
+    flex-direction: column;
+  }
+  .est2-sidebar{
+    width: 100%;
+  }
+}
