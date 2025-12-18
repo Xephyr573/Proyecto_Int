@@ -18,8 +18,8 @@ export default function DocenteDashboard() {
   const navigate = useNavigate();
 
   const docente = useMemo(() => getDocenteFromStorage(), []);
-  const nombreDocente = docente?.nombre || docente?.name || "Docente";
-  const correoDocente = docente?.correo || docente?.email || "docente@inacapmail.cl";
+  const nombreDocente = docente?.nombre || "Docente";
+  const correoDocente = docente?.correo || "docente@inacapmail.cl";
   const sede = docente?.sede || "Sede Temuco";
   const asignatura = docente?.asignatura || "Asignatura no definida";
 
@@ -72,10 +72,6 @@ export default function DocenteDashboard() {
             <span className="doc-sb-dot" />
             <span>Solicitudes recibidas</span>
           </button>
-
-
-          {/* Si ya tienes ruta creada, puedes activar este botón:
-              onClick={() => navigate("/docente/perfil")} */}
           
         </nav>
 
