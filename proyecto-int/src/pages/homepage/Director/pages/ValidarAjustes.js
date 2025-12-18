@@ -359,7 +359,7 @@ export default function ValidarAjustes() {
 
         <div className="asesor-form-buttons">
           <button type="button" className="btn-asesor-primary">
-            Guardar validación (demo)
+            Guardar validación
           </button>
 
           <button

@@ -117,7 +117,7 @@ export default function SeguimientoCaso() {
 
           <div className="seg-actions">
             <button type="button" className="seg-btn seg-btn-primary" onClick={handleGuardar}>
-              Guardar (demo)
+              Guardar
             </button>
             <button type="button" className="seg-btn seg-btn-ghost" onClick={volverAtras}>
               Volver
@@ -216,7 +216,7 @@ export default function SeguimientoCaso() {
         {/* Botonera abajo (por si scrolleas) */}
         <div className="seg-bottom-actions">
           <button type="button" className="seg-btn seg-btn-primary" onClick={handleGuardar}>
-            Guardar seguimiento (demo)
+            Guardar seguimiento
           </button>
           <button type="button" className="seg-btn seg-btn-ghost" onClick={volverAtras}>
             Volver

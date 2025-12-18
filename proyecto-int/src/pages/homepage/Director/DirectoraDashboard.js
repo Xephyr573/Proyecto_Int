@@ -394,20 +394,6 @@ export default function DirectorDashboard() {
                   ))}
                 </ul>
               </div>
-
-              <div className="dir-card">
-                <h3>Sincronización (demo)</h3>
-                <p className="dir-card-help">
-                  Si la Coordinación definió ajustes, este panel los toma automáticamente desde localStorage.
-                </p>
-                <button
-                  type="button"
-                  className="dir-btn-secondary"
-                  onClick={() => setPayloadDefinidos(safeReadLS(LS_AJUSTES_PROPUESTOS))}
-                >
-                  Recargar ajustes definidos
-                </button>
-              </div>
             </div>
           </section>
         )}

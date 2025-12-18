@@ -193,14 +193,13 @@ export default function EncargadaDashboard() {
           <p className="enc-sidebar-sub">Sede Temuco</p>
         </div>
 
-        
         <div className="enc-sidebar-top-actions">
-          <button className="enc-sidebar-link" onClick={() => navigate("/")}> 
+          <button className="enc-sidebar-link" onClick={() => navigate("/")}>
             Volver al inicio
           </button>
         </div>
 
-<nav className="enc-sidebar-menu">
+        <nav className="enc-sidebar-menu">
           <button
             className={"enc-sidebar-item " + (pestanaActiva === "resumen" ? "enc-sidebar-item-active" : "")}
             onClick={() => setPestanaActiva("resumen")}
@@ -313,28 +312,30 @@ export default function EncargadaDashboard() {
               <div className="enc-card">
                 <h3>Accesos rápidos</h3>
                 <p className="enc-card-help">Atajos a las vistas que más utiliza la Encargada.</p>
+
                 <ul className="enc-list-simple">
                   <li>
                     <button type="button" className="enc-link" onClick={() => setPestanaActiva("agenda")}>
                       Ver agenda mensual
                     </button>
                   </li>
+
                   <li>
                     <button type="button" className="enc-link" onClick={() => setPestanaActiva("casos")}>
                       Revisar casos recientes
                     </button>
                   </li>
+
                   <li>
                     <button type="button" className="enc-link" onClick={() => setPestanaActiva("documentos")}>
                       Revisar formatos oficiales
                     </button>
-                    <button
-                        type="button"
-                        className="enc-link"
-                        onClick={() => navigate("/asesor/seguimiento")}
-                      >
-                        Ir a seguimiento
-                      </button>
+                  </li>
+
+                  <li>
+                    <button type="button" className="enc-link" onClick={() => navigate("/asesor/seguimiento")}>
+                      Ir a seguimiento
+                    </button>
                   </li>
                 </ul>
               </div>
