@@ -119,8 +119,7 @@ def login_view(request):
              try:
                 response_data['datos_perfil'] = {
                     'rut': usuario.estudiante.rut,
-                    'carrera': usuario.estudiante.carrera,
-                    'estado_caso': usuario.estudiante.estado_caso
+                    'carrera': usuario.estudiante.carrera
                 }
              except Estudiante.DoesNotExist:
                  response_data['datos_perfil'] = {'error': 'Perfil de Estudiante no encontrado'}
