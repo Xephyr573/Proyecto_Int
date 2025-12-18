@@ -11,17 +11,14 @@ const buildAjustesParaDirectora = (ajustesSeleccionados, categoriasMap) => {
 
   ["A", "B", "C", "D"].forEach((cat) => {
     (ajustesSeleccionados[cat] || []).forEach((aj) => {
-      const tituloFinal = aj.detalleExtra
-        ? `${aj.titulo} — ${aj.detalleExtra}`
-        : aj.titulo;
+      const tituloFinal = aj.detalleExtra ? `${aj.titulo} — ${aj.detalleExtra}` : aj.titulo;
 
       out.push({
-        id: aj.codigo, // A1, B1, etc.
+        id: aj.codigo,
         categoria: cat,
         categoriaNombre: categoriasMap[cat],
         titulo: tituloFinal,
         descripcion: aj.descripcion,
-        // Regla demo: D suele quedar como "no recomendado inicialmente"
         propuestoPorCoordinacion: cat !== "D",
       });
     });
@@ -69,6 +66,84 @@ function AjusteResumenCard({ letra, categoria, categoriaNombre, ajuste, onRemove
   );
 }
 
+/**
+ * ✅ IMPORTANTE: Este componente va FUERA del render principal para evitar remount por cada tecla.
+ */
+function BloqueCategoria({
+  letra,
+  titulo,
+  seleccionValor,
+  onCambioSeleccion,
+  onAgregar,
+  puedeAgregar,
+  opciones,
+  renderAgregados,
+  mostrarDetalle,
+  detalleValue,
+  onCambioDetalle,
+  agregadosCount,
+}) {
+  return (
+    <section className="def-block">
+      <div className="def-block-head">
+        <div className="def-block-left">
+          <span className={`def-pill def-pill-${letra}`}>{letra}</span>
+          <div>
+            <div className="def-block-title">{titulo}</div>
+            <div className="def-block-sub">
+              Selecciona un ajuste y presiona <strong>Agregar</strong>.
+            </div>
+          </div>
+        </div>
+
+        <div className="def-block-kpi">
+          <span className="def-muted">Agregados</span>
+          <strong>{agregadosCount}</strong>
+        </div>
+      </div>
+
+      {renderAgregados}
+
+      <label className="def-label">
+        Seleccionar ajuste ({letra})
+        <div className="def-row">
+          <select className="def-select" value={seleccionValor} onChange={onCambioSeleccion}>
+            <option value="">Seleccione un ajuste {letra}</option>
+            {opciones.map((opt) => (
+              <option key={opt.codigo} value={opt.codigo} disabled={opt.disabled}>
+                {opt.codigo} – {opt.titulo}
+                {opt.disabled ? " (ya agregado)" : ""}
+              </option>
+            ))}
+          </select>
+
+          <button
+            type="button"
+            className="def-btn def-btn-primary"
+            disabled={!puedeAgregar}
+            onClick={onAgregar}
+          >
+            Agregar
+          </button>
+        </div>
+      </label>
+
+      {mostrarDetalle ? (
+        <div className="def-label">
+          <span className="def-label-text">Detalle del ajuste (Otras…)</span>
+          <textarea
+            className="def-textarea"
+            rows={4}
+            placeholder="Describe brevemente el ajuste razonable que quieres registrar."
+            value={detalleValue}
+            onChange={onCambioDetalle}
+          />
+        </div>
+      ) : null}
+    </section>
+  );
+}
+
 export default function DefinirAjustes() {
   const navigate = useNavigate();
 
@@ -77,13 +152,9 @@ export default function DefinirAjustes() {
     else navigate("/asesor/dashboard-asesor");
   };
 
-  // valor actual del select de cada categoría
   const [seleccion, setSeleccion] = useState({ A: "", B: "", C: "", D: "" });
-
-  // detalle libre cuando se elige "Otras..."
   const [detalles, setDetalles] = useState({ A: "", B: "", C: "", D: "" });
 
-  // ajustes agregados al caso (pueden ser varios por categoría)
   const [ajustesSeleccionados, setAjustesSeleccionados] = useState({
     A: [],
     B: [],
@@ -91,34 +162,28 @@ export default function DefinirAjustes() {
     D: [],
   });
 
-  const getAjuste = (cat, codigo) =>
-    AJUSTES_POR_CATEGORIA[cat].find((a) => a.codigo === codigo);
+  const getAjuste = (cat, codigo) => AJUSTES_POR_CATEGORIA[cat].find((a) => a.codigo === codigo);
 
   const ajusteSelA = seleccion.A ? getAjuste("A", seleccion.A) : null;
   const ajusteSelB = seleccion.B ? getAjuste("B", seleccion.B) : null;
   const ajusteSelC = seleccion.C ? getAjuste("C", seleccion.C) : null;
   const ajusteSelD = seleccion.D ? getAjuste("D", seleccion.D) : null;
 
-  const mostrarDetalleA = ajusteSelA?.requiereDetalle;
-  const mostrarDetalleB = ajusteSelB?.requiereDetalle;
-  const mostrarDetalleC = ajusteSelC?.requiereDetalle;
-  const mostrarDetalleD = ajusteSelD?.requiereDetalle;
+  const mostrarDetalleA = !!ajusteSelA?.requiereDetalle;
+  const mostrarDetalleB = !!ajusteSelB?.requiereDetalle;
+  const mostrarDetalleC = !!ajusteSelC?.requiereDetalle;
+  const mostrarDetalleD = !!ajusteSelD?.requiereDetalle;
 
-  // IMPORTANTE:
-  // - Al cambiar el select, limpiamos el detalle SOLO de esa categoría.
-  // - Esto está bien, porque el detalle corresponde a "la opción actual".
   const manejarCambioSeleccion = (cat, valor) => {
     setSeleccion((prev) => ({ ...prev, [cat]: valor }));
     setDetalles((prev) => ({ ...prev, [cat]: "" }));
   };
 
-  // Handler separado para escribir en textarea (evita cortes por re-renders)
   const manejarCambioDetalle = (cat, valor) => {
     setDetalles((prev) => ({ ...prev, [cat]: valor }));
   };
 
-  const estaAgregado = (cat, codigo) =>
-    ajustesSeleccionados[cat].some((a) => a.codigo === codigo);
+  const estaAgregado = (cat, codigo) => ajustesSeleccionados[cat].some((a) => a.codigo === codigo);
 
   const agregarAjuste = (cat) => {
     const codigo = seleccion[cat];
@@ -136,7 +201,6 @@ export default function DefinirAjustes() {
       [cat]: [...prev[cat], { ...base, detalleExtra }],
     }));
 
-    // al agregar, limpiamos selección y detalle
     setSeleccion((prev) => ({ ...prev, [cat]: "" }));
     setDetalles((prev) => ({ ...prev, [cat]: "" }));
   };
@@ -154,12 +218,10 @@ export default function DefinirAjustes() {
   );
 
   const totalAjustes = useMemo(
-    () =>
-      ["A", "B", "C", "D"].reduce((acc, cat) => acc + ajustesSeleccionados[cat].length, 0),
+    () => ["A", "B", "C", "D"].reduce((acc, cat) => acc + ajustesSeleccionados[cat].length, 0),
     [ajustesSeleccionados]
   );
 
-  // Opción A: Guardar sin navegar
   const guardar = () => {
     if (!hayAlguno) {
       alert("Debes agregar al menos un ajuste antes de continuar.");
@@ -217,76 +279,11 @@ export default function DefinirAjustes() {
     );
   };
 
-  const BloqueCategoria = ({ letra, titulo, mostrarDetalle, detalleValue }) => {
-    const cat = letra;
-
-    return (
-      <section className="def-block">
-        <div className="def-block-head">
-          <div className="def-block-left">
-            <span className={`def-pill def-pill-${letra}`}>{letra}</span>
-            <div>
-              <div className="def-block-title">{titulo}</div>
-              <div className="def-block-sub">
-                Selecciona un ajuste y presiona <strong>Agregar</strong>.
-              </div>
-            </div>
-          </div>
-
-          <div className="def-block-kpi">
-            <span className="def-muted">Agregados</span>
-            <strong>{ajustesSeleccionados[cat].length}</strong>
-          </div>
-        </div>
-
-        {renderAgregados(cat)}
-
-        <label className="def-label">
-          Seleccionar ajuste ({letra})
-          <div className="def-row">
-            <select
-              className="def-select"
-              value={seleccion[cat]}
-              onChange={(e) => manejarCambioSeleccion(cat, e.target.value)}
-            >
-              <option value="">Seleccione un ajuste {letra}</option>
-              {AJUSTES_POR_CATEGORIA[cat].map((aj) => {
-                const disabled = estaAgregado(cat, aj.codigo);
-                return (
-                  <option key={aj.codigo} value={aj.codigo} disabled={disabled}>
-                    {aj.codigo} – {aj.titulo}
-                    {disabled ? " (ya agregado)" : ""}
-                  </option>
-                );
-              })}
-            </select>
-
-            <button
-              type="button"
-              className="def-btn def-btn-primary"
-              disabled={!seleccion[cat] || estaAgregado(cat, seleccion[cat])}
-              onClick={() => agregarAjuste(cat)}
-            >
-              Agregar
-            </button>
-          </div>
-        </label>
-
-        {mostrarDetalle ? (
-          <label className="def-label">
-            Detalle del ajuste (Otras…)
-            <textarea
-              className="def-textarea"
-              rows={3}
-              placeholder="Describe brevemente el ajuste razonable que quieres registrar."
-              value={detalleValue}
-              onChange={(e) => manejarCambioDetalle(cat, e.target.value)}
-            />
-          </label>
-        ) : null}
-      </section>
-    );
-  };
+  const opcionesCat = (cat) =>
+    AJUSTES_POR_CATEGORIA[cat].map((aj) => ({
+      ...aj,
+      disabled: estaAgregado(cat, aj.codigo),
+    }));
 
   return (
     <div className="def-page">
@@ -294,8 +291,8 @@ export default function DefinirAjustes() {
         <div className="def-topbar-left">
           <h2>Definir ajustes razonables</h2>
           <p>
-            La <strong>Coordinadora Técnica Pedagógica</strong> selecciona ajustes
-            (A, B, C, D) que se propondrán para el estudiante.
+            La <strong>Coordinadora Técnica Pedagógica</strong> selecciona ajustes (A, B, C, D)
+            que se propondrán para el estudiante.
           </p>
         </div>
 
@@ -333,26 +330,61 @@ export default function DefinirAjustes() {
             <BloqueCategoria
               letra="A"
               titulo={CATEGORIAS.A}
+              seleccionValor={seleccion.A}
+              onCambioSeleccion={(e) => manejarCambioSeleccion("A", e.target.value)}
+              onAgregar={() => agregarAjuste("A")}
+              puedeAgregar={!!seleccion.A && !estaAgregado("A", seleccion.A)}
+              opciones={opcionesCat("A")}
+              renderAgregados={renderAgregados("A")}
               mostrarDetalle={mostrarDetalleA}
               detalleValue={detalles.A}
+              onCambioDetalle={(e) => manejarCambioDetalle("A", e.target.value)}
+              agregadosCount={ajustesSeleccionados.A.length}
             />
+
             <BloqueCategoria
               letra="B"
               titulo={CATEGORIAS.B}
+              seleccionValor={seleccion.B}
+              onCambioSeleccion={(e) => manejarCambioSeleccion("B", e.target.value)}
+              onAgregar={() => agregarAjuste("B")}
+              puedeAgregar={!!seleccion.B && !estaAgregado("B", seleccion.B)}
+              opciones={opcionesCat("B")}
+              renderAgregados={renderAgregados("B")}
               mostrarDetalle={mostrarDetalleB}
               detalleValue={detalles.B}
+              onCambioDetalle={(e) => manejarCambioDetalle("B", e.target.value)}
+              agregadosCount={ajustesSeleccionados.B.length}
             />
+
             <BloqueCategoria
               letra="C"
               titulo={CATEGORIAS.C}
+              seleccionValor={seleccion.C}
+              onCambioSeleccion={(e) => manejarCambioSeleccion("C", e.target.value)}
+              onAgregar={() => agregarAjuste("C")}
+              puedeAgregar={!!seleccion.C && !estaAgregado("C", seleccion.C)}
+              opciones={opcionesCat("C")}
+              renderAgregados={renderAgregados("C")}
               mostrarDetalle={mostrarDetalleC}
               detalleValue={detalles.C}
+              onCambioDetalle={(e) => manejarCambioDetalle("C", e.target.value)}
+              agregadosCount={ajustesSeleccionados.C.length}
             />
+
             <BloqueCategoria
               letra="D"
               titulo={CATEGORIAS.D}
+              seleccionValor={seleccion.D}
+              onCambioSeleccion={(e) => manejarCambioSeleccion("D", e.target.value)}
+              onAgregar={() => agregarAjuste("D")}
+              puedeAgregar={!!seleccion.D && !estaAgregado("D", seleccion.D)}
+              opciones={opcionesCat("D")}
+              renderAgregados={renderAgregados("D")}
               mostrarDetalle={mostrarDetalleD}
               detalleValue={detalles.D}
+              onCambioDetalle={(e) => manejarCambioDetalle("D", e.target.value)}
+              agregadosCount={ajustesSeleccionados.D.length}
             />
           </div>
         </section>

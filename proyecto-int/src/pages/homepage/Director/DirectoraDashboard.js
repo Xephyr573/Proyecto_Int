@@ -1,10 +1,10 @@
-// src/pages/homepage/Director/DirectoraDashboard.js
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./DirectoraDashboard.css";
 
 const VALIDAR_AJUSTES_PATH = "/director/validarajustes";
 const LS_AJUSTES_PROPUESTOS = "sgar_ajustes_propuestos_v1";
+const LS_DECISIONES_DIRECTORA = "sgar_decisiones_directora_v1";
 
 // ====== Carreras (Área -> Carreras) ======
 const CARRERAS_POR_AREA = {
@@ -57,7 +57,6 @@ const CASOS_BASE = [
     fecha: "2025-04-01",
     resumen:
       "Caso con foco en dificultades visuales y atención. Se propone ampliar letra y ajustar ubicación en sala.",
-    // Se rellenará desde localStorage si existe
     ajustesPropuestos: [],
   },
   {
@@ -109,24 +108,9 @@ const CASOS_BASE = [
 ];
 
 const MENSAJES_DIRECTOR = [
-  {
-    id: 1,
-    asunto: "Nuevo caso derivado desde Asesoría",
-    remitente: "Encargada de Inclusión",
-    fecha: "01-04-2025",
-  },
-  {
-    id: 2,
-    asunto: "Recordatorio: validar ajustes pendientes",
-    remitente: "Sistema SGAR",
-    fecha: "28-03-2025",
-  },
-  {
-    id: 3,
-    asunto: "Consulta sobre criterios de validación",
-    remitente: "Docente Bases de Datos",
-    fecha: "25-03-2025",
-  },
+  { id: 1, asunto: "Nuevo caso derivado desde Asesoría", remitente: "Encargada de Inclusión", fecha: "01-04-2025" },
+  { id: 2, asunto: "Recordatorio: validar ajustes pendientes", remitente: "Sistema SGAR", fecha: "28-03-2025" },
+  { id: 3, asunto: "Consulta sobre criterios de validación", remitente: "Docente Bases de Datos", fecha: "25-03-2025" },
 ];
 
 function safeReadLS(key) {
@@ -138,8 +122,6 @@ function safeReadLS(key) {
 }
 
 function buildResumenAjustesFromPayload(payload) {
-  // payload.ajustes viene desde DefinirAjustes.js con:
-  // { id, categoria, categoriaNombre, titulo, descripcion, propuestoPorCoordinacion }
   const ajustes = Array.isArray(payload?.ajustes) ? payload.ajustes : [];
   return ajustes.map((a) => ({
     codigo: a.id, // A1, B1...
@@ -150,40 +132,63 @@ function buildResumenAjustesFromPayload(payload) {
   }));
 }
 
+function getDecisionLabel(decision) {
+  if (decision === "aprobado") return "Aprobado";
+  if (decision === "no_aprobado") return "No aprobado";
+  if (decision === "revisar") return "En revisión";
+  return "Sin decisión";
+}
+
+function getDecisionClass(decision) {
+  if (decision === "aprobado") return "ok";
+  if (decision === "no_aprobado") return "bad";
+  if (decision === "revisar") return "rev";
+  return "none";
+}
+
 export default function DirectorDashboard() {
   const navigate = useNavigate();
 
   const [pestanaActiva, setPestanaActiva] = useState("resumen");
   const [tabEstado, setTabEstado] = useState("Pendiente");
-
-  // Buscar por id/estudiante/carrera (lo usas como “barra”)
   const [busqueda, setBusqueda] = useState("");
 
-  // Bloque carreras
   const [areaSeleccionada, setAreaSeleccionada] = useState("Todas");
   const [carreraSeleccionada, setCarreraSeleccionada] = useState("Todas");
 
   const [casoSeleccionado, setCasoSeleccionado] = useState(null);
 
-  // ====== 1) Leer payload guardado por DefinirAjustes ======
   const [payloadDefinidos, setPayloadDefinidos] = useState(() =>
     safeReadLS(LS_AJUSTES_PROPUESTOS)
   );
 
-  // Si quieres que se actualice al instante cuando vuelves desde DefinirAjustes,
-  // recargamos el payload cada vez que vuelves a esta vista (al montar).
+  const [decisionesDirectora, setDecisionesDirectora] = useState(() =>
+    safeReadLS(LS_DECISIONES_DIRECTORA) || {}
+  );
+
+  // Mantener sincronizado si se guarda en otra vista/pestaña
   useEffect(() => {
-    setPayloadDefinidos(safeReadLS(LS_AJUSTES_PROPUESTOS));
+    const onStorage = (e) => {
+      if (e.key === LS_AJUSTES_PROPUESTOS) setPayloadDefinidos(safeReadLS(LS_AJUSTES_PROPUESTOS));
+      if (e.key === LS_DECISIONES_DIRECTORA) setDecisionesDirectora(safeReadLS(LS_DECISIONES_DIRECTORA) || {});
+    };
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
   }, []);
 
-  // ====== 2) Construir casos “vivos” mezclando CASOS_BASE + payload ======
+  // Al montar, refrescar
+  useEffect(() => {
+    setPayloadDefinidos(safeReadLS(LS_AJUSTES_PROPUESTOS));
+    setDecisionesDirectora(safeReadLS(LS_DECISIONES_DIRECTORA) || {});
+  }, []);
+
+  // Construir casos vivos
   const casos = useMemo(() => {
     const base = [...CASOS_BASE];
 
     const casoPayload = payloadDefinidos?.caso;
     if (!casoPayload?.id) return base;
 
-    // Solo actualizamos el caso que coincida (CASO-001 en tu demo)
     return base.map((c) => {
       if (c.id !== casoPayload.id) return c;
 
@@ -191,16 +196,13 @@ export default function DirectorDashboard() {
 
       return {
         ...c,
-        // si cambiaste estudiante/carrera desde el payload, también se reflejará
         estudiante: casoPayload.estudiante || c.estudiante,
         carrera: casoPayload.carrera || c.carrera,
-        // el resumen “bonito” viene 100% desde lo definido
         ajustesPropuestos: resumenAjustes,
       };
     });
   }, [payloadDefinidos]);
 
-  // ====== KPIs por estado ======
   const totalPendientes = useMemo(
     () => casos.filter((c) => c.estado === "Pendiente").length,
     [casos]
@@ -258,13 +260,7 @@ export default function DirectorDashboard() {
       alert("Selecciona un caso para validar ajustes.");
       return;
     }
-
-    // 1) Cambiar “barra de búsqueda” al nombre del estudiante
     setBusqueda(caso.estudiante);
-
-    // 2) Asegurar que ValidarAjustes tome lo definido (payload actual)
-    // Si el caso abierto coincide con el payload, ya está guardado.
-    // Si no, en demo no hacemos nada.
     navigate(VALIDAR_AJUSTES_PATH);
   };
 
@@ -272,6 +268,25 @@ export default function DirectorDashboard() {
     setCasoSeleccionado(c);
     setPestanaActiva("detalle");
   };
+
+  // Decorar ajustes del caso seleccionado con decisiones reales
+  const ajustesDecorados = useMemo(() => {
+    if (!casoSeleccionado) return [];
+
+    const caseId = casoSeleccionado.id;
+    const bundle = decisionesDirectora?.[caseId] || null;
+    const map = bundle?.decisiones || {};
+
+    return (casoSeleccionado.ajustesPropuestos || []).map((a) => {
+      const decision = map[a.codigo] ?? null;
+      return {
+        ...a,
+        decision,
+        decisionLabel: getDecisionLabel(decision),
+        decisionClass: getDecisionClass(decision),
+      };
+    });
+  }, [casoSeleccionado, decisionesDirectora]);
 
   return (
     <div className="dir-layout">
@@ -292,10 +307,7 @@ export default function DirectorDashboard() {
 
         <nav className="dir-sidebar-menu">
           <button
-            className={
-              "dir-sidebar-item " +
-              (pestanaActiva === "resumen" ? "dir-sidebar-item-active" : "")
-            }
+            className={"dir-sidebar-item " + (pestanaActiva === "resumen" ? "dir-sidebar-item-active" : "")}
             onClick={() => setPestanaActiva("resumen")}
           >
             <span className="dir-sidebar-bullet" />
@@ -303,10 +315,7 @@ export default function DirectorDashboard() {
           </button>
 
           <button
-            className={
-              "dir-sidebar-item " +
-              (pestanaActiva === "casos" ? "dir-sidebar-item-active" : "")
-            }
+            className={"dir-sidebar-item " + (pestanaActiva === "casos" ? "dir-sidebar-item-active" : "")}
             onClick={() => setPestanaActiva("casos")}
           >
             <span className="dir-sidebar-bullet" />
@@ -314,10 +323,7 @@ export default function DirectorDashboard() {
           </button>
 
           <button
-            className={
-              "dir-sidebar-item " +
-              (pestanaActiva === "detalle" ? "dir-sidebar-item-active" : "")
-            }
+            className={"dir-sidebar-item " + (pestanaActiva === "detalle" ? "dir-sidebar-item-active" : "")}
             onClick={() => setPestanaActiva("detalle")}
           >
             <span className="dir-sidebar-bullet" />
@@ -584,17 +590,26 @@ export default function DirectorDashboard() {
                       </div>
 
                       <div className="dir-ajustes-cards">
-                        {(casoSeleccionado.ajustesPropuestos || []).map((a) => (
+                        {ajustesDecorados.map((a) => (
                           <div key={a.codigo} className="dir-aj-card">
                             <div className="dir-aj-top">
                               <span className={"dir-aj-tag dir-aj-" + a.categoria}>{a.categoria}</span>
                               <div className="dir-aj-code">{a.codigo}</div>
-                              <span className={"dir-aj-pill " + (a.recomendado ? "ok" : "warn")}>
-                                {a.recomendado ? "Recomendado" : "No recomendado"}
+
+                              {/* Estado real según Directora */}
+                              <span className={"dir-aj-pill-decision " + a.decisionClass}>
+                                {a.decisionLabel}
                               </span>
                             </div>
+
                             <div className="dir-aj-title">{a.titulo}</div>
                             <div className="dir-aj-desc">{a.descripcion}</div>
+
+                            {/* (Opcional) Mantener recomendación coordinación como meta chica */}
+                            <div className="dir-aj-meta">
+                              Coordinación:{" "}
+                              <strong>{a.recomendado ? "Recomendado" : "No recomendado"}</strong>
+                            </div>
                           </div>
                         ))}
 

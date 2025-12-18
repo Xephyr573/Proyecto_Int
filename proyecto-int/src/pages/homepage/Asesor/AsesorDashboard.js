@@ -61,14 +61,6 @@ const CASOS_ASESOR = [
   },
 ];
 
-// Plantillas para la pestaña "Documentos y formatos"
-const DOCUMENTOS_PLANTILLAS = [
-  "Formato_Ficha_Entrevista_Inicial.docx",
-  "Consentimiento_Informado_Ajustes.pdf",
-  "Plantilla_Informe_Derivacion.docx",
-  "Resumen_Seguimiento_Semestral.xlsx",
-];
-
 export default function AsesorDashboard() {
   const navigate = useNavigate();
 
@@ -177,17 +169,6 @@ export default function AsesorDashboard() {
             <span>Detalle de caso</span>
           </button>
 
-          <button
-            className={
-              "ases-sidebar-item " +
-              (pestanaActiva === "documentos" ? "ases-sidebar-item-active" : "")
-            }
-            onClick={() => setPestanaActiva("documentos")}
-            type="button"
-          >
-            <span className="ases-sidebar-bullet" />
-            <span>Documentos y formatos</span>
-          </button>
         </nav>
       </aside>
 
@@ -198,7 +179,7 @@ export default function AsesorDashboard() {
           <div className="ases-header-left">
             <h1>Panel Asesoría / CTP</h1>
             <p className="ases-main-subtitle">
-              Gestión de casos, derivaciones y documentación del flujo SGAR.
+              Gestión de casos, derivaciones del flujo SGAR.
             </p>
           </div>
 
@@ -215,13 +196,6 @@ export default function AsesorDashboard() {
                 onClick={() => setPestanaActiva("casos")}
               >
                 Ver casos
-              </button>
-              <button
-                type="button"
-                className={`ases-btn-secondary ${pestanaActiva === "documentos" ? "ases-btn-active" : ""}`}
-                onClick={() => setPestanaActiva("documentos")}
-              >
-                Documentos
               </button>
             </div>
           </div>
@@ -319,14 +293,6 @@ export default function AsesorDashboard() {
                   >
                     <div className="ases-quick-title">Definir ajustes razonables</div>
                     <div className="ases-quick-sub">Seleccionar ajustes (A, B, C, D)</div>
-                  </button>
-                  <button
-                    type="button"
-                    className="ases-quick-card"
-                    onClick={() => setPestanaActiva("documentos")}
-                  >
-                    <div className="ases-quick-title">Documentos y formatos</div>
-                    <div className="ases-quick-sub">Plantillas y descargas</div>
                   </button>
                 </div>
               </div>
@@ -533,24 +499,7 @@ export default function AsesorDashboard() {
 
                   <div className="ases-case-files">
                     <h4>Archivos del caso</h4>
-                    <p className="ases-card-help">
-                      Documentos asociados al caso (entrevista, informes, acuerdos, etc.).
-                    </p>
-
-                  <ul className="ases-files-list">
-                   {casoSeleccionado.archivos.map((archivo) => (
-                    <li key={archivo} className="ases-files-item">
-                     <span className="ases-file-name">{archivo}</span>
-
-                     <button
-                      type="button"
-                      className="ases-doc-link"
-                      onClick={() => handleDescargarArchivo(archivo)}
-                     >
-                      Descargar
-                   </button>
-                 </li>
-               ))}
+                    <ul className="ases-case-file-list">
             </ul>
 
                   </div>
@@ -559,40 +508,7 @@ export default function AsesorDashboard() {
             </div>
           </section>
         )}
-
-        {/* 4) Documentos */}
-        {pestanaActiva === "documentos" && (
-          <section className="ases-section">
-            <div className="ases-card">
-              <div className="ases-card-header">
-                <h3>Documentos y formatos</h3>
-              </div>
-              <p className="ases-card-help">
-                Plantillas base utilizadas por la Asesoría / CTP para entrevistas,
-                consentimientos e informes.
-              </p>
-
-              <ul className="ases-doc-list">
-                {DOCUMENTOS_PLANTILLAS.map((doc) => (
-                  <li key={doc} className="ases-doc-item">
-                    <div className="ases-doc-info">
-                      <span className="ases-doc-dot" />
-                      <span className="ases-doc-name">{doc}</span>
-                    </div>
-                    <button
-                      type="button"
-                      className="ases-doc-link"
-                      onClick={() => handleDescargarArchivo(doc)}
-                    >
-                      Descargar (demo)
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-        )}
-
+        {/* Footer */}
         <footer className="ases-footer">
           © 2025 · SGAR Inclusión · Vista Asesoría / CTP
         </footer>

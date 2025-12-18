@@ -1,9 +1,30 @@
-// src/pages/homepage/Director/pages/ValidarAjustes.js
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ValidarAjustes.css";
 
 const LS_AJUSTES_PROPUESTOS = "sgar_ajustes_propuestos_v1";
+const LS_DECISIONES_DIRECTORA = "sgar_decisiones_directora_v1"; 
+// Estructura:
+// {
+//   [caseId]: {
+//     updatedAt: ISO,
+//     decisiones: { [ajusteId]: "aprobado"|"no_aprobado"|"revisar"|null },
+//     comentarios: { [ajusteId]: "..." },
+//     comentarioGeneral: "...",
+//     orientaciones: "..."
+//   }
+// }
+
+function safeReadLS(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "null");
+  } catch {
+    return null;
+  }
+}
+function safeWriteLS(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
 
 export default function ValidarAjustes() {
   const navigate = useNavigate();
@@ -52,12 +73,7 @@ export default function ValidarAjustes() {
     },
   ];
 
-  let payload = null;
-  try {
-    payload = JSON.parse(localStorage.getItem(LS_AJUSTES_PROPUESTOS) || "null");
-  } catch {
-    payload = null;
-  }
+  const payload = safeReadLS(LS_AJUSTES_PROPUESTOS);
 
   const casoActivo = payload?.caso || {
     id: "CASO-001",
@@ -70,28 +86,40 @@ export default function ValidarAjustes() {
   const ajustesIniciales =
     payload?.ajustes && payload.ajustes.length > 0 ? payload.ajustes : fallbackAjustes;
 
+  // Cargar decisiones guardadas para este caso (si existen)
+  const persisted = useMemo(() => {
+    const all = safeReadLS(LS_DECISIONES_DIRECTORA) || {};
+    return all[casoActivo.id] || null;
+  }, [casoActivo.id]);
+
   // "aprobado" | "no_aprobado" | "revisar" | null
-  // Parte todo desmarcado
   const [decisiones, setDecisiones] = useState(() => {
     const base = {};
     ajustesIniciales.forEach((ajuste) => {
-      base[ajuste.id] = null;
+      base[ajuste.id] = persisted?.decisiones?.[ajuste.id] ?? null;
     });
     return base;
   });
 
-  // Si cambian los ajustes (por ejemplo, se guardaron otros desde DefinirAjustes),
-  // aseguramos llaves para todos y mantenemos lo ya marcado si existía.
+  const [comentarios, setComentarios] = useState(() => persisted?.comentarios || {});
+  const [panelesAbiertos, setPanelesAbiertos] = useState({});
+  const [comentarioGeneral, setComentarioGeneral] = useState(
+    () => persisted?.comentarioGeneral || ""
+  );
+  const [orientaciones, setOrientaciones] = useState(() => persisted?.orientaciones || "");
+
+  // Si cambian los ajustes, asegurar llaves y mantener lo existente
   useEffect(() => {
     setDecisiones((prev) => {
       const next = {};
       ajustesIniciales.forEach((a) => {
         next[a.id] = Object.prototype.hasOwnProperty.call(prev, a.id)
           ? prev[a.id]
-          : null;
+          : (persisted?.decisiones?.[a.id] ?? null);
       });
       return next;
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ajustesIniciales]);
 
   // Toggle: si clickeas la misma opción, se desmarca
@@ -101,9 +129,6 @@ export default function ValidarAjustes() {
       [idAjuste]: prev[idAjuste] === valor ? null : valor,
     }));
   };
-
-  const [comentarios, setComentarios] = useState({});
-  const [panelesAbiertos, setPanelesAbiertos] = useState({});
 
   const total = ajustesIniciales.length;
 
@@ -123,6 +148,22 @@ export default function ValidarAjustes() {
   const ajustesConComentarioAbierto = ajustesIniciales.filter(
     (a) => panelesAbiertos[a.id]
   );
+
+  const guardarValidacion = () => {
+    const all = safeReadLS(LS_DECISIONES_DIRECTORA) || {};
+
+    all[casoActivo.id] = {
+      updatedAt: new Date().toISOString(),
+      decisiones,
+      comentarios,
+      comentarioGeneral,
+      orientaciones,
+    };
+
+    safeWriteLS(LS_DECISIONES_DIRECTORA, all);
+
+    alert("Validación guardada. El detalle del caso se actualizará en el panel.");
+  };
 
   return (
     <div className="asesor-form-page">
@@ -346,6 +387,8 @@ export default function ValidarAjustes() {
           <textarea
             rows={3}
             placeholder="Ej: Se aprueban los ajustes A, B y C. En el ajuste D se solicita revisar el porcentaje de tiempo extra propuesto y definir criterios por asignatura."
+            value={comentarioGeneral}
+            onChange={(e) => setComentarioGeneral(e.target.value)}
           />
         </label>
 
@@ -354,11 +397,13 @@ export default function ValidarAjustes() {
           <textarea
             rows={3}
             placeholder="Ej: Priorizar seguimiento del ajuste C en evaluaciones parciales y registrar observaciones en el panel de seguimiento."
+            value={orientaciones}
+            onChange={(e) => setOrientaciones(e.target.value)}
           />
         </label>
 
         <div className="asesor-form-buttons">
-          <button type="button" className="btn-asesor-primary">
+          <button type="button" className="btn-asesor-primary" onClick={guardarValidacion}>
             Guardar validación
           </button>
 

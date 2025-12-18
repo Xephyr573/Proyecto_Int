@@ -110,7 +110,7 @@ export default function DocenteDashboard() {
         <section className="doc-grid">
           <button className="doc-card" type="button" onClick={() => navigate("/docente/solicitudes")}>
             <h3>Solicitudes recibidas</h3>
-            <p>Revisa solicitudes y registra tu decisión o comentario docente.</p>
+            <p>Revisa solicitudes.</p>
             <span className="doc-card-link">Abrir módulo</span>
           </button>
         </section>

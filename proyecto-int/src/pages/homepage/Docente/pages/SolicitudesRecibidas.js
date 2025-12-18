@@ -5,7 +5,7 @@ import { DocenteShell } from "../DocenteShell";
 
 const SOLICITUDES_BASE = [
   {
-    id: "SOL-001",
+    id: "CASO-001",
     fecha: "2025-04-05",
     estudiante: "Alexander Torres",
     carrera: "Ingeniería en Informática",
@@ -13,7 +13,7 @@ const SOLICITUDES_BASE = [
     estado: "Pendiente",
   },
   {
-    id: "SOL-002",
+    id: "CASO-002",
     fecha: "2025-04-07",
     estudiante: "Matias Soto",
     carrera: "Analista Programador",
@@ -21,7 +21,7 @@ const SOLICITUDES_BASE = [
     estado: "Aprobada",
   },
   {
-    id: "SOL-003",
+    id: "CASO-003",
     fecha: "2025-04-09",
     estudiante: "Camila Vargas",
     carrera: "Moda y Diseño",

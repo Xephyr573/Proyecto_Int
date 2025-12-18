@@ -15,13 +15,6 @@ const CASOS_ENCARGADA = [
   { id: "CASO-009", estudiante: "Rebecca Flores", carrera: "Gastronomia", estado: "Cerrado", fechaRegistro: "2025-10-13"},
 ];
 
-const ARCHIVOS_FORMATOS = [
-  "Formato_Ficha_Entrevista_Inicial.docx",
-  "Consentimiento_Informado_Ajustes.pdf",
-  "Plantilla_Informe_Derivacion.docx",
-  "Resumen_Seguimiento_Semestral.xlsx",
-];
-
 // ================== CALENDARIO / STORAGE (DEMO) ==================
 const HORAS = ["09:00", "10:00", "11:00", "15:00"];
 const LS_SLOTS = "sgar_agenda_slots_v1";          // { [slotId]: { state, ... } }
@@ -231,14 +224,6 @@ export default function EncargadaDashboard() {
             <span className="enc-sidebar-bullet" />
             <span>Detalle de caso</span>
           </button>
-
-          <button
-            className={"enc-sidebar-item " + (pestanaActiva === "documentos" ? "enc-sidebar-item-active" : "")}
-            onClick={() => setPestanaActiva("documentos")}
-          >
-            <span className="enc-sidebar-bullet" />
-            <span>Documentos y formatos</span>
-          </button>
         </nav>
       </aside>
 
@@ -323,12 +308,6 @@ export default function EncargadaDashboard() {
                   <li>
                     <button type="button" className="enc-link" onClick={() => setPestanaActiva("casos")}>
                       Revisar casos recientes
-                    </button>
-                  </li>
-
-                  <li>
-                    <button type="button" className="enc-link" onClick={() => setPestanaActiva("documentos")}>
-                      Revisar formatos oficiales
                     </button>
                   </li>
 
@@ -602,32 +581,6 @@ export default function EncargadaDashboard() {
                   </div>
                 </div>
               )}
-            </div>
-          </section>
-        )}
-
-        {/* 5) Documentos y formatos */}
-        {pestanaActiva === "documentos" && (
-          <section className="enc-section">
-            <div className="enc-card">
-              <h3>Documentos y formatos</h3>
-              <p className="enc-card-help">
-                Plantillas base utilizadas para entrevistas, consentimientos e informes.
-              </p>
-
-              <ul className="enc-formatos-list">
-                {ARCHIVOS_FORMATOS.map((f) => (
-                  <li key={f} className="enc-doc-item">
-                    <div className="enc-doc-info">
-                      <span className="enc-doc-dot" />
-                      <span className="enc-doc-name">{f}</span>
-                    </div>
-                    <button type="button" className="enc-doc-link" onClick={() => handleDescargarFormato(f)}>
-                      Descargar (demo)
-                    </button>
-                  </li>
-                ))}
-              </ul>
             </div>
           </section>
         )}

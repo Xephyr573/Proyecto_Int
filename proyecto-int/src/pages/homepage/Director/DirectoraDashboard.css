@@ -902,3 +902,45 @@
   }
 }
 
+.dir-aj-pill-decision{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 800;
+  font-size: 0.72rem;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.dir-aj-pill-decision.ok{
+  background: #ecfdf5;
+  border-color: #10b981;
+  color: #047857;
+}
+
+.dir-aj-pill-decision.bad{
+  background: #fff1f2;
+  border-color: #ef4444;
+  color: #b91c1c;
+}
+
+.dir-aj-pill-decision.rev{
+  background: #eff6ff;
+  border-color: #2563eb;
+  color: #1d4ed8;
+}
+
+.dir-aj-pill-decision.none{
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+  color: #374151;
+}
+
+.dir-aj-meta{
+  margin-top: 6px;
+  font-size: 0.78rem;
+  color: #6b7280;
+}
+
