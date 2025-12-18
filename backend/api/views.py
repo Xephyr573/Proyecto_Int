@@ -5,8 +5,8 @@ from rest_framework.response import Response
 from django.contrib.auth.hashers import check_password
 from django.db.models import Q
 from django.utils import timezone
-from .serializer import UsuarioSerializer, EstudianteSerializer, AsesorSerializer, DocenteSerializer, DirectorSerializer, AjusteSerializer, NotificacionSerializer, AsignaturaSerializer, CasoSerializer, EntrevistaSerializer, TipoAjusteSerializer, UsuarioBaseSerializer
-from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Notificacion, Asignatura, Caso, Entrevista, TipoAjuste, MotivoCaso
+from .serializer import UsuarioSerializer, EstudianteSerializer, AsesorSerializer, DocenteSerializer, DirectorSerializer, AjusteSerializer, NotificacionSerializer, AsignaturaSerializer, CasoSerializer, EntrevistaSerializer, UsuarioBaseSerializer
+from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Notificacion, Asignatura, Caso, Entrevista, MotivoCaso
 from .utils import limpiar_rut, formatear_rut, obtener_semestre_actual
 
 from django.views.decorators.csrf import csrf_exempt
@@ -67,10 +67,6 @@ class EntrevistaViewSet(viewsets.ModelViewSet):
 class AjusteViewSet(viewsets.ModelViewSet):
     queryset = Ajuste.objects.all()
     serializer_class = AjusteSerializer
-
-class TipoAjusteViewSet(viewsets.ModelViewSet):
-    queryset = TipoAjuste.objects.all()
-    serializer_class = TipoAjusteSerializer
 
 #=============================
 #VIEWS DE MANEJO DE DATOS
