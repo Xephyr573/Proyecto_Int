@@ -10,7 +10,7 @@ export default function ValidarAjustes() {
 
   const volverAtras = () => {
     if (window.history.length > 1) navigate(-1);
-    else navigate("/");
+    else navigate("/dashboard-director");
   };
 
   const fallbackAjustes = [

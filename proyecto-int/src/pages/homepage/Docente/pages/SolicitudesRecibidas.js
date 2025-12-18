@@ -214,6 +214,7 @@ export default function SolicitudesRecibidas() {
                       <span className="doc-muted">Estado</span>
                       <EstadoPill value={detalle.estado} />
                     </div>
+
                     <div className="doc-actions">
 
                       <button
