@@ -31,7 +31,7 @@ export default function AsesorPedagogicoLogin() {
         localStorage.setItem('user_data', JSON.stringify(userData));
 
         // Éxito: El rol es correcto, redirige al dashboard
-        navigate("/asesor/dashboard"); 
+        navigate("/dashboard-asesor"); 
       } else {
         // Error: Es un usuario válido, pero no es el rol esperado
         setErrores('Acceso denegado: Sus credenciales no pertenecen a un Coordinador Tecnico Pedagogico.'); 
