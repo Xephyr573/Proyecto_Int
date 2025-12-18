@@ -6,42 +6,33 @@ const VALIDAR_AJUSTES_PATH = "/director/validarajustes";
 const LS_AJUSTES_PROPUESTOS = "sgar_ajustes_propuestos_v1";
 const LS_DECISIONES_DIRECTORA = "sgar_decisiones_directora_v1";
 
-// ====== Carreras (Área -> Carreras) ======
+// ====== Áreas -> Carreras ======
 const CARRERAS_POR_AREA = {
+  "Tecnología Aplicada": [
+    "Analista Programador",
+    "Ingeniería en Informática",
+    "Ingeniería en Ciberseguridad",
+    "Ingeniería en Telecomunicaciones y Servicios Digitales",
+    "Diseño Digital y Web",
+    "Animación Digital y Videojuegos",
+    "Técnico en Automatización y Robótica",
+  ],
   "Administración y Servicios": [
     "Administración de Empresas",
     "Ingeniería en Administración de Empresas",
-    "Administración Gastronómica",
-    "Gastronomía",
     "Gestión Turística",
     "Ingeniería en Gestión Turística",
+    "Gastronomía",
   ],
   Salud: ["Técnico en Farmacia", "Técnico en Odontología"],
   "Energía y Sostenibilidad": [
-    "Ingeniería Agrícola",
-    "Técnico Agrícola",
     "Construcción Civil",
     "Técnico en Construcción",
-    "Técnico en Topografía y Geomática",
     "Ingeniería Eléctrica",
     "Técnico en Electricidad Industrial",
     "Ingeniería en Logística",
     "Técnico en Logística",
-    "Ingeniería en Mecánica y Electromovilidad Automotriz",
-    "Mecánica Automotriz en Maquinaria Pesada",
-    "Técnico en Mantenimiento Industrial",
-    "Técnico en Mecánica y Electromovilidad Automotriz",
     "Técnico en Prevención de Riesgos y Gestión de Emergencias",
-  ],
-  "Tecnología Aplicada": [
-    "Técnico en Automatización y Robótica",
-    "Animación Digital y Videojuegos",
-    "Diseño Digital Profesional",
-    "Diseño Digital y Web",
-    "Analista Programador",
-    "Ingeniería en Ciberseguridad",
-    "Ingeniería en Informática",
-    "Ingeniería en Telecomunicaciones y Servicios Digitales",
   ],
 };
 
@@ -52,6 +43,7 @@ const CASOS_BASE = [
   {
     id: "CASO-001",
     estudiante: "Alexander Torres",
+    area: "Tecnología Aplicada",
     carrera: "Ingeniería en Informática",
     estado: "Pendiente",
     fecha: "2025-04-01",
@@ -62,6 +54,7 @@ const CASOS_BASE = [
   {
     id: "CASO-002",
     estudiante: "Matias Soto",
+    area: "Tecnología Aplicada",
     carrera: "Analista Programador",
     estado: "Aprobado",
     fecha: "2025-03-20",
@@ -89,6 +82,7 @@ const CASOS_BASE = [
   {
     id: "CASO-003",
     estudiante: "Benjamin Urra",
+    area: "Tecnología Aplicada",
     carrera: "Ingeniería en Informática",
     estado: "Rechazado",
     fecha: "2025-03-10",
@@ -105,12 +99,111 @@ const CASOS_BASE = [
       },
     ],
   },
+
+  // ===== más casos para que se vea real =====
+  {
+    id: "CASO-004",
+    estudiante: "Camila Vargas",
+    area: "Tecnología Aplicada",
+    carrera: "Ingeniería en Ciberseguridad",
+    estado: "Pendiente",
+    fecha: "2025-04-03",
+    resumen:
+      "Pendiente: requiere entrevista para definir medidas de acceso a material y evaluación.",
+    ajustesPropuestos: [],
+  },
+  {
+    id: "CASO-005",
+    estudiante: "Diego Muñoz",
+    area: "Tecnología Aplicada",
+    carrera: "Ingeniería en Telecomunicaciones y Servicios Digitales",
+    estado: "Aprobado",
+    fecha: "2025-03-28",
+    resumen:
+      "Aprobado: se coordinó entrega anticipada de instrucciones y apoyos de organización.",
+    ajustesPropuestos: [
+      {
+        codigo: "C2",
+        categoria: "C",
+        titulo: "Entregar instrucciones por escrito y de forma estructurada",
+        descripcion:
+          "Reduce ambigüedad y mejora el seguimiento de evaluaciones y tareas.",
+        recomendado: true,
+      },
+    ],
+  },
+  {
+    id: "CASO-006",
+    estudiante: "Fernanda Silva",
+    area: "Administración y Servicios",
+    carrera: "Administración de Empresas",
+    estado: "Pendiente",
+    fecha: "2025-04-02",
+    resumen:
+      "Pendiente: se solicita adecuación de evaluación y apoyo en material accesible.",
+    ajustesPropuestos: [],
+  },
+  {
+    id: "CASO-007",
+    estudiante: "Valentina Rojas",
+    area: "Salud",
+    carrera: "Técnico en Farmacia",
+    estado: "Aprobado",
+    fecha: "2025-03-26",
+    resumen:
+      "Aprobado: ajustes aplicados en evaluaciones prácticas y material de estudio.",
+    ajustesPropuestos: [
+      {
+        codigo: "B1",
+        categoria: "B",
+        titulo: "Ubicar al estudiante en un lugar estratégico dentro de la sala",
+        descripcion:
+          "Favorece atención y reduce distractores visuales/auditivos.",
+        recomendado: true,
+      },
+    ],
+  },
+  {
+    id: "CASO-008",
+    estudiante: "Sebastián Paredes",
+    area: "Energía y Sostenibilidad",
+    carrera: "Ingeniería en Logística",
+    estado: "Rechazado",
+    fecha: "2025-03-18",
+    resumen:
+      "Rechazado: solicitud excede criterios. Se acordó alternativa y seguimiento.",
+    ajustesPropuestos: [
+      {
+        codigo: "D6",
+        categoria: "D",
+        titulo: "50% de tiempo extra en evaluaciones",
+        descripcion:
+          "No recomendado como primera medida; se sugiere 25% con monitoreo.",
+        recomendado: false,
+      },
+    ],
+  },
 ];
 
 const MENSAJES_DIRECTOR = [
-  { id: 1, asunto: "Nuevo caso derivado desde Asesoría", remitente: "Encargada de Inclusión", fecha: "01-04-2025" },
-  { id: 2, asunto: "Recordatorio: validar ajustes pendientes", remitente: "Sistema SGAR", fecha: "28-03-2025" },
-  { id: 3, asunto: "Consulta sobre criterios de validación", remitente: "Docente Bases de Datos", fecha: "25-03-2025" },
+  {
+    id: 1,
+    asunto: "Nuevo caso derivado desde Asesoría",
+    remitente: "Encargada de Inclusión",
+    fecha: "01-04-2025",
+  },
+  {
+    id: 2,
+    asunto: "Recordatorio: validar ajustes pendientes",
+    remitente: "Sistema SGAR",
+    fecha: "28-03-2025",
+  },
+  {
+    id: 3,
+    asunto: "Consulta sobre criterios de validación",
+    remitente: "Docente Bases de Datos",
+    fecha: "25-03-2025",
+  },
 ];
 
 function safeReadLS(key) {
@@ -119,6 +212,15 @@ function safeReadLS(key) {
   } catch {
     return null;
   }
+}
+
+// Detecta área desde carrera (si payload no trae area)
+function inferAreaFromCarrera(carrera) {
+  if (!carrera) return "Tecnología Aplicada";
+  for (const area of Object.keys(CARRERAS_POR_AREA)) {
+    if ((CARRERAS_POR_AREA[area] || []).includes(carrera)) return area;
+  }
+  return "Tecnología Aplicada";
 }
 
 function buildResumenAjustesFromPayload(payload) {
@@ -169,8 +271,10 @@ export default function DirectorDashboard() {
   // Mantener sincronizado si se guarda en otra vista/pestaña
   useEffect(() => {
     const onStorage = (e) => {
-      if (e.key === LS_AJUSTES_PROPUESTOS) setPayloadDefinidos(safeReadLS(LS_AJUSTES_PROPUESTOS));
-      if (e.key === LS_DECISIONES_DIRECTORA) setDecisionesDirectora(safeReadLS(LS_DECISIONES_DIRECTORA) || {});
+      if (e.key === LS_AJUSTES_PROPUESTOS)
+        setPayloadDefinidos(safeReadLS(LS_AJUSTES_PROPUESTOS));
+      if (e.key === LS_DECISIONES_DIRECTORA)
+        setDecisionesDirectora(safeReadLS(LS_DECISIONES_DIRECTORA) || {});
     };
     window.addEventListener("storage", onStorage);
     return () => window.removeEventListener("storage", onStorage);
@@ -182,7 +286,7 @@ export default function DirectorDashboard() {
     setDecisionesDirectora(safeReadLS(LS_DECISIONES_DIRECTORA) || {});
   }, []);
 
-  // Construir casos vivos
+  // Construir casos vivos (inyecta lo definido en DefinirAjustes)
   const casos = useMemo(() => {
     const base = [...CASOS_BASE];
 
@@ -193,11 +297,14 @@ export default function DirectorDashboard() {
       if (c.id !== casoPayload.id) return c;
 
       const resumenAjustes = buildResumenAjustesFromPayload(payloadDefinidos);
+      const carreraFinal = casoPayload.carrera || c.carrera;
+      const areaFinal = casoPayload.area || c.area || inferAreaFromCarrera(carreraFinal);
 
       return {
         ...c,
         estudiante: casoPayload.estudiante || c.estudiante,
-        carrera: casoPayload.carrera || c.carrera,
+        carrera: carreraFinal,
+        area: areaFinal,
         ajustesPropuestos: resumenAjustes,
       };
     });
@@ -242,14 +349,12 @@ export default function DirectorDashboard() {
         carreraSeleccionada === "Todas" ? true : c.carrera === carreraSeleccionada;
 
       const matchArea =
-        areaSeleccionada === "Todas"
-          ? true
-          : (CARRERAS_POR_AREA[areaSeleccionada] || []).includes(c.carrera);
+        areaSeleccionada === "Todas" ? true : c.area === areaSeleccionada;
 
       const matchBusqueda =
         q.length === 0
           ? true
-          : `${c.id} ${c.estudiante} ${c.carrera}`.toLowerCase().includes(q);
+          : `${c.id} ${c.estudiante} ${c.area} ${c.carrera}`.toLowerCase().includes(q);
 
       return matchEstado && matchArea && matchCarrera && matchBusqueda;
     });
@@ -307,7 +412,10 @@ export default function DirectorDashboard() {
 
         <nav className="dir-sidebar-menu">
           <button
-            className={"dir-sidebar-item " + (pestanaActiva === "resumen" ? "dir-sidebar-item-active" : "")}
+            className={
+              "dir-sidebar-item " +
+              (pestanaActiva === "resumen" ? "dir-sidebar-item-active" : "")
+            }
             onClick={() => setPestanaActiva("resumen")}
           >
             <span className="dir-sidebar-bullet" />
@@ -315,7 +423,10 @@ export default function DirectorDashboard() {
           </button>
 
           <button
-            className={"dir-sidebar-item " + (pestanaActiva === "casos" ? "dir-sidebar-item-active" : "")}
+            className={
+              "dir-sidebar-item " +
+              (pestanaActiva === "casos" ? "dir-sidebar-item-active" : "")
+            }
             onClick={() => setPestanaActiva("casos")}
           >
             <span className="dir-sidebar-bullet" />
@@ -323,7 +434,10 @@ export default function DirectorDashboard() {
           </button>
 
           <button
-            className={"dir-sidebar-item " + (pestanaActiva === "detalle" ? "dir-sidebar-item-active" : "")}
+            className={
+              "dir-sidebar-item " +
+              (pestanaActiva === "detalle" ? "dir-sidebar-item-active" : "")
+            }
             onClick={() => setPestanaActiva("detalle")}
           >
             <span className="dir-sidebar-bullet" />
@@ -337,7 +451,7 @@ export default function DirectorDashboard() {
           <div>
             <h1>Panel Directora de Carrera</h1>
             <p className="dir-subtitle">
-              Validación de ajustes razonables y revisión de historial de casos de la carrera.
+              Validación de ajustes razonables y revisión de historial de casos por área y carrera.
             </p>
 
             <div className="dir-header-actions">
@@ -447,12 +561,12 @@ export default function DirectorDashboard() {
                 </label>
 
                 <label className="dir-filter-label">
-                  Buscar (caso / estudiante / carrera)
+                  Buscar (caso / estudiante / área / carrera)
                   <input
                     type="text"
                     value={busqueda}
                     onChange={(e) => setBusqueda(e.target.value)}
-                    placeholder="Ej: CASO-001 o Alexander"
+                    placeholder="Ej: CASO-001 o Tecnología Aplicada"
                   />
                 </label>
               </div>
@@ -463,6 +577,7 @@ export default function DirectorDashboard() {
                     <tr>
                       <th>Caso</th>
                       <th>Estudiante</th>
+                      <th>Área</th>
                       <th>Carrera</th>
                       <th>Fecha</th>
                       <th></th>
@@ -473,6 +588,7 @@ export default function DirectorDashboard() {
                       <tr key={c.id}>
                         <td>{c.id}</td>
                         <td>{c.estudiante}</td>
+                        <td>{c.area}</td>
                         <td>{c.carrera}</td>
                         <td>{c.fecha}</td>
                         <td className="dir-table-actions">
@@ -487,7 +603,7 @@ export default function DirectorDashboard() {
                     ))}
                     {casosFiltrados.length === 0 && (
                       <tr>
-                        <td colSpan={5} className="dir-table-empty">
+                        <td colSpan={6} className="dir-table-empty">
                           No hay casos con esos filtros.
                         </td>
                       </tr>
@@ -519,7 +635,7 @@ export default function DirectorDashboard() {
                       <div className="dir-detail-id">{casoSeleccionado.id}</div>
                       <div className="dir-detail-title">{casoSeleccionado.estudiante}</div>
                       <div className="dir-detail-sub">
-                        {casoSeleccionado.carrera} · {casoSeleccionado.fecha}
+                        {casoSeleccionado.area} · {casoSeleccionado.carrera} · {casoSeleccionado.fecha}
                       </div>
                     </div>
 
@@ -553,6 +669,10 @@ export default function DirectorDashboard() {
                         <div className="dir-kv-item">
                           <span>Estudiante</span>
                           <strong>{casoSeleccionado.estudiante}</strong>
+                        </div>
+                        <div className="dir-kv-item">
+                          <span>Área</span>
+                          <strong>{casoSeleccionado.area}</strong>
                         </div>
                         <div className="dir-kv-item">
                           <span>Carrera</span>
@@ -595,8 +715,6 @@ export default function DirectorDashboard() {
                             <div className="dir-aj-top">
                               <span className={"dir-aj-tag dir-aj-" + a.categoria}>{a.categoria}</span>
                               <div className="dir-aj-code">{a.codigo}</div>
-
-                              {/* Estado real según Directora */}
                               <span className={"dir-aj-pill-decision " + a.decisionClass}>
                                 {a.decisionLabel}
                               </span>
@@ -605,19 +723,15 @@ export default function DirectorDashboard() {
                             <div className="dir-aj-title">{a.titulo}</div>
                             <div className="dir-aj-desc">{a.descripcion}</div>
 
-                            {/* (Opcional) Mantener recomendación coordinación como meta chica */}
                             <div className="dir-aj-meta">
-                              Coordinación:{" "}
-                              <strong>{a.recomendado ? "Recomendado" : "No recomendado"}</strong>
+                              Coordinación: <strong>{a.recomendado ? "Recomendado" : "No recomendado"}</strong>
                             </div>
                           </div>
                         ))}
 
                         {(!casoSeleccionado.ajustesPropuestos ||
                           casoSeleccionado.ajustesPropuestos.length === 0) && (
-                          <div className="dir-empty-lite">
-                            Aún no hay ajustes definidos para este caso.
-                          </div>
+                          <div className="dir-empty-lite">Aún no hay ajustes definidos para este caso.</div>
                         )}
                       </div>
                     </div>
