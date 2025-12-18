@@ -12,7 +12,7 @@ const CASOS_ENCARGADA = [
   { id: "CASO-006", estudiante: "Bruno Méndez", carrera: "Técnico en Administración", estado: "Cerrado", fechaRegistro: "2025-05-21", origen: "Estudiante" },
   { id: "CASO-007", estudiante: "Camila Vargas", carrera: "Moda y Diseño", estado: "En entrevista", fechaRegistro: "2025-04-15", origen: "Estudiante" },
   { id: "CASO-008", estudiante: "Paulina Rojas", carrera: "Tecnico en Enfermería", estado: "Derivado a CTP", fechaRegistro: "2025-09-07", origen: "Estudiante" },
-  { id: "CASO-009", estudiante: "Rebecca Flores", carrera: "Gastronomia", estado: "Cerrado", fechaRegistro: "2025-10-13", origen: "Estudiante" },
+  { id: "CASO-009", estudiante: "Rebecca Flores", carrera: "Gastronomia", estado: "Cerrado", fechaRegistro: "2025-10-13"},
 ];
 
 const ARCHIVOS_FORMATOS = [
@@ -193,7 +193,14 @@ export default function EncargadaDashboard() {
           <p className="enc-sidebar-sub">Sede Temuco</p>
         </div>
 
-        <nav className="enc-sidebar-menu">
+        
+        <div className="enc-sidebar-top-actions">
+          <button className="enc-sidebar-link" onClick={() => navigate("/")}> 
+            Volver al inicio
+          </button>
+        </div>
+
+<nav className="enc-sidebar-menu">
           <button
             className={"enc-sidebar-item " + (pestanaActiva === "resumen" ? "enc-sidebar-item-active" : "")}
             onClick={() => setPestanaActiva("resumen")}
@@ -234,12 +241,6 @@ export default function EncargadaDashboard() {
             <span>Documentos y formatos</span>
           </button>
         </nav>
-
-        <div className="enc-sidebar-bottom">
-          <button className="enc-sidebar-link" onClick={() => navigate("/")}>
-            Volver al inicio
-          </button>
-        </div>
       </aside>
 
       {/* ========== MAIN ========== */}
@@ -327,6 +328,13 @@ export default function EncargadaDashboard() {
                     <button type="button" className="enc-link" onClick={() => setPestanaActiva("documentos")}>
                       Revisar formatos oficiales
                     </button>
+                    <button
+                        type="button"
+                        className="enc-link"
+                        onClick={() => navigate("/asesor/seguimiento")}
+                      >
+                        Ir a seguimiento
+                      </button>
                   </li>
                 </ul>
               </div>
@@ -577,9 +585,6 @@ export default function EncargadaDashboard() {
                         {casoSeleccionado.carrera} · Origen: {casoSeleccionado.origen}
                       </p>
                     </div>
-                    <button type="button" className="enc-btn-cerrar" onClick={() => setCasoSeleccionado(null)}>
-                      Cerrar
-                    </button>
                   </div>
 
                   <p className="enc-detalle-text">

@@ -1,12 +1,17 @@
 // src/pages/homepage/Asesor/pages/RegistrarCaso.js
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./RegistrarCaso.css";
 import { buscarEstudiante } from "../../../../services/searchStudent";
 import { crearCaso, obtenerMotivos } from "../../../../services/guardarCaso";
 
 export default function RegistrarCaso() {
   const navigate = useNavigate();
+
+  const volverAtras = () => {
+    if (window.history.length > 1) navigate(-1);
+    else navigate("/");
+  };
 
   // estado de los datos del estudiante
   const [rut, setRut] = useState("");
@@ -348,9 +353,9 @@ const handleGuardarCaso = async () => {
             {cargando ? "Guardando..." : "Guardar registro"}
           </button>
 
-          <Link to="/Asesor" className="btn-asesor-volver">
-            Volver al inicio Asesor
-          </Link>
+          <button type="button" className="btn-asesor-volver" onClick={volverAtras}>
+            Volver
+          </button>
         </div>
       </form>
     </div>

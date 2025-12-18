@@ -32,6 +32,7 @@ export default function AsesorInclusionLogin() {
 
         // Éxito: El rol es correcto, redirige al dashboard
         navigate("/dashboard-encargada");
+
       } else {
         // Error: Es un usuario válido, pero no es el rol esperado
         setErrores('Acceso denegado: Sus credenciales no pertenecen a un Asesor pedagogico.'); 

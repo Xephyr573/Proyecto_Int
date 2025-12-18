@@ -1,97 +1,138 @@
 // src/pages/homepage/Docente/DocenteDashboard.js
 import "./DocenteDashboard.css";
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+
+function getDocenteFromStorage() {
+  try {
+    const raw = localStorage.getItem("user") || localStorage.getItem("usuario");
+    if (!raw) return null;
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return null;
+  }
+}
 
 export default function DocenteDashboard() {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    navigate("/Docente");
-  };
+  const docente = useMemo(() => getDocenteFromStorage(), []);
+  const nombreDocente = docente?.nombre || "Docente";
+  const correoDocente = docente?.correo || "docente@inacapmail.cl";
+  const sede = docente?.sede || "Sede Temuco";
+  const asignatura = docente?.asignatura || "Asignatura no definida";
 
-  // Por ahora es estático. Después lo puedes traer de la API / localStorage.
-  const nombreDocente = "Nombre Nombre Apellido Apellido";
-  const correoDocente = "docente@inacapmail.cl";
+  const stats = [
+    { label: "Solicitudes pendientes", value: 3, hint: "Requieren revisión", tone: "warn" },
+    { label: "Entrevistas esta semana", value: 2, hint: "Con estudiantes", tone: "info" },
+    { label: "Asistencias registradas", value: "80%", hint: "Últimos 30 días", tone: "ok" },
+    { label: "Reportes emitidos", value: 5, hint: "Rendimiento y seguimiento", tone: "neutral" },
+  ];
+
+  const actividad = [
+    { id: 1, title: "Nueva solicitud recibida", meta: "Alexander Torres · Ajuste visual · Pendiente" },
+    { id: 2, title: "Asistencia marcada", meta: "Entrevista · Matías Soto · Asistió" },
+    { id: 3, title: "Reporte actualizado", meta: "Rendimiento semanal · Ingeniería en Informática" },
+  ];
 
   return (
-    <div className="docente-layout">
-      {/* ==== SIDEBAR IZQUIERDA ==== */}
-      <aside className="docente-sidebar">
-        <div className="sidebar-top">
+    <div className="doc-layout">
+      {/* SIDEBAR */}
+      <aside className="doc-sb">
+        <div className="doc-sb-top">
           <img
             src="https://digital.inacap.cl/recursos/inacap-liferay/img/logo-footer.png"
             alt="Inacap"
-            className="sidebar-logo"
+            className="doc-sb-logo"
           />
         </div>
 
-        <div className="sidebar-card">
-          <span className="sidebar-label">Bienvenido/a</span>
-          <p className="sidebar-name">{nombreDocente}</p>
-          <p className="sidebar-email">{correoDocente}</p>
+        <div className="doc-sb-card">
+          <span className="doc-sb-label">Cuenta</span>
+          <p className="doc-sb-name">{nombreDocente}</p>
+          <p className="doc-sb-sub">{correoDocente}</p>
+          <div className="doc-sb-chiprow">
+            <span className="doc-chip">{sede}</span>
+            <span className="doc-chip doc-chip-muted">{asignatura}</span>
+          </div>
         </div>
 
-        <nav className="sidebar-menu">
-          <button
-            className="sidebar-item"
-            onClick={() => navigate("/docente/asistencia")}
-          >
-            <span className="sidebar-bullet" />
-            <span>Asistencia de Estudiantes</span>
+        <nav className="doc-sb-menu">
+          <button className="doc-sb-item doc-sb-item-active" type="button">
+            <span className="doc-sb-dot" />
+            <span>Panel docente</span>
           </button>
+
           <button
-            className="sidebar-item"
+            className="doc-sb-item"
+            type="button"
             onClick={() => navigate("/docente/solicitudes")}
           >
-            <span className="sidebar-bullet" />
-            <span>Solicitudes Recibidas</span>
+            <span className="doc-sb-dot" />
+            <span>Solicitudes recibidas</span>
           </button>
-          <button
-            className="sidebar-item"
-            onClick={() => navigate("/docente/reportes")}
-          >
-            <span className="sidebar-bullet" />
-            <span>Reportes Académicos</span>
-          </button>
+          
         </nav>
-      </aside>
 
-      {/* ==== CONTENIDO DERECHO ==== */}
-      <main className="docente-main">
-        <header className="docente-main-header">
-          <h1>Panel Docente</h1>
-          <button className="btn-logout" onClick={handleLogout}>
+        <div className="doc-sb-bottom">
+          <button className="doc-sb-logout" type="button" onClick={() => navigate("/Docente")}>
             Cerrar sesión
           </button>
+        </div>
+      </aside>
+
+      {/* MAIN */}
+      <main className="doc-main">
+        <header className="doc-topbar">
+          <div>
+            <h1>Panel Docente</h1>
+            <p className="doc-subtitle">
+              Gestión rápida de solicitudes.
+            </p>
+          </div>
+          <div className="doc-topbar-tags">
+            <span className="doc-badge">Docente</span>
+            <span className="doc-badge doc-badge-muted">{sede}</span>
+          </div>
         </header>
 
-        <section className="docente-main-grid">
-          <div
-            className="dash-card"
-            onClick={() => navigate("/docente/asistencia")}
-          >
-            <h3>Asistencia de Estudiantes</h3>
-            <p>Consulta y marca asistencia de alumnos.</p>
-          </div>
+        <section className="doc-kpis">
+          {stats.map((s) => (
+            <div key={s.label} className={"doc-kpi doc-kpi-" + s.tone}>
+              <span className="doc-kpi-label">{s.label}</span>
+              <strong className="doc-kpi-value">{s.value}</strong>
+              <small className="doc-kpi-hint">{s.hint}</small>
+            </div>
+          ))}
+        </section>
 
-          <div
-            className="dash-card"
-            onClick={() => navigate("/docente/solicitudes")}
-          >
-            <h3>Solicitudes Recibidas</h3>
-            <p>Revisa las solicitudes enviadas por estudiantes.</p>
-          </div>
+        <section className="doc-grid">
+          <button className="doc-card" type="button" onClick={() => navigate("/docente/solicitudes")}>
+            <h3>Solicitudes recibidas</h3>
+            <p>Revisa solicitudes y registra tu decisión o comentario docente.</p>
+            <span className="doc-card-link">Abrir módulo</span>
+          </button>
+        </section>
 
-          <div
-            className="dash-card"
-            onClick={() => navigate("/docente/reportes")}
-          >
-            <h3>Reportes Académicos</h3>
-            <p>Genera y visualiza reportes de rendimiento.</p>
+        <section className="doc-section">
+          <div className="doc-card-surface">
+            <div className="doc-card-surface-header">
+              <h3>Actividad reciente</h3>
+              <span className="doc-muted">Últimas acciones</span>
+            </div>
+            <ul className="doc-activity">
+              {actividad.map((a) => (
+                <li key={a.id}>
+                  <div className="doc-activity-title">{a.title}</div>
+                  <div className="doc-activity-meta">{a.meta}</div>
+                </li>
+              ))}
+            </ul>
           </div>
         </section>
 
-        <footer className="dash-footer">© 2025 · INACAP</footer>
+        <footer className="doc-footer">© 2025 · SGAR Inclusión · Vista Docente</footer>
       </main>
     </div>
   );
