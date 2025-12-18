@@ -147,37 +147,6 @@ const handleGuardarCaso = async () => {
         semestral.
       </p> */}
 
-      {/*  Flujo del caso SOLO para el asesor (ahora como navegación) */}
-      <div className="flujo-etapas">
-        <button
-          type="button"
-          className="etapa active"
-          onClick={() => navigate("/asesor/registrar-caso")}
-        >
-          1. Entrevista / Registro de caso
-        </button>
-        <button
-          type="button"
-          className="etapa"
-          onClick={() => navigate("/asesor/definir-ajustes")}
-        >
-          2. Definición de ajustes
-        </button>
-        <button
-          type="button"
-          className="etapa"
-          onClick={() => navigate("/asesor/seguimiento")}
-        >
-          3. Seguimiento
-        </button>
-        <button
-          type="button"
-          className="etapa"
-          onClick={() => navigate("/asesor/evaluacion-final")}
-        >
-          4. Evaluación final
-        </button>
-      </div>
 
       {/* Cuadro de DATOS DE CASO */}
       <form className="asesor-form">
