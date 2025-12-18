@@ -4,6 +4,32 @@ import { useNavigate } from "react-router-dom";
 import "./DefinirAjustes.css";
 import { CATEGORIAS, AJUSTES_POR_CATEGORIA } from "./ajustesRazonables";
 
+const LS_AJUSTES_PROPUESTOS = "sgar_ajustes_propuestos_v1";
+
+const buildAjustesParaDirectora = (ajustesSeleccionados, categoriasMap) => {
+  const out = [];
+
+  ["A", "B", "C", "D"].forEach((cat) => {
+    (ajustesSeleccionados[cat] || []).forEach((aj) => {
+      const tituloFinal = aj.detalleExtra
+        ? `${aj.titulo} — ${aj.detalleExtra}`
+        : aj.titulo;
+
+      out.push({
+        id: aj.codigo, // A1, B1, etc.
+        categoria: cat,
+        categoriaNombre: categoriasMap[cat],
+        titulo: tituloFinal,
+        descripcion: aj.descripcion,
+        // Regla demo: D suele quedar como "no recomendado inicialmente"
+        propuestoPorCoordinacion: cat !== "D",
+      });
+    });
+  });
+
+  return out;
+};
+
 function AjusteResumenCard({ letra, categoria, categoriaNombre, ajuste, onRemove }) {
   if (!ajuste) return null;
 
@@ -35,8 +61,7 @@ function AjusteResumenCard({ letra, categoria, categoriaNombre, ajuste, onRemove
 
       <div className="def-card-meta">
         <div>
-          <span className="def-muted">Tipo:</span>{" "}
-          <strong>{categoriaNombre}</strong>
+          <span className="def-muted">Tipo:</span> <strong>{categoriaNombre}</strong>
         </div>
         <div className="def-desc">{ajuste.descripcion}</div>
       </div>
@@ -47,13 +72,9 @@ function AjusteResumenCard({ letra, categoria, categoriaNombre, ajuste, onRemove
 export default function DefinirAjustes() {
   const navigate = useNavigate();
 
-  // Ruta a "ventana de detalles"
-  const DETALLE_CASO_PATH = "/asesor/seguimiento";
-
-  // Volver como flecha atrás (con fallback)
   const volverAtras = () => {
     if (window.history.length > 1) navigate(-1);
-    else navigate("/");
+    else navigate("/asesor/dashboard-asesor");
   };
 
   // valor actual del select de cada categoría
@@ -83,9 +104,17 @@ export default function DefinirAjustes() {
   const mostrarDetalleC = ajusteSelC?.requiereDetalle;
   const mostrarDetalleD = ajusteSelD?.requiereDetalle;
 
+  // IMPORTANTE:
+  // - Al cambiar el select, limpiamos el detalle SOLO de esa categoría.
+  // - Esto está bien, porque el detalle corresponde a "la opción actual".
   const manejarCambioSeleccion = (cat, valor) => {
     setSeleccion((prev) => ({ ...prev, [cat]: valor }));
     setDetalles((prev) => ({ ...prev, [cat]: "" }));
+  };
+
+  // Handler separado para escribir en textarea (evita cortes por re-renders)
+  const manejarCambioDetalle = (cat, valor) => {
+    setDetalles((prev) => ({ ...prev, [cat]: valor }));
   };
 
   const estaAgregado = (cat, codigo) =>
@@ -100,13 +129,14 @@ export default function DefinirAjustes() {
 
     if (estaAgregado(cat, codigo)) return;
 
-    const detalleExtra = base.requiereDetalle ? detalles[cat].trim() : "";
+    const detalleExtra = base.requiereDetalle ? (detalles[cat] || "").trim() : "";
 
     setAjustesSeleccionados((prev) => ({
       ...prev,
       [cat]: [...prev[cat], { ...base, detalleExtra }],
     }));
 
+    // al agregar, limpiamos selección y detalle
     setSeleccion((prev) => ({ ...prev, [cat]: "" }));
     setDetalles((prev) => ({ ...prev, [cat]: "" }));
   };
@@ -129,18 +159,29 @@ export default function DefinirAjustes() {
     [ajustesSeleccionados]
   );
 
-  const guardarYVerDetalle = () => {
+  // Opción A: Guardar sin navegar
+  const guardar = () => {
     if (!hayAlguno) {
       alert("Debes agregar al menos un ajuste antes de continuar.");
       return;
     }
 
-    navigate(DETALLE_CASO_PATH, {
-      state: { ajustesSeleccionados },
-    });
+    const payload = {
+      caso: {
+        id: "CASO-001",
+        estudiante: "Alexander Torres",
+        carrera: "Ingeniería en Informática",
+        semestre: "2/2025",
+        asignaturas: ["Programación", "Bases de Datos"],
+      },
+      ajustes: buildAjustesParaDirectora(ajustesSeleccionados, CATEGORIAS),
+      createdAt: new Date().toISOString(),
+    };
+
+    localStorage.setItem(LS_AJUSTES_PROPUESTOS, JSON.stringify(payload));
+    alert("Ajustes guardados correctamente.");
   };
 
-  // render de “agregados” (select bloqueado + quitar)
   const renderAgregados = (cat) => {
     const lista = ajustesSeleccionados[cat];
     if (!lista || lista.length === 0) return null;
@@ -239,7 +280,7 @@ export default function DefinirAjustes() {
               rows={3}
               placeholder="Describe brevemente el ajuste razonable que quieres registrar."
               value={detalleValue}
-              onChange={(e) => setDetalles((prev) => ({ ...prev, [cat]: e.target.value }))}
+              onChange={(e) => manejarCambioDetalle(cat, e.target.value)}
             />
           </label>
         ) : null}
@@ -249,13 +290,12 @@ export default function DefinirAjustes() {
 
   return (
     <div className="def-page">
-      {/* TOPBAR */}
       <header className="def-topbar">
         <div className="def-topbar-left">
           <h2>Definir ajustes razonables</h2>
           <p>
-            La <strong>Coordinadora Técnica Pedagógica</strong> selecciona ajustes (A, B, C, D)
-            que se propondrán para el estudiante.
+            La <strong>Coordinadora Técnica Pedagógica</strong> selecciona ajustes
+            (A, B, C, D) que se propondrán para el estudiante.
           </p>
         </div>
 
@@ -270,8 +310,8 @@ export default function DefinirAjustes() {
           </div>
 
           <div className="def-actions">
-            <button type="button" className="def-btn def-btn-primary" onClick={guardarYVerDetalle}>
-              Guardar y ver detalle
+            <button type="button" className="def-btn def-btn-primary" onClick={guardar}>
+              Guardar
             </button>
             <button type="button" className="def-btn def-btn-ghost" onClick={volverAtras}>
               Volver
@@ -280,7 +320,6 @@ export default function DefinirAjustes() {
         </div>
       </header>
 
-      {/* MAIN */}
       <main className="def-main">
         <section className="def-card-surface">
           <div className="def-card-surface-head">
@@ -318,7 +357,6 @@ export default function DefinirAjustes() {
           </div>
         </section>
 
-        {/* RESUMEN */}
         <section className="def-card-surface">
           <div className="def-card-surface-head">
             <h3>Resumen de ajustes seleccionados</h3>
@@ -341,14 +379,12 @@ export default function DefinirAjustes() {
               )}
             </div>
           ) : (
-            <div className="def-empty">
-              Aún no se ha agregado ningún ajuste al caso.
-            </div>
+            <div className="def-empty">Aún no se ha agregado ningún ajuste al caso.</div>
           )}
 
           <div className="def-bottom-actions">
-            <button type="button" className="def-btn def-btn-primary" onClick={guardarYVerDetalle}>
-              Guardar y ver detalle
+            <button type="button" className="def-btn def-btn-primary" onClick={guardar}>
+              Guardar
             </button>
             <button type="button" className="def-btn def-btn-ghost" onClick={volverAtras}>
               Volver

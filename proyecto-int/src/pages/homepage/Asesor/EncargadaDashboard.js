@@ -328,6 +328,13 @@ export default function EncargadaDashboard() {
                     <button type="button" className="enc-link" onClick={() => setPestanaActiva("documentos")}>
                       Revisar formatos oficiales
                     </button>
+                    <button
+                        type="button"
+                        className="enc-link"
+                        onClick={() => navigate("/asesor/seguimiento")}
+                      >
+                        Ir a seguimiento
+                      </button>
                   </li>
                 </ul>
               </div>

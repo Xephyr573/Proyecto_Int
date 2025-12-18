@@ -320,16 +320,6 @@ export default function AsesorDashboard() {
                     <div className="ases-quick-title">Definir ajustes razonables</div>
                     <div className="ases-quick-sub">Seleccionar ajustes (A, B, C, D)</div>
                   </button>
-
-                  <button
-                    type="button"
-                    className="ases-quick-card"
-                    onClick={() => navigate("/asesor/seguimiento")}
-                  >
-                    <div className="ases-quick-title">Seguimiento semestral</div>
-                    <div className="ases-quick-sub">Registro de avance y evidencias</div>
-                  </button>
-
                   <button
                     type="button"
                     className="ases-quick-card"
@@ -445,16 +435,6 @@ export default function AsesorDashboard() {
                           </span>
                         </td>
                         <td className="ases-td-action">
-                          <button
-                            type="button"
-                            className="ases-link"
-                            onClick={() => {
-                              setCasoSeleccionado(caso);
-                              setPestanaActiva("detalle");
-                            }}
-                          >
-                            Ver detalle
-                          </button>
                         </td>
                       </tr>
                     ))}
@@ -536,14 +516,6 @@ export default function AsesorDashboard() {
                         onClick={() => navigate("/asesor/definir-ajustes")}
                       >
                         Ir a definición de ajustes
-                      </button>
-
-                      <button
-                        type="button"
-                        className="ases-btn-primary-outline"
-                        onClick={() => navigate("/asesor/seguimiento")}
-                      >
-                        Ir a seguimiento
                       </button>
 
                       <button

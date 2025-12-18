@@ -1,18 +1,19 @@
 // src/pages/homepage/Director/pages/ValidarAjustes.js
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ValidarAjustes.css";
+
+const LS_AJUSTES_PROPUESTOS = "sgar_ajustes_propuestos_v1";
 
 export default function ValidarAjustes() {
   const navigate = useNavigate();
 
-  // Vuelve exactamente como la flecha "Atrás"
   const volverAtras = () => {
     if (window.history.length > 1) navigate(-1);
     else navigate("/");
   };
 
-  const ajustesIniciales = [
+  const fallbackAjustes = [
     {
       id: "A1",
       categoria: "A",
@@ -51,37 +52,73 @@ export default function ValidarAjustes() {
     },
   ];
 
-  // "aprobado" | "no_aprobado" | "revisar"
+  let payload = null;
+  try {
+    payload = JSON.parse(localStorage.getItem(LS_AJUSTES_PROPUESTOS) || "null");
+  } catch {
+    payload = null;
+  }
+
+  const casoActivo = payload?.caso || {
+    id: "CASO-001",
+    estudiante: "Alexander Torres",
+    carrera: "Ingeniería en Informática",
+    semestre: "2/2025",
+    asignaturas: ["Programación", "Bases de Datos"],
+  };
+
+  const ajustesIniciales =
+    payload?.ajustes && payload.ajustes.length > 0 ? payload.ajustes : fallbackAjustes;
+
+  // "aprobado" | "no_aprobado" | "revisar" | null
+  // Parte todo desmarcado
   const [decisiones, setDecisiones] = useState(() => {
     const base = {};
-    ajustesIniciales.forEach((ajuste, i) => {
-      base[ajuste.id] = i < 3 ? "aprobado" : "revisar";
+    ajustesIniciales.forEach((ajuste) => {
+      base[ajuste.id] = null;
     });
     return base;
   });
 
-  // Comentarios por ajuste
-  const [comentarios, setComentarios] = useState({});
-  // Paneles de comentario abiertos (pueden ser varios a la vez)
-  const [panelesAbiertos, setPanelesAbiertos] = useState({});
+  // Si cambian los ajustes (por ejemplo, se guardaron otros desde DefinirAjustes),
+  // aseguramos llaves para todos y mantenemos lo ya marcado si existía.
+  useEffect(() => {
+    setDecisiones((prev) => {
+      const next = {};
+      ajustesIniciales.forEach((a) => {
+        next[a.id] = Object.prototype.hasOwnProperty.call(prev, a.id)
+          ? prev[a.id]
+          : null;
+      });
+      return next;
+    });
+  }, [ajustesIniciales]);
 
+  // Toggle: si clickeas la misma opción, se desmarca
   const handleCambioDecision = (idAjuste, valor) => {
     setDecisiones((prev) => ({
       ...prev,
-      [idAjuste]: valor,
+      [idAjuste]: prev[idAjuste] === valor ? null : valor,
     }));
   };
 
+  const [comentarios, setComentarios] = useState({});
+  const [panelesAbiertos, setPanelesAbiertos] = useState({});
+
   const total = ajustesIniciales.length;
-  const aprobados = ajustesIniciales.filter(
-    (a) => decisiones[a.id] === "aprobado"
-  ).length;
-  const rechazados = ajustesIniciales.filter(
-    (a) => decisiones[a.id] === "no_aprobado"
-  ).length;
-  const enRevision = ajustesIniciales.filter(
-    (a) => decisiones[a.id] === "revisar"
-  ).length;
+
+  const aprobados = useMemo(
+    () => ajustesIniciales.filter((a) => decisiones[a.id] === "aprobado").length,
+    [decisiones, ajustesIniciales]
+  );
+  const rechazados = useMemo(
+    () => ajustesIniciales.filter((a) => decisiones[a.id] === "no_aprobado").length,
+    [decisiones, ajustesIniciales]
+  );
+  const enRevision = useMemo(
+    () => ajustesIniciales.filter((a) => decisiones[a.id] === "revisar").length,
+    [decisiones, ajustesIniciales]
+  );
 
   const ajustesConComentarioAbierto = ajustesIniciales.filter(
     (a) => panelesAbiertos[a.id]
@@ -91,27 +128,29 @@ export default function ValidarAjustes() {
     <div className="asesor-form-page">
       <h2>Validar ajustes</h2>
       <p className="asesor-form-text">
-        En esta etapa la <strong>Directora de Carrera</strong> revisa los
-        ajustes propuestos por la Coordinación, considerando el reglamento
-        institucional y la viabilidad en cada asignatura. Cada ajuste se aprueba
-        o no de forma independiente, y el resultado alimenta el panel de
-        seguimiento y la evaluación final del semestre.
+        En esta etapa la <strong>Directora de Carrera</strong> revisa los ajustes
+        propuestos por la Coordinación, considerando el reglamento institucional
+        y la viabilidad en cada asignatura. Cada ajuste se aprueba o no de forma
+        independiente, y el resultado alimenta el panel de seguimiento y la
+        evaluación final del semestre.
       </p>
 
-      {/* Info del caso + resumen numérico */}
       <div className="validar-header">
         <div className="validar-info-case">
           <div className="validar-badge">Caso activo</div>
-          <h3>Caso: CASO-001</h3>
+
+          <h3>Caso: {casoActivo.id}</h3>
+
           <p>
-            <strong>Estudiante:</strong> Alexander Torres – Ingeniería en
-            Informática
+            <strong>Estudiante:</strong> {casoActivo.estudiante} – {casoActivo.carrera}
           </p>
+
           <p>
-            <strong>Semestre:</strong> 2/2025 ·{" "}
-            <strong>Asignaturas involucradas:</strong> Programación, Bases de
-            Datos
+            <strong>Semestre:</strong> {casoActivo.semestre} ·{" "}
+            <strong>Asignaturas involucradas:</strong>{" "}
+            {casoActivo.asignaturas.join(", ")}
           </p>
+
           <p className="validar-text-small">
             Este caso forma parte del programa de Ajustes Razonables. Las
             decisiones que se tomen aquí serán visibles para docentes y asesores
@@ -185,67 +224,54 @@ export default function ValidarAjustes() {
                   </td>
                   <td>
                     <div className="radio-decision">
-                      {/* Aprobar */}
                       <label
                         className={
                           "pill-decision pill-aprobar" +
-                          (decisiones[ajuste.id] === "aprobado"
-                            ? " active"
-                            : "")
+                          (decisiones[ajuste.id] === "aprobado" ? " active" : "")
                         }
                       >
                         <input
                           type="radio"
                           name={`dec-${ajuste.id}`}
                           checked={decisiones[ajuste.id] === "aprobado"}
-                          onChange={() =>
-                            handleCambioDecision(ajuste.id, "aprobado")
-                          }
+                          onClick={() => handleCambioDecision(ajuste.id, "aprobado")}
+                          readOnly
                         />
                         <span>Aprobar</span>
                       </label>
 
-                      {/* No aprobar */}
                       <label
                         className={
                           "pill-decision pill-rechazar" +
-                          (decisiones[ajuste.id] === "no_aprobado"
-                            ? " active"
-                            : "")
+                          (decisiones[ajuste.id] === "no_aprobado" ? " active" : "")
                         }
                       >
                         <input
                           type="radio"
                           name={`dec-${ajuste.id}`}
                           checked={decisiones[ajuste.id] === "no_aprobado"}
-                          onChange={() =>
-                            handleCambioDecision(ajuste.id, "no_aprobado")
-                          }
+                          onClick={() => handleCambioDecision(ajuste.id, "no_aprobado")}
+                          readOnly
                         />
                         <span>No aprobar</span>
                       </label>
 
-                      {/* Revisión */}
                       <label
                         className={
                           "pill-decision pill-revisar" +
-                          (decisiones[ajuste.id] === "revisar"
-                            ? " active"
-                            : "")
+                          (decisiones[ajuste.id] === "revisar" ? " active" : "")
                         }
                       >
                         <input
                           type="radio"
                           name={`dec-${ajuste.id}`}
                           checked={decisiones[ajuste.id] === "revisar"}
-                          onChange={() =>
-                            handleCambioDecision(ajuste.id, "revisar")
-                          }
+                          onClick={() => handleCambioDecision(ajuste.id, "revisar")}
+                          readOnly
                         />
                         <span>Revisión</span>
                       </label>
 
-                      {/* Botón para abrir/cerrar panel de comentario */}
                       <button
                         type="button"
                         className="btn-comentario-ajuste"
@@ -256,9 +282,7 @@ export default function ValidarAjustes() {
                           }))
                         }
                       >
-                        {panelesAbiertos[ajuste.id]
-                          ? "Ocultar comentario"
-                          : "Comentar"}
+                        {panelesAbiertos[ajuste.id] ? "Ocultar comentario" : "Comentar"}
                       </button>
                     </div>
                   </td>
@@ -268,7 +292,6 @@ export default function ValidarAjustes() {
           </table>
         </div>
 
-        {/* Paneles de comentario grandes, uno por cada ajuste abierto */}
         {ajustesConComentarioAbierto.length > 0 && (
           <div className="paneles-comentario-wrapper">
             {ajustesConComentarioAbierto.map((ajuste) => (

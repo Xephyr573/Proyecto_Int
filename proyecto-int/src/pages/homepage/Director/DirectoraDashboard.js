@@ -1,26 +1,64 @@
 // src/pages/homepage/Director/DirectoraDashboard.js
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./DirectoraDashboard.css";
 
-// IMPORTANTE: esto debe calzar con App.js:
-// <Route path="/director/validarajustes" element={<DirectorValidarAjustes />} />
 const VALIDAR_AJUSTES_PATH = "/director/validarajustes";
+const LS_AJUSTES_PROPUESTOS = "sgar_ajustes_propuestos_v1";
 
-const CASOS_DIRECTOR = [
+// ====== Carreras (Área -> Carreras) ======
+const CARRERAS_POR_AREA = {
+  "Administración y Servicios": [
+    "Administración de Empresas",
+    "Ingeniería en Administración de Empresas",
+    "Administración Gastronómica",
+    "Gastronomía",
+    "Gestión Turística",
+    "Ingeniería en Gestión Turística",
+  ],
+  Salud: ["Técnico en Farmacia", "Técnico en Odontología"],
+  "Energía y Sostenibilidad": [
+    "Ingeniería Agrícola",
+    "Técnico Agrícola",
+    "Construcción Civil",
+    "Técnico en Construcción",
+    "Técnico en Topografía y Geomática",
+    "Ingeniería Eléctrica",
+    "Técnico en Electricidad Industrial",
+    "Ingeniería en Logística",
+    "Técnico en Logística",
+    "Ingeniería en Mecánica y Electromovilidad Automotriz",
+    "Mecánica Automotriz en Maquinaria Pesada",
+    "Técnico en Mantenimiento Industrial",
+    "Técnico en Mecánica y Electromovilidad Automotriz",
+    "Técnico en Prevención de Riesgos y Gestión de Emergencias",
+  ],
+  "Tecnología Aplicada": [
+    "Técnico en Automatización y Robótica",
+    "Animación Digital y Videojuegos",
+    "Diseño Digital Profesional",
+    "Diseño Digital y Web",
+    "Analista Programador",
+    "Ingeniería en Ciberseguridad",
+    "Ingeniería en Informática",
+    "Ingeniería en Telecomunicaciones y Servicios Digitales",
+  ],
+};
+
+const ALL_AREAS = ["Todas", ...Object.keys(CARRERAS_POR_AREA)];
+
+// ====== Casos base (demo) ======
+const CASOS_BASE = [
   {
     id: "CASO-001",
     estudiante: "Alexander Torres",
     carrera: "Ingeniería en Informática",
     estado: "Pendiente",
     fecha: "2025-04-01",
-    ajustesPropuestos: [
-      "A1 – Amplificación de la letra (macrotipo) o imagen",
-      "B1 – Ubicar al estudiante en un lugar estratégico dentro de la sala",
-      "C1 – Dar mayor tiempo de respuesta y ejecución",
-    ],
     resumen:
       "Caso con foco en dificultades visuales y atención. Se propone ampliar letra y ajustar ubicación en sala.",
+    // Se rellenará desde localStorage si existe
+    ajustesPropuestos: [],
   },
   {
     id: "CASO-002",
@@ -28,12 +66,26 @@ const CASOS_DIRECTOR = [
     carrera: "Analista Programador",
     estado: "Aprobado",
     fecha: "2025-03-20",
-    ajustesPropuestos: [
-      "A4 – Ayudas tecnológicas para acceso a la información",
-      "D5 – 25% tiempo extra en evaluaciones",
-    ],
     resumen:
       "Caso aprobado en reunión anterior. Ajustes ya informados a docentes de la carrera.",
+    ajustesPropuestos: [
+      {
+        codigo: "A4",
+        categoria: "A",
+        titulo: "Ayudas tecnológicas para acceso a la información",
+        descripcion:
+          "Uso de herramientas digitales para acceder a contenidos y evaluaciones.",
+        recomendado: true,
+      },
+      {
+        codigo: "D5",
+        categoria: "D",
+        titulo: "25% de tiempo extra en evaluaciones",
+        descripcion:
+          "Extender el tiempo disponible en evaluaciones escritas u online.",
+        recomendado: true,
+      },
+    ],
   },
   {
     id: "CASO-003",
@@ -41,9 +93,18 @@ const CASOS_DIRECTOR = [
     carrera: "Ingeniería en Informática",
     estado: "Rechazado",
     fecha: "2025-03-10",
-    ajustesPropuestos: ["D7 – 75% de tiempo extra en evaluaciones"],
     resumen:
       "Solicitud rechazada por exceder los criterios institucionales. Se definieron alternativas.",
+    ajustesPropuestos: [
+      {
+        codigo: "D7",
+        categoria: "D",
+        titulo: "75% de tiempo extra en evaluaciones",
+        descripcion:
+          "Propuesta que excede el criterio institucional. Se sugiere alternativa menor.",
+        recomendado: false,
+      },
+    ],
   },
 ];
 
@@ -68,57 +129,148 @@ const MENSAJES_DIRECTOR = [
   },
 ];
 
+function safeReadLS(key) {
+  try {
+    return JSON.parse(localStorage.getItem(key) || "null");
+  } catch {
+    return null;
+  }
+}
+
+function buildResumenAjustesFromPayload(payload) {
+  // payload.ajustes viene desde DefinirAjustes.js con:
+  // { id, categoria, categoriaNombre, titulo, descripcion, propuestoPorCoordinacion }
+  const ajustes = Array.isArray(payload?.ajustes) ? payload.ajustes : [];
+  return ajustes.map((a) => ({
+    codigo: a.id, // A1, B1...
+    categoria: a.categoria, // A, B, C, D
+    titulo: a.titulo,
+    descripcion: a.descripcion,
+    recomendado: Boolean(a.propuestoPorCoordinacion),
+  }));
+}
+
 export default function DirectorDashboard() {
   const navigate = useNavigate();
 
   const [pestanaActiva, setPestanaActiva] = useState("resumen");
   const [tabEstado, setTabEstado] = useState("Pendiente");
-  const [filtroCarrera, setFiltroCarrera] = useState("");
+
+  // Buscar por id/estudiante/carrera (lo usas como “barra”)
+  const [busqueda, setBusqueda] = useState("");
+
+  // Bloque carreras
+  const [areaSeleccionada, setAreaSeleccionada] = useState("Todas");
+  const [carreraSeleccionada, setCarreraSeleccionada] = useState("Todas");
+
   const [casoSeleccionado, setCasoSeleccionado] = useState(null);
-  const [comentario, setComentario] = useState("");
 
-  const totalPendientes = useMemo(
-    () => CASOS_DIRECTOR.filter((c) => c.estado === "Pendiente").length,
-    []
-  );
-  const totalAprobados = useMemo(
-    () => CASOS_DIRECTOR.filter((c) => c.estado === "Aprobado").length,
-    []
-  );
-  const totalRechazados = useMemo(
-    () => CASOS_DIRECTOR.filter((c) => c.estado === "Rechazado").length,
-    []
+  // ====== 1) Leer payload guardado por DefinirAjustes ======
+  const [payloadDefinidos, setPayloadDefinidos] = useState(() =>
+    safeReadLS(LS_AJUSTES_PROPUESTOS)
   );
 
-  const casosFiltrados = useMemo(() => {
-    return CASOS_DIRECTOR.filter(
-      (c) =>
-        c.estado === tabEstado &&
-        c.carrera.toLowerCase().includes(filtroCarrera.toLowerCase())
-    );
-  }, [tabEstado, filtroCarrera]);
-
-  const casoPendientePrioritario = useMemo(() => {
-    return CASOS_DIRECTOR.find((c) => c.estado === "Pendiente") || null;
+  // Si quieres que se actualice al instante cuando vuelves desde DefinirAjustes,
+  // recargamos el payload cada vez que vuelves a esta vista (al montar).
+  useEffect(() => {
+    setPayloadDefinidos(safeReadLS(LS_AJUSTES_PROPUESTOS));
   }, []);
 
+  // ====== 2) Construir casos “vivos” mezclando CASOS_BASE + payload ======
+  const casos = useMemo(() => {
+    const base = [...CASOS_BASE];
+
+    const casoPayload = payloadDefinidos?.caso;
+    if (!casoPayload?.id) return base;
+
+    // Solo actualizamos el caso que coincida (CASO-001 en tu demo)
+    return base.map((c) => {
+      if (c.id !== casoPayload.id) return c;
+
+      const resumenAjustes = buildResumenAjustesFromPayload(payloadDefinidos);
+
+      return {
+        ...c,
+        // si cambiaste estudiante/carrera desde el payload, también se reflejará
+        estudiante: casoPayload.estudiante || c.estudiante,
+        carrera: casoPayload.carrera || c.carrera,
+        // el resumen “bonito” viene 100% desde lo definido
+        ajustesPropuestos: resumenAjustes,
+      };
+    });
+  }, [payloadDefinidos]);
+
+  // ====== KPIs por estado ======
+  const totalPendientes = useMemo(
+    () => casos.filter((c) => c.estado === "Pendiente").length,
+    [casos]
+  );
+  const totalAprobados = useMemo(
+    () => casos.filter((c) => c.estado === "Aprobado").length,
+    [casos]
+  );
+  const totalRechazados = useMemo(
+    () => casos.filter((c) => c.estado === "Rechazado").length,
+    [casos]
+  );
+
+  const carrerasDisponibles = useMemo(() => {
+    if (areaSeleccionada === "Todas") {
+      const flat = Object.values(CARRERAS_POR_AREA).flat();
+      const uniq = Array.from(new Set(flat)).sort();
+      return ["Todas", ...uniq];
+    }
+    const arr = CARRERAS_POR_AREA[areaSeleccionada] || [];
+    const uniq = Array.from(new Set(arr)).sort();
+    return ["Todas", ...uniq];
+  }, [areaSeleccionada]);
+
+  const onChangeArea = (value) => {
+    setAreaSeleccionada(value);
+    setCarreraSeleccionada("Todas");
+  };
+
+  const casosFiltrados = useMemo(() => {
+    const q = busqueda.trim().toLowerCase();
+
+    return casos.filter((c) => {
+      const matchEstado = c.estado === tabEstado;
+
+      const matchCarrera =
+        carreraSeleccionada === "Todas" ? true : c.carrera === carreraSeleccionada;
+
+      const matchArea =
+        areaSeleccionada === "Todas"
+          ? true
+          : (CARRERAS_POR_AREA[areaSeleccionada] || []).includes(c.carrera);
+
+      const matchBusqueda =
+        q.length === 0
+          ? true
+          : `${c.id} ${c.estudiante} ${c.carrera}`.toLowerCase().includes(q);
+
+      return matchEstado && matchArea && matchCarrera && matchBusqueda;
+    });
+  }, [casos, tabEstado, areaSeleccionada, carreraSeleccionada, busqueda]);
+
   const abrirValidarAjustes = (caso) => {
-    // Si quieres pasar data después:
-    // navigate(VALIDAR_AJUSTES_PATH, { state: { caso } });
+    if (!caso) {
+      alert("Selecciona un caso para validar ajustes.");
+      return;
+    }
+
+    // 1) Cambiar “barra de búsqueda” al nombre del estudiante
+    setBusqueda(caso.estudiante);
+
+    // 2) Asegurar que ValidarAjustes tome lo definido (payload actual)
+    // Si el caso abierto coincide con el payload, ya está guardado.
+    // Si no, en demo no hacemos nada.
     navigate(VALIDAR_AJUSTES_PATH);
   };
 
-  const handleAccionCaso = (nuevoEstado) => {
-    if (!casoSeleccionado) return;
-
-    alert(
-      `Demostración:\n` +
-        `Caso ${casoSeleccionado.id} marcado como ${nuevoEstado}.\n` +
-        `Comentario:\n${comentario || "Sin comentario registrado."}`
-    );
-
-    setCasoSeleccionado(null);
-    setComentario("");
+  const seleccionarCaso = (c) => {
+    setCasoSeleccionado(c);
+    setPestanaActiva("detalle");
   };
 
   return (
@@ -169,7 +321,7 @@ export default function DirectorDashboard() {
             onClick={() => setPestanaActiva("detalle")}
           >
             <span className="dir-sidebar-bullet" />
-            <span>Detalle y decisión</span>
+            <span>Detalle del caso</span>
           </button>
         </nav>
       </aside>
@@ -179,8 +331,7 @@ export default function DirectorDashboard() {
           <div>
             <h1>Panel Directora de Carrera</h1>
             <p className="dir-subtitle">
-              Validación de ajustes razonables y revisión de historial de casos
-              de la carrera.
+              Validación de ajustes razonables y revisión de historial de casos de la carrera.
             </p>
 
             <div className="dir-header-actions">
@@ -245,25 +396,17 @@ export default function DirectorDashboard() {
               </div>
 
               <div className="dir-card">
-                <h3>Acciones rápidas</h3>
-
-                <div className="dir-quick-actions">
-                  <button
-                    type="button"
-                    className="dir-btn-primary"
-                    onClick={() => abrirValidarAjustes(casoPendientePrioritario)}
-                  >
-                    Validar ajustes ahora
-                  </button>
-
-                  <button
-                    type="button"
-                    className="dir-btn-secondary"
-                    onClick={() => setPestanaActiva("casos")}
-                  >
-                    Revisar bandeja de casos
-                  </button>
-                </div>
+                <h3>Sincronización (demo)</h3>
+                <p className="dir-card-help">
+                  Si la Coordinación definió ajustes, este panel los toma automáticamente desde localStorage.
+                </p>
+                <button
+                  type="button"
+                  className="dir-btn-secondary"
+                  onClick={() => setPayloadDefinidos(safeReadLS(LS_AJUSTES_PROPUESTOS))}
+                >
+                  Recargar ajustes definidos
+                </button>
               </div>
             </div>
           </section>
@@ -277,9 +420,7 @@ export default function DirectorDashboard() {
                   <button
                     key={estado}
                     type="button"
-                    className={
-                      "dir-tab" + (tabEstado === estado ? " dir-tab-active" : "")
-                    }
+                    className={"dir-tab" + (tabEstado === estado ? " dir-tab-active" : "")}
                     onClick={() => setTabEstado(estado)}
                   >
                     {estado}
@@ -287,14 +428,42 @@ export default function DirectorDashboard() {
                 ))}
               </div>
 
-              <label className="dir-filter-label">
-                Filtrar por carrera
-                <input
-                  type="text"
-                  value={filtroCarrera}
-                  onChange={(e) => setFiltroCarrera(e.target.value)}
-                />
-              </label>
+              <div className="dir-filter-row">
+                <label className="dir-filter-label">
+                  Área
+                  <select value={areaSeleccionada} onChange={(e) => onChangeArea(e.target.value)}>
+                    {ALL_AREAS.map((a) => (
+                      <option key={a} value={a}>
+                        {a}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="dir-filter-label">
+                  Carrera
+                  <select
+                    value={carreraSeleccionada}
+                    onChange={(e) => setCarreraSeleccionada(e.target.value)}
+                  >
+                    {carrerasDisponibles.map((c) => (
+                      <option key={c} value={c}>
+                        {c}
+                      </option>
+                    ))}
+                  </select>
+                </label>
+
+                <label className="dir-filter-label">
+                  Buscar (caso / estudiante / carrera)
+                  <input
+                    type="text"
+                    value={busqueda}
+                    onChange={(e) => setBusqueda(e.target.value)}
+                    placeholder="Ej: CASO-001 o Alexander"
+                  />
+                </label>
+              </div>
 
               <div className="dir-table-wrapper">
                 <table className="dir-table">
@@ -315,22 +484,10 @@ export default function DirectorDashboard() {
                         <td>{c.carrera}</td>
                         <td>{c.fecha}</td>
                         <td className="dir-table-actions">
-                          <button
-                            type="button"
-                            className="dir-link"
-                            onClick={() => {
-                              setCasoSeleccionado(c);
-                              setPestanaActiva("detalle");
-                              setComentario("");
-                            }}
-                          >
+                          <button type="button" className="dir-link" onClick={() => seleccionarCaso(c)}>
                             Ver detalle
                           </button>
-                          <button
-                            type="button"
-                            className="dir-link"
-                            onClick={() => abrirValidarAjustes(c)}
-                          >
+                          <button type="button" className="dir-link" onClick={() => abrirValidarAjustes(c)}>
                             Validar ajustes
                           </button>
                         </td>
@@ -346,6 +503,10 @@ export default function DirectorDashboard() {
                   </tbody>
                 </table>
               </div>
+
+              <p className="dir-card-help" style={{ marginTop: 10 }}>
+                “CASO-001” se alimenta desde lo que definió Coordinación en “Definir ajustes”.
+              </p>
             </div>
           </section>
         )}
@@ -361,43 +522,104 @@ export default function DirectorDashboard() {
                 </div>
               ) : (
                 <>
-                  <h3>{casoSeleccionado.id}</h3>
-                  <p className="dir-card-help">
-                    {casoSeleccionado.estudiante} · {casoSeleccionado.carrera}
-                  </p>
+                  <div className="dir-detail-hero">
+                    <div>
+                      <div className="dir-detail-id">{casoSeleccionado.id}</div>
+                      <div className="dir-detail-title">{casoSeleccionado.estudiante}</div>
+                      <div className="dir-detail-sub">
+                        {casoSeleccionado.carrera} · {casoSeleccionado.fecha}
+                      </div>
+                    </div>
 
-                  <button
-                    type="button"
-                    className="dir-btn-primary"
-                    onClick={() => abrirValidarAjustes(casoSeleccionado)}
-                  >
-                    Ir a Validar Ajustes
-                  </button>
+                    <div className="dir-detail-hero-actions">
+                      <span className={"dir-state-pill dir-state-" + casoSeleccionado.estado.toLowerCase()}>
+                        {casoSeleccionado.estado}
+                      </span>
 
-                  <textarea
-                    className="dir-detalle-textarea"
-                    rows={6}
-                    value={comentario}
-                    onChange={(e) => setComentario(e.target.value)}
-                    placeholder="Comentario"
-                    style={{ marginTop: 12 }}
-                  />
+                      <button
+                        type="button"
+                        className="dir-btn-primary"
+                        onClick={() => abrirValidarAjustes(casoSeleccionado)}
+                      >
+                        Validar ajustes
+                      </button>
+                    </div>
+                  </div>
 
-                  <div className="dir-detalle-acciones">
-                    <button
-                      type="button"
-                      className="dir-btn dir-btn-aprobar"
-                      onClick={() => handleAccionCaso("Aprobado")}
-                    >
-                      Aprobar
-                    </button>
-                    <button
-                      type="button"
-                      className="dir-btn dir-btn-rechazar"
-                      onClick={() => handleAccionCaso("Rechazado")}
-                    >
-                      Rechazar
-                    </button>
+                  <div className="dir-detail-grid">
+                    <div className="dir-detail-card">
+                      <div className="dir-detail-card-head">
+                        <h4>Ficha del caso</h4>
+                        <span className="dir-muted">Vista ejecutiva</span>
+                      </div>
+
+                      <div className="dir-kv">
+                        <div className="dir-kv-item">
+                          <span>Caso</span>
+                          <strong>{casoSeleccionado.id}</strong>
+                        </div>
+                        <div className="dir-kv-item">
+                          <span>Estudiante</span>
+                          <strong>{casoSeleccionado.estudiante}</strong>
+                        </div>
+                        <div className="dir-kv-item">
+                          <span>Carrera</span>
+                          <strong>{casoSeleccionado.carrera}</strong>
+                        </div>
+                        <div className="dir-kv-item">
+                          <span>Fecha</span>
+                          <strong>{casoSeleccionado.fecha}</strong>
+                        </div>
+                        <div className="dir-kv-item">
+                          <span>Ajustes definidos</span>
+                          <strong>{casoSeleccionado.ajustesPropuestos?.length || 0}</strong>
+                        </div>
+                        <div className="dir-kv-item">
+                          <span>Origen</span>
+                          <strong>
+                            {casoSeleccionado.id === payloadDefinidos?.caso?.id
+                              ? "DefinirAjustes (sincronizado)"
+                              : "Demo"}
+                          </strong>
+                        </div>
+                      </div>
+
+                      <div className="dir-note">{casoSeleccionado.resumen}</div>
+
+                      <div className="dir-note-soft">
+                        El detalle por ajuste (Aprobar / No aprobar / Revisión y comentarios) se realiza en “Validar ajustes”.
+                      </div>
+                    </div>
+
+                    <div className="dir-detail-card">
+                      <div className="dir-detail-card-head">
+                        <h4>Resumen de ajustes definidos</h4>
+                        <span className="dir-muted">Vista rápida</span>
+                      </div>
+
+                      <div className="dir-ajustes-cards">
+                        {(casoSeleccionado.ajustesPropuestos || []).map((a) => (
+                          <div key={a.codigo} className="dir-aj-card">
+                            <div className="dir-aj-top">
+                              <span className={"dir-aj-tag dir-aj-" + a.categoria}>{a.categoria}</span>
+                              <div className="dir-aj-code">{a.codigo}</div>
+                              <span className={"dir-aj-pill " + (a.recomendado ? "ok" : "warn")}>
+                                {a.recomendado ? "Recomendado" : "No recomendado"}
+                              </span>
+                            </div>
+                            <div className="dir-aj-title">{a.titulo}</div>
+                            <div className="dir-aj-desc">{a.descripcion}</div>
+                          </div>
+                        ))}
+
+                        {(!casoSeleccionado.ajustesPropuestos ||
+                          casoSeleccionado.ajustesPropuestos.length === 0) && (
+                          <div className="dir-empty-lite">
+                            Aún no hay ajustes definidos para este caso.
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </>
               )}
@@ -405,9 +627,7 @@ export default function DirectorDashboard() {
           </section>
         )}
 
-        <footer className="dir-footer">
-          © 2025 · SGAR Inclusión · Vista Directora de Carrera
-        </footer>
+        <footer className="dir-footer">© 2025 · SGAR Inclusión · Vista Directora de Carrera</footer>
       </main>
     </div>
   );

@@ -218,10 +218,6 @@ export default function EstudianteDashboard() {
         </div>
 
         <nav className="est2-sidebar-menu">
-          <button className="est2-sidebar-item" onClick={() => navigate("/estudiante/necesidades")}>
-            <span className="est2-dot" />
-            <span>Necesidades Especiales</span>
-          </button>
 
           <button className="est2-sidebar-item" onClick={() => navigate("/estudiante/asistencia")}>
             <span className="est2-dot" />
@@ -258,9 +254,6 @@ export default function EstudianteDashboard() {
           </div>
 
           <div className="est2-header-actions">
-            <button className="est2-btn-ghost" onClick={() => navigate("/estudiante/necesidades")}>
-              Actualizar necesidades
-            </button>
             <button className="est2-btn-primary" onClick={() => setSelectedDateKey(toDateKey(new Date()))}>
               Ir a hoy
             </button>
