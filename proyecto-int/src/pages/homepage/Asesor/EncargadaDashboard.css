@@ -35,6 +35,11 @@
   box-shadow: 0 6px 18px rgba(15, 23, 42, 0.3);
 }
 
+
+.enc-sidebar-top-actions{
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #e5e7eb;
+}
 .enc-sidebar-label {
   font-size: 0.7rem;
   text-transform: uppercase;

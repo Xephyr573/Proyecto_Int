@@ -1,6 +1,11 @@
-// src/pages/homepage/Director/DirectorDashboard.js
-import { useState } from "react";
-import "./DirectorDashboard.css";
+// src/pages/homepage/Director/DirectoraDashboard.js
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import "./DirectoraDashboard.css";
+
+// IMPORTANTE: esto debe calzar con App.js:
+// <Route path="/director/validarajustes" element={<DirectorValidarAjustes />} />
+const VALIDAR_AJUSTES_PATH = "/director/validarajustes";
 
 const CASOS_DIRECTOR = [
   {
@@ -64,27 +69,44 @@ const MENSAJES_DIRECTOR = [
 ];
 
 export default function DirectorDashboard() {
+  const navigate = useNavigate();
+
   const [pestanaActiva, setPestanaActiva] = useState("resumen");
   const [tabEstado, setTabEstado] = useState("Pendiente");
   const [filtroCarrera, setFiltroCarrera] = useState("");
   const [casoSeleccionado, setCasoSeleccionado] = useState(null);
   const [comentario, setComentario] = useState("");
 
-  const totalPendientes = CASOS_DIRECTOR.filter(
-    (c) => c.estado === "Pendiente"
-  ).length;
-  const totalAprobados = CASOS_DIRECTOR.filter(
-    (c) => c.estado === "Aprobado"
-  ).length;
-  const totalRechazados = CASOS_DIRECTOR.filter(
-    (c) => c.estado === "Rechazado"
-  ).length;
-
-  const casosFiltrados = CASOS_DIRECTOR.filter(
-    (c) =>
-      c.estado === tabEstado &&
-      c.carrera.toLowerCase().includes(filtroCarrera.toLowerCase())
+  const totalPendientes = useMemo(
+    () => CASOS_DIRECTOR.filter((c) => c.estado === "Pendiente").length,
+    []
   );
+  const totalAprobados = useMemo(
+    () => CASOS_DIRECTOR.filter((c) => c.estado === "Aprobado").length,
+    []
+  );
+  const totalRechazados = useMemo(
+    () => CASOS_DIRECTOR.filter((c) => c.estado === "Rechazado").length,
+    []
+  );
+
+  const casosFiltrados = useMemo(() => {
+    return CASOS_DIRECTOR.filter(
+      (c) =>
+        c.estado === tabEstado &&
+        c.carrera.toLowerCase().includes(filtroCarrera.toLowerCase())
+    );
+  }, [tabEstado, filtroCarrera]);
+
+  const casoPendientePrioritario = useMemo(() => {
+    return CASOS_DIRECTOR.find((c) => c.estado === "Pendiente") || null;
+  }, []);
+
+  const abrirValidarAjustes = (caso) => {
+    // Si quieres pasar data después:
+    // navigate(VALIDAR_AJUSTES_PATH, { state: { caso } });
+    navigate(VALIDAR_AJUSTES_PATH);
+  };
 
   const handleAccionCaso = (nuevoEstado) => {
     if (!casoSeleccionado) return;
@@ -101,7 +123,6 @@ export default function DirectorDashboard() {
 
   return (
     <div className="dir-layout">
-      {/* SIDEBAR */}
       <aside className="dir-sidebar">
         <div className="dir-sidebar-top">
           <img
@@ -153,7 +174,6 @@ export default function DirectorDashboard() {
         </nav>
       </aside>
 
-      {/* MAIN */}
       <main className="dir-main">
         <header className="dir-main-header">
           <div>
@@ -162,14 +182,32 @@ export default function DirectorDashboard() {
               Validación de ajustes razonables y revisión de historial de casos
               de la carrera.
             </p>
+
+            <div className="dir-header-actions">
+              <button
+                type="button"
+                className="dir-btn-primary"
+                onClick={() => abrirValidarAjustes(casoSeleccionado)}
+              >
+                Ir a Validar Ajustes
+              </button>
+
+              <button
+                type="button"
+                className="dir-btn-secondary"
+                onClick={() => setPestanaActiva("casos")}
+              >
+                Ver casos
+              </button>
+            </div>
           </div>
+
           <div className="dir-header-tags">
             <span className="dir-badge dir-badge-rol">Directora</span>
             <span className="dir-badge dir-badge-sede">Sede Temuco</span>
           </div>
         </header>
 
-        {/* Resumen estados arriba siempre visible */}
         <section className="dir-resumen-row">
           <div className="dir-resumen-card dir-resumen-pendiente">
             <span className="dir-resumen-label">Pendientes</span>
@@ -188,19 +226,11 @@ export default function DirectorDashboard() {
           </div>
         </section>
 
-        {/* CONTENIDO POR PESTAÑA */}
-
-        {/* 1) Resumen general */}
         {pestanaActiva === "resumen" && (
           <section className="dir-section">
             <div className="dir-grid">
               <div className="dir-card">
                 <h3>Bandeja de mensajes</h3>
-                <p className="dir-card-help">
-                  Mensajes enviados por asesoría, docentes y el sistema
-                  relacionados con casos de la carrera.
-                </p>
-
                 <ul className="dir-mensajes-list">
                   {MENSAJES_DIRECTOR.map((m) => (
                     <li key={m.id}>
@@ -215,43 +245,40 @@ export default function DirectorDashboard() {
               </div>
 
               <div className="dir-card">
-                <h3>Historial de casos</h3>
-                <p className="dir-card-help">
-                  Vista compacta de los casos y su estado actual.
-                </p>
-                <ul className="dir-historial-list">
-                  {CASOS_DIRECTOR.map((c) => (
-                    <li key={c.id}>
-                      <span className="dir-historial-id">{c.id}</span>
-                      <span className="dir-historial-text">
-                        {c.estudiante} · {c.carrera} · {c.estado}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
+                <h3>Acciones rápidas</h3>
+
+                <div className="dir-quick-actions">
+                  <button
+                    type="button"
+                    className="dir-btn-primary"
+                    onClick={() => abrirValidarAjustes(casoPendientePrioritario)}
+                  >
+                    Validar ajustes ahora
+                  </button>
+
+                  <button
+                    type="button"
+                    className="dir-btn-secondary"
+                    onClick={() => setPestanaActiva("casos")}
+                  >
+                    Revisar bandeja de casos
+                  </button>
+                </div>
               </div>
             </div>
           </section>
         )}
 
-        {/* 2) Casos por estado */}
         {pestanaActiva === "casos" && (
           <section className="dir-section">
             <div className="dir-card">
-              <h3>Casos por estado</h3>
-              <p className="dir-card-help">
-                Seleccione una pestaña para ver los casos pendientes, aprobados
-                o rechazados. Puede filtrar por carrera.
-              </p>
-
               <div className="dir-tabs">
                 {["Pendiente", "Aprobado", "Rechazado"].map((estado) => (
                   <button
                     key={estado}
                     type="button"
                     className={
-                      "dir-tab" +
-                      (tabEstado === estado ? " dir-tab-active" : "")
+                      "dir-tab" + (tabEstado === estado ? " dir-tab-active" : "")
                     }
                     onClick={() => setTabEstado(estado)}
                   >
@@ -264,7 +291,6 @@ export default function DirectorDashboard() {
                 Filtrar por carrera
                 <input
                   type="text"
-                  placeholder="Ej: Ingeniería en Informática"
                   value={filtroCarrera}
                   onChange={(e) => setFiltroCarrera(e.target.value)}
                 />
@@ -282,20 +308,13 @@ export default function DirectorDashboard() {
                     </tr>
                   </thead>
                   <tbody>
-                    {casosFiltrados.length === 0 && (
-                      <tr>
-                        <td colSpan={5} className="dir-table-empty">
-                          No hay casos con estos filtros.
-                        </td>
-                      </tr>
-                    )}
                     {casosFiltrados.map((c) => (
                       <tr key={c.id}>
                         <td>{c.id}</td>
                         <td>{c.estudiante}</td>
                         <td>{c.carrera}</td>
                         <td>{c.fecha}</td>
-                        <td>
+                        <td className="dir-table-actions">
                           <button
                             type="button"
                             className="dir-link"
@@ -307,9 +326,23 @@ export default function DirectorDashboard() {
                           >
                             Ver detalle
                           </button>
+                          <button
+                            type="button"
+                            className="dir-link"
+                            onClick={() => abrirValidarAjustes(c)}
+                          >
+                            Validar ajustes
+                          </button>
                         </td>
                       </tr>
                     ))}
+                    {casosFiltrados.length === 0 && (
+                      <tr>
+                        <td colSpan={5} className="dir-table-empty">
+                          No hay casos con esos filtros.
+                        </td>
+                      </tr>
+                    )}
                   </tbody>
                 </table>
               </div>
@@ -317,86 +350,56 @@ export default function DirectorDashboard() {
           </section>
         )}
 
-        {/* 3) Detalle y decisión */}
         {pestanaActiva === "detalle" && (
           <section className="dir-section">
             <div className="dir-card">
-              <h3>Detalle del caso y decisión</h3>
-
-              {!casoSeleccionado && (
-                <p className="dir-card-help">
-                  Seleccione un caso desde la pestaña "Casos por estado" para
-                  revisar los ajustes propuestos y registrar la decisión.
-                </p>
-              )}
-
-              {casoSeleccionado && (
-                <div className="dir-detalle-layout">
-                  <div className="dir-detalle-col">
-                    <div className="dir-detalle-header">
-                      <div>
-                        <h4>{casoSeleccionado.id}</h4>
-                        <p className="dir-detalle-subtitle">
-                          {casoSeleccionado.estudiante} ·{" "}
-                          {casoSeleccionado.carrera}
-                        </p>
-                      </div>
-                      <span className="dir-detalle-estado">
-                        {casoSeleccionado.estado}
-                      </span>
-                    </div>
-
-                    <h4 className="dir-detalle-title">Ajustes propuestos</h4>
-                    <ul className="dir-ajustes-list">
-                      {casoSeleccionado.ajustesPropuestos.map((a) => (
-                        <li key={a}>{a}</li>
-                      ))}
-                    </ul>
-
-                    <p className="dir-detalle-resumen">
-                      {casoSeleccionado.resumen}
-                    </p>
-                  </div>
-
-                  <div className="dir-detalle-col">
-                    <h4 className="dir-detalle-title">
-                      Comentario de la Directora
-                    </h4>
-                    <textarea
-                      className="dir-detalle-textarea"
-                      rows={6}
-                      placeholder="Escriba un comentario breve sobre este caso (por qué se aprueba o no se aprueba, condiciones, observaciones o acuerdos que se definen con la carrera)."
-                      value={comentario}
-                      onChange={(e) => setComentario(e.target.value)}
-                    />
-
-                    <div className="dir-detalle-acciones">
-                      <button
-                        type="button"
-                        className="dir-btn dir-btn-aprobar"
-                        onClick={() => handleAccionCaso("Aprobado")}
-                      >
-                        Aprobar ajustes
-                      </button>
-                      <button
-                        type="button"
-                        className="dir-btn dir-btn-rechazar"
-                        onClick={() => handleAccionCaso("Rechazado")}
-                      >
-                        No aprobar ajustes
-                      </button>
-                      <button
-                        type="button"
-                        className="dir-btn dir-btn-revision"
-                        onClick={() =>
-                          handleAccionCaso("Pendiente / En revisión")
-                        }
-                      >
-                        Dejar en revisión
-                      </button>
-                    </div>
-                  </div>
+              {!casoSeleccionado ? (
+                <div className="dir-empty">
+                  <p className="dir-card-help" style={{ margin: 0 }}>
+                    Selecciona un caso desde “Casos por estado”.
+                  </p>
                 </div>
+              ) : (
+                <>
+                  <h3>{casoSeleccionado.id}</h3>
+                  <p className="dir-card-help">
+                    {casoSeleccionado.estudiante} · {casoSeleccionado.carrera}
+                  </p>
+
+                  <button
+                    type="button"
+                    className="dir-btn-primary"
+                    onClick={() => abrirValidarAjustes(casoSeleccionado)}
+                  >
+                    Ir a Validar Ajustes
+                  </button>
+
+                  <textarea
+                    className="dir-detalle-textarea"
+                    rows={6}
+                    value={comentario}
+                    onChange={(e) => setComentario(e.target.value)}
+                    placeholder="Comentario"
+                    style={{ marginTop: 12 }}
+                  />
+
+                  <div className="dir-detalle-acciones">
+                    <button
+                      type="button"
+                      className="dir-btn dir-btn-aprobar"
+                      onClick={() => handleAccionCaso("Aprobado")}
+                    >
+                      Aprobar
+                    </button>
+                    <button
+                      type="button"
+                      className="dir-btn dir-btn-rechazar"
+                      onClick={() => handleAccionCaso("Rechazado")}
+                    >
+                      Rechazar
+                    </button>
+                  </div>
+                </>
               )}
             </div>
           </section>

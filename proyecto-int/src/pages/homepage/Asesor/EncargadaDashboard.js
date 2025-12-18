@@ -193,7 +193,14 @@ export default function EncargadaDashboard() {
           <p className="enc-sidebar-sub">Sede Temuco</p>
         </div>
 
-        <nav className="enc-sidebar-menu">
+        
+        <div className="enc-sidebar-top-actions">
+          <button className="enc-sidebar-link" onClick={() => navigate("/")}> 
+            Volver al inicio
+          </button>
+        </div>
+
+<nav className="enc-sidebar-menu">
           <button
             className={"enc-sidebar-item " + (pestanaActiva === "resumen" ? "enc-sidebar-item-active" : "")}
             onClick={() => setPestanaActiva("resumen")}
@@ -234,12 +241,6 @@ export default function EncargadaDashboard() {
             <span>Documentos y formatos</span>
           </button>
         </nav>
-
-        <div className="enc-sidebar-bottom">
-          <button className="enc-sidebar-link" onClick={() => navigate("/")}>
-            Volver al inicio
-          </button>
-        </div>
       </aside>
 
       {/* ========== MAIN ========== */}

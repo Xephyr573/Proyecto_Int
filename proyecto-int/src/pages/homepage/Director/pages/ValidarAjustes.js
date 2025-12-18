@@ -1,9 +1,17 @@
 // src/pages/homepage/Director/pages/ValidarAjustes.js
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./ValidarAjustes.css";
 
 export default function ValidarAjustes() {
+  const navigate = useNavigate();
+
+  // Vuelve exactamente como la flecha "Atrás"
+  const volverAtras = () => {
+    if (window.history.length > 1) navigate(-1);
+    else navigate("/");
+  };
+
   const ajustesIniciales = [
     {
       id: "A1",
@@ -266,17 +274,13 @@ export default function ValidarAjustes() {
             {ajustesConComentarioAbierto.map((ajuste) => (
               <div key={ajuste.id} className="panel-comentario-ajuste">
                 <div className="panel-comentario-header">
-                  <span
-                    className={`tag-categoria tag-${ajuste.categoria}`}
-                  >
+                  <span className={`tag-categoria tag-${ajuste.categoria}`}>
                     {ajuste.categoria}
                   </span>
 
                   <div className="panel-comentario-titulos">
                     <h4>{ajuste.titulo}</h4>
-                    <p className="panel-comentario-desc">
-                      {ajuste.descripcion}
-                    </p>
+                    <p className="panel-comentario-desc">{ajuste.descripcion}</p>
                   </div>
 
                   <button
@@ -335,9 +339,13 @@ export default function ValidarAjustes() {
             Guardar validación (demo)
           </button>
 
-          <Link to="/Directora" className="btn-asesor-volver">
-            Volver atrás
-          </Link>
+          <button
+            type="button"
+            className="btn-asesor-volver"
+            onClick={volverAtras}
+          >
+            Volver
+          </button>
         </div>
       </form>
     </div>

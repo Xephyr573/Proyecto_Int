@@ -40,9 +40,9 @@ import EntrevistaEstudiante from "./pages/homepage/Estudiante/pages/EntrevistaEs
 
 // Subrutas Docente
 import PerfilDocente from "./pages/homepage/Docente/pages/PerfilDocente";
-import AsistenciaDocente from "./pages/homepage/Docente/pages/AsistenciaEstudiantes";
 import SolicitudesRecibidas from "./pages/homepage/Docente/pages/SolicitudesRecibidas";
 import ReportesDocente from "./pages/homepage/Docente/pages/ReportesDocente";
+import { DocenteShell } from "./pages/homepage/Docente/DocenteShell";
 
 // Subrutas Asesor
 import RegistrarCaso from "./pages/homepage/Asesor/pages/RegistrarCaso";
@@ -117,15 +117,11 @@ function App() {
         {/* ------ Subrutas Docente ------ */}
         <Route path="/docente/perfil" element={<PerfilDocente />} />
         <Route
-          path="/docente/asistencia"
-          element={<AsistenciaDocente />}
-        />
-        <Route
           path="/docente/solicitudes"
           element={<SolicitudesRecibidas />}
         />
         <Route path="/docente/reportes" element={<ReportesDocente />} />
-
+        <Route path="/docente/shell" element={<DocenteShell />} />
         {/* ------ Subrutas Asesor ------ */}
         <Route
           path="/asesor/registrar-caso"
