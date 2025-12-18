@@ -43,34 +43,6 @@ export default function SeguimientoCaso() {
         semestre.
       </p>
 
-      {/* Flujo (solo lo ve el asesor/CTP) */}
-      <div className="flujo-etapas">
-        <button
-          type="button"
-          className="etapa done"
-          onClick={() => navigate("/asesor/registrar-caso")}
-        >
-          1. Entrevista / Registro de caso
-        </button>
-        <button
-          type="button"
-          className="etapa done"
-          onClick={() => navigate("/asesor/definir-ajustes")}
-        >
-          2. Definición de ajustes
-        </button>
-        <button type="button" className="etapa active">
-          3. Seguimiento
-        </button>
-        <button
-          type="button"
-          className="etapa"
-          onClick={() => navigate("/asesor/evaluacion-final")}
-        >
-          4. Evaluación final
-        </button>
-      </div>
-
       <div className="seguimiento-panel">
         <h3>Ajustes del estudiante y seguimiento</h3>
         <p className="ajustes-panel-text">

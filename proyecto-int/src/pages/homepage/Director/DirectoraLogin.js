@@ -27,7 +27,7 @@ export default function AsesorDirectoraLogin() {
       // Verificamos si el rol es el correcto
       if (userData.rol === 'Director') {
         // Éxito: El rol es correcto, redirige al dashboard
-        navigate("/director/validarajustes"); 
+        navigate("/director/dashboard"); 
       } else {
         // Error: Es un usuario válido, pero no es el rol esperado
         setErrores('Acceso denegado: Sus credenciales no pertenecen a un Director.'); 

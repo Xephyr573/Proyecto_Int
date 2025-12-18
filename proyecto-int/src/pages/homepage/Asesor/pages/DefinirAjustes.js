@@ -137,38 +137,6 @@ export default function DefinirAjustes() {
         estudiante.
       </p>
 
-      {/* Flujo del caso – navegación entre pantallas del asesor */}
-      <div className="flujo-etapas">
-        <button
-          type="button"
-          className="etapa done"
-          onClick={() => navigate("/asesor/registrar-caso")}
-        >
-          1. Entrevista / Registro de caso
-        </button>
-        <button
-          type="button"
-          className="etapa active"
-          onClick={() => navigate("/asesor/definir-ajustes")}
-        >
-          2. Definición de ajustes
-        </button>
-        <button
-          type="button"
-          className="etapa"
-          onClick={() => navigate("/asesor/seguimiento")}
-        >
-          3. Seguimiento
-        </button>
-        <button
-          type="button"
-          className="etapa"
-          onClick={() => navigate("/asesor/evaluacion-final")}
-        >
-          4. Evaluación final
-        </button>
-      </div>
-
       <fieldset className="asesor-fieldset">
         <legend>Selección de ajustes por categoría</legend>
 
