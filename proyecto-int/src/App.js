@@ -91,7 +91,7 @@ function App() {
         <Route path="/EstudianteDashboard" element={<EstudianteDashboard />} />
         <Route path="/DocenteDashboard" element={<DocenteDashboard />} />
         <Route path="/dashboard-asesor" element={<AsesorDashboard />} /> {/*Asesor CTP*/}
-        <Route path="/dashboard-directora" element={<DirectorDashboard />} />
+        <Route path="/dashboard-director" element={<DirectorDashboard />} />
         <Route path="/dashboard-encargada" element={<EncargadaDashboard />} /> {/*Asesora Ped}
 
         {/* ------ Subrutas Estudiante ------ */}

@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Notificacion, Asignatura, Caso, Entrevista, TipoAjuste
+from .models import Usuario, Estudiante, Asesor, Docente, Director, Ajuste, Notificacion, Asignatura, Caso, Entrevista
 
 #Serializer para el modelo Usuario y subclases
 
@@ -13,25 +13,6 @@ class UsuarioBaseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Usuario
         fields = ['nombre', 'correo']
-
-# class EstudianteSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Estudiante
-#         fields = '__all__'
-
-#     def get_estado_caso(self, estudiante):
-#         # Obtener el estado del caso más reciente asociado al estudiante
-#         ultimo_caso = estudiante.casos_estudiante.last()
-#         if ultimo_caso:
-#             return ultimo_caso.estado_caso
-#         return "No tiene casos"
-
-# #SERIALIZER DE USUARIO CON ESTUDIANTE PARA BUSQUEDA DETALLADA
-# class UsuarioConEstudianteSerializer(serializers.ModelSerializer):
-#     usuario = UsuarioBaseSerializer(source='id_usuario', read_only=True)
-#     class Meta:
-#         model = Estudiante
-#         fields = ['rut', 'carrera', 'cede', 'usuario', 'telefono'] 
 
 class EstudianteSerializer(serializers.ModelSerializer):
     #Traemos los datos (Nombre, Correo) desde usuario
@@ -100,9 +81,4 @@ class CasoSerializer(serializers.ModelSerializer):
 class AjusteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ajuste
-        fields = '__all__'
-
-class TipoAjusteSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = TipoAjuste
         fields = '__all__'

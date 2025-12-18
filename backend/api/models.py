@@ -116,6 +116,50 @@ class MotivoCaso(models.Model):
     def __str__(self):
         return self.nombre
 
+class Ajuste(models.Model):
+    class TipoAjuste(models.TextChoices):
+        PRESENTACION = 'Presentacion', 'Presentacion de la informacion'
+        ENTORNO = 'Entorno', 'Entorno'
+        FORMA = 'Forma', 'Forma de respuesta'
+        TIEMPO = 'Tiempo', 'Organizacion del tiempo y horario'
+
+    id_ajuste = models.AutoField(primary_key=True)
+    titulo = models.CharField(max_length=190, unique=True)
+    descripcion = models.TextField(verbose_name="Descipción del ajuste")
+    tipo = models.CharField(
+        max_length=20,
+        choices=TipoAjuste.choices,
+        default=TipoAjuste.PRESENTACION
+    )
+
+    def __str__(self):
+        return f"{self.titulo} ({self.tipo})"
+    
+    class Meta:
+        verbose_name = "Ajuste Razonable"
+        verbose_name_plural = "Ajustes Razonables"
+
+class SolicitudAjuste(models.Model):
+    class EstadoSolicitudAjuste(models.TextChoices):
+        PROPUESTO = 'Propuesto', 'Propuesto por asesor'
+        APROBADO = 'Aprobado', 'Aprobado por Director/CTP'
+        RECHAZADO = 'Rechazado', 'Rechazado'
+
+    caso = models.ForeignKey('Caso', on_delete=models.CASCADE, related_name='ajustes_solicitados')
+    ajuste = models.ForeignKey(Ajuste, on_delete=models.PROTECT)
+
+    estado = models.CharField(
+        max_length=20,
+        choices=EstadoSolicitudAjuste.choices,
+        default=EstadoSolicitudAjuste.PROPUESTO
+    )
+
+    comentario_desicion = models.TextField(blank=True, verbose_name="Motivo de rechazo")
+    fecha_decision = models.DateTimeField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.ajuste.titulo} para Caso {self.caso.id_caso} ({self.estado})"
+    
 class Caso(models.Model):
     #Creamos constantes para evitar errores tipograficos
     ESTADO_INICIADO = 'Iniciado'
@@ -147,42 +191,39 @@ class Caso(models.Model):
     semestre = models.CharField(max_length=8, blank=True) # Ejemplo: 2025-1
     descripcion = models.TextField(blank=True, verbose_name="Descripción del Caso")
 
+    ajustes = models.ManyToManyField(
+    Ajuste,
+    through='SolicitudAjuste',
+    related_name='casos',
+    blank=True
+    )
+
     def __str__(self):
         return f"Caso {self.id_caso} de {self.id_usuario_estudiante.id_usuario.nombre}"
 
 class Entrevista(models.Model):
-    # id_entrevista (PK)
+    class EstadoEntrevista(models.TextChoices):
+        PROGRAMADA = 'Programada', 'Programada'
+        REALIZADA = 'Realizada', 'Realizada'
+        CANCELADA = 'Cancelada', 'Cancelada'
+        NO_ASISTIO = 'No Asistio', 'Estudiante no asistió'
+
     id_entrevista = models.AutoField(primary_key=True)
-    id_usuario_asesor = models.ForeignKey(Asesor, on_delete=models.SET_NULL, null=True, related_name='entrevistas_realizadas')
-    id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.SET_NULL, null=True, related_name='entrevistas_recibidas')
-    fecha_entrevista = models.DateTimeField()
-    observaciones = models.TextField(blank=True)
-    estado = models.CharField(max_length=50)
+
+    caso = models.ForeignKey(
+        'Caso',
+        on_delete=models.CASCADE,
+        related_name='entrevistas'
+    )
+
+    fecha_hora = models.DateTimeField(verbose_name='Fecha y hora de la entrevista')
+
+    estado = models.CharField(
+        max_length=20,
+        choices=EstadoEntrevista.choices,
+        default=EstadoEntrevista.PROGRAMADA
+    )
 
     def __str__(self):
-        return f"Entrevista {self.id_entrevista} el {self.fecha_entrevista.date()}"
-    
-class TipoAjuste(models.Model):
-    # id_tipo_ajuste (PK)
-    id_tipo_ajuste = models.AutoField(primary_key=True)
-    nombre_tipo = models.CharField(max_length=100)
-    descripcion = models.TextField()
-
-    def __str__(self):
-        return self.nombre_tipo
-
-class Ajuste(models.Model):
-    # id_ajuste (PK)
-    id_ajuste = models.AutoField(primary_key=True)
-    id_caso = models.ForeignKey(Caso, on_delete=models.CASCADE, related_name='ajustes')
-    id_usuario_estudiante = models.ForeignKey(Estudiante, on_delete=models.SET_NULL, null=True, related_name='ajustes_estudiante')
-    id_usuario_director = models.ForeignKey(Director, on_delete=models.SET_NULL, null=True, blank=True, related_name='ajustes_aprobados')
-    asignatura_asignada = models.ForeignKey(Asignatura, on_delete=models.CASCADE, blank=True, null=True)
-    titulo_ajuste = models.CharField(max_length=200, blank=True) #Aqui va el nombre del ajuste, en caso de 'Otro' queda con ese mismo titulo
-    tipo_ajuste = models.ForeignKey(TipoAjuste, on_delete=models.CASCADE)
-    descripcion = models.TextField()
-    estado_ajuste = models.CharField(max_length=50) # Ejemplo: Pendiente, Aprobado, Rechazado
-    fecha_aprobacion = models.DateField(blank=True, null=True)
-
-    def __str__(self):
-        return f"Ajuste {self.id_ajuste} - {self.tipo_ajuste}"
+        # Podemos acceder al nombre del estudiante a través del Caso
+        return f"Entrevista {self.caso.id_usuario_estudiante.id_usuario.nombre} - {self.fecha_hora.strftime('%d/%m %H:%M')}"
