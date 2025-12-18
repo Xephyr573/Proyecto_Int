@@ -47,6 +47,18 @@ const CASOS_ASESOR = [
       "Solicitud de aumento de tiempo en evaluaciones y adecuaciones de horario. Derivado para validación.",
     archivos: ["Ficha_entrevista_CASO-003.pdf"],
   },
+    {
+    id: "CASO-003",
+    estudiante: "Benjamin Urra",
+    carrera: "Ingeniería en Informática",
+    estado: "Derivado a Directora",
+    fechaEntrevista: "2025-03-25 09:30",
+    asistido: true,
+    proximaCita: "-",
+    resumen:
+      "Solicitud de aumento de tiempo en evaluaciones y adecuaciones de horario. Derivado para validación.",
+    archivos: ["Ficha_entrevista_CASO-003.pdf"],
+  },
 ];
 
 // Plantillas para la pestaña "Documentos y formatos"
@@ -97,6 +109,7 @@ export default function AsesorDashboard() {
       return matchTexto && matchCarrera && matchEstado;
     });
   }, [filtroBusqueda, filtroCarrera, filtroEstado]);
+
 
   const handleDescargarArchivo = (nombreArchivo) => {
     alert(`Descarga de demostración: ${nombreArchivo}`);

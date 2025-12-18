@@ -12,7 +12,7 @@ const CASOS_ENCARGADA = [
   { id: "CASO-006", estudiante: "Bruno Méndez", carrera: "Técnico en Administración", estado: "Cerrado", fechaRegistro: "2025-05-21", origen: "Estudiante" },
   { id: "CASO-007", estudiante: "Camila Vargas", carrera: "Moda y Diseño", estado: "En entrevista", fechaRegistro: "2025-04-15", origen: "Estudiante" },
   { id: "CASO-008", estudiante: "Paulina Rojas", carrera: "Tecnico en Enfermería", estado: "Derivado a CTP", fechaRegistro: "2025-09-07", origen: "Estudiante" },
-  { id: "CASO-009", estudiante: "Rebecca Flores", carrera: "Gastronomia", estado: "Cerrado", fechaRegistro: "2025-10-13", origen: "Estudiante" },
+  { id: "CASO-009", estudiante: "Rebecca Flores", carrera: "Gastronomia", estado: "Cerrado", fechaRegistro: "2025-10-13"},
 ];
 
 const ARCHIVOS_FORMATOS = [
@@ -578,9 +578,6 @@ export default function EncargadaDashboard() {
                         {casoSeleccionado.carrera} · Origen: {casoSeleccionado.origen}
                       </p>
                     </div>
-                    <button type="button" className="enc-btn-cerrar" onClick={() => setCasoSeleccionado(null)}>
-                      Cerrar
-                    </button>
                   </div>
 
                   <p className="enc-detalle-text">
