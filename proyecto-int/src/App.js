@@ -90,9 +90,9 @@ function App() {
         {/* ------ Dashboards ------ */}
         <Route path="/EstudianteDashboard" element={<EstudianteDashboard />} />
         <Route path="/DocenteDashboard" element={<DocenteDashboard />} />
-        <Route path="/dashboard-asesor" element={<AsesorDashboard />} />
+        <Route path="/dashboard-asesor" element={<AsesorDashboard />} /> {/*Asesor CTP*/}
         <Route path="/dashboard-directora" element={<DirectorDashboard />} />
-        <Route path="/dashboard-encargada" element={<EncargadaDashboard />} />
+        <Route path="/dashboard-encargada" element={<EncargadaDashboard />} /> {/*Asesora Ped}
 
         {/* ------ Subrutas Estudiante ------ */}
         <Route path="/estudiante/perfil" element={<PerfilEstudiante />} />
